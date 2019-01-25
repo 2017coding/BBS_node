@@ -1,21 +1,25 @@
 import query from '../mysql'
 
 class User{
-  async registered (req, res, next) {
-    const result = await query('select * from bbs_user where id = 1')
-    return result
+  async registered (param) {
+    const sql = 'select * from bbs_user where id = 1'
+    return query(sql)
   }
-  async login (req, res, next) {
-    const result = await query('select * from bbs_user where id = 1')
-    return result
+  async login (param) {
+    const sql = 'select * from bbs_user where id = 1'
+    return query(sql)
   }
-  async getUserInfo (req, res, next) {
-    const result = await query('select * from bbs_user where id = 1')
-    return result
+  async getRow (param) {
+    const sql = 'select * from bbs_user where id = 1'
+    return query(sql)
   }
-  async delete (req, res, next) {
-    const result = await query('select * from bbs_user where id = 1')
-    return result
+  async getList (param) {
+    const sql = 'select * from bbs_user where id = 1'
+    return query(sql)
+  }
+  async delete (param) {
+    const sql = 'select * from bbs_user where id = 1'
+    return query(sql)
   }
 }
 

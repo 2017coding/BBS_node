@@ -4,6 +4,10 @@ const router = express.Router()
 
 router.post('/registered', User.registered)
 router.post('/login', User.login)
-router.get('/userInfo', User.getUserInfo)
+router.put('/update', User.update)
+router.delete('/delete/:id', User.delete)
+router.get('/userInfo', User.userInfo)
+router.get('/getList', User.getList)
+router.get('/getAll', User.getAll)
 
 export default router
