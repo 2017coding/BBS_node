@@ -22,9 +22,9 @@ app.all('*', (req, res, next) => {
 })
 
 // 解析body参数
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-router(app);
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}))
+router(app)
 app.use(history())
 app.use(express.static(path.join(__dirname, 'public/apidoc')))
 app.listen(config.port || '1313', () => {

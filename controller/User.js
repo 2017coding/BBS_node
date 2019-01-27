@@ -1,6 +1,6 @@
-import userModel from '../model/User';
-import query from '../mysql'
-import Base from './Base';
+import userModel from '../model/User'
+import Base from './Base'
+import crypto from 'crypto'
 
 class User extends Base {
   constructor () {
@@ -10,20 +10,21 @@ class User extends Base {
   }
   // 注册
   async registered (req, res, next) {
-    let search 
+    let search, result
+    // 查询用户是否存在
     try {
-      search = await userModel.getRow([account])
+      search = await userModel.getRow('account', req.body.account)
     } catch (e) {
       res.json({
-        code: 200,
+        code: 500,
         success: false,
-        content: e.sqlMessage,
-        message: '错误'
+        content: e,
+        message: '服务器内部错误'
       })
       return
     }
+    // 用户不存在创建用户，存在则提示
     if (search.length === 0) {
-      let result
       try {
         result = await userModel.registered({
           role_id: 1,
@@ -35,17 +36,16 @@ class User extends Base {
         })
       } catch (e) {
         res.json({
-          code: 200,
+          code: 500,
           success: false,
-          content: e.sqlMessage,
-          message: '注册失败'
+          content: e,
+          message: '服务器内部错误'
         })
         return
       }
       res.json({
         code: 200,
-        success: false,
-        content: result,
+        success: true,
         message: '注册成功'
       })
     } else {
@@ -60,18 +60,22 @@ class User extends Base {
   async login (req, res, next) {
     const account = req.body.account
     const password = req.body.password
-    let search
+    let search,
+        token
+    // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
     try {
       search = await userModel.login(account, password)
+      token = await this.setToken(search)
     } catch (e) {
       res.json({
         code: 200,
         success: false,
-        content: e.sqlMessage,
-        message: '注册失败'
+        content: e,
+        message: '登录失败'
       })
       return
     }
+    // 查询为空即用户信息不正确，不为空说明查询成功
     if (search === 0) {
       res.json({
         code: 200,
@@ -82,6 +86,7 @@ class User extends Base {
       res.json({
         code: 200,
         success: true,
+        token,
         message: '登录成功'
       })
     }
@@ -89,32 +94,57 @@ class User extends Base {
   // 编辑用户
   async update (req, res, next) {
     let id = req.body.id,
-        data = JSON.parse(JSON.stringify(req.body))
+        data = JSON.parse(JSON.stringify(req.body)),
+        result
         delete data.id
-    const result = await userModel.update([data, id])
-    res.json({
-      code: 200,
-      success: true,
-      content: result,
-      message: '操作成功'
-    })
+    try {
+      result = await userModel.update([data, id])
+    } catch (e) {
+      res.json({
+        code: 500,
+        success: false,
+        content: e,
+        message: '编辑失败'
+      })
+      return
+    }
+    if (result.affectedRows) {
+      res.json({
+        code: 200,
+        success: true,
+        message: '编辑成功'
+      })
+    } else {
+      res.json({
+        code: 200,
+        success: true,
+        message: '编辑失败'
+      })
+    }
   }
   // 删除用户
   async delete (req, res, next) {
     let id = req.params.id
+    console.log(id)
     const result = await userModel.delete(id)
-    res.json({
-      code: 200,
-      success: true,
-      content: result,
-      message: '操作成功'
-    })
+    if (result.affectedRows) {
+      res.json({
+        code: 200,
+        success: true,
+        message: '操作成功'
+      })
+    } else {
+      res.json({
+        code: 200,
+        success: true,
+        message: '操作失败'
+      })
+    }
   }
   // 获取用户信息
   async userInfo (req, res, next) {
     const id = req.query.id
-    const sql = `select * from bbs_user where id = '${id}'`
-    const search = await query(sql)
+    const search = await userModel.getRow('id', id)
     if (search.length === 0) {
       res.json({
         code: 200,
@@ -149,7 +179,7 @@ class User extends Base {
         result,
         curPage,
         pageSize,
-        totals: length[0].count
+        totals: length ? length[0].count : ''
       },
       message: '操作成功'
     })
