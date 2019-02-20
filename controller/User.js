@@ -1,5 +1,6 @@
 import userModel from '../model/User'
 import Base from './Base'
+import JWT from 'jsonwebtoken'
 import crypto from 'crypto'
 
 class User extends Base {
@@ -60,12 +61,18 @@ class User extends Base {
   async login (req, res, next) {
     const account = req.body.account
     const password = req.body.password
+    const type = req.body.type
     let search,
         token
     // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
     try {
-      search = await userModel.login(account, password)
-      token = await this.setToken(search)
+      search = await userModel.login([account, password])
+      if (search.id) {
+        token = await this.setToken(search, [
+          {[type + '_token']: JWT.sign(search, 'BBS', {})},
+          search.id
+        ])
+      }
     } catch (e) {
       res.json({
         code: 200,
@@ -86,6 +93,7 @@ class User extends Base {
       res.json({
         code: 200,
         success: true,
+        content: {data: search},
         token,
         message: '登录成功'
       })
@@ -144,7 +152,7 @@ class User extends Base {
   // 获取用户信息
   async userInfo (req, res, next) {
     const id = req.query.id
-    const search = await userModel.getRow('id', id)
+    const search = await userModel.getRow('id', [id])
     if (search.length === 0) {
       res.json({
         code: 200,

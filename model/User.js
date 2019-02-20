@@ -5,9 +5,9 @@ class User{
     const sql = 'INSERT INTO bbs_user set ?'
     return query(sql, params)
   }
-  async login (account, password) {
-    const sql = `select * from bbs_user where account = '${account}' and password = '${password}'`
-    return query(sql)
+  async login (params) {
+    const sql = `select * from bbs_user where account = ? and password = ?`
+    return query(sql, params)
   }
   async update (params) {
     const sql = 'UPDATE bbs_user set ? where id = ?'
@@ -17,9 +17,9 @@ class User{
     const sql = 'DELETE from bbs_user where id = ?'
     return query(sql, params)
   }
-  async getRow (key, value) {
-    const sql = `select * from bbs_user where ${key} = '${value}'`
-    return query(sql)
+  async getRow (key, params) {
+    const sql = `select * from bbs_user where ${key} = ?`
+    return query(sql, params)
   }
   async getList (curPage, pageSize) {
     const sql = `select * from bbs_user limit ${(curPage - 1) * pageSize}, ${pageSize}`

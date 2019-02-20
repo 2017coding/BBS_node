@@ -1,22 +1,22 @@
 import query from '../mysql'
 
 class Token{
-  async getToken (key, value) {
-    const sql = `select * from bbs_token where ${key} = ${value}`
-    return query(sql)
+  async getToken (key, params) {
+    const sql = `select * from bbs_token where ${key} = ?`
+    return query(sql, params)
   }
-  async setToken (params) {
+  async setToken (data, params) {
     let search, sql
     try {
-      search = await this.getToken('user_id', params.id)
+      search = await this.getToken('user_id', [data.id])
     } catch (e) {
-
+      return e
     }
     // 用户不存在则创建一条数据，存在则将原来的token替换掉
     if (search.length === 0) {
-      sql = 'INSERT INTO bbs_user set ?'
+      sql = `INSERT INTO bbs_user set ? where user_id = ?`
     } else {
-      sql = 'UPDATE bbs_user set ? where id = ?'
+      sql = `UPDATE bbs_user set ? where user_id = ?`
     }
     return query(sql, params)
   }
