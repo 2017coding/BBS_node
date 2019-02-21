@@ -2,8 +2,6 @@ import TokenModel from '../model/Token'
 import JWT from 'jsonwebtoken'
 
 class Base{
-  constructor () {
-  }
   // 验证Token令牌
   async checkToken (key, value) {
     let search, result = true, message, content = {}
@@ -45,11 +43,11 @@ class Base{
     if (result.affectedRows) {
 
     }
-    return await this.getToken(key, [params.id])
+    return await this.getToken('user_id', [params[1]])
   }
   // 获取Token令牌
   async getToken (key, params) {
-    return TokenModel.getToken(key, [params.id])
+    return TokenModel.getToken(key, params)
   }
 }
 

@@ -12,9 +12,9 @@ DROP TABLE IF EXISTS `bbs_token`;
 CREATE TABLE `bbs_token` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL COMMENT '所属用户',
-  `bbs_token` VARCHAR(128) DEFAULT NULL,
-  `phone_token` VARCHAR(128) DEFAULT NULL,
-  `admin_token` VARCHAR(128) DEFAULT NULL,
+  `bbs_token` VARCHAR(512) DEFAULT NULL,
+  `phone_token` VARCHAR(512) DEFAULT NULL,
+  `admin_token` VARCHAR(512) DEFAULT NULL,
   `bbs_addr` VARCHAR(48) DEFAULT NULL,
   `phone_addr` VARCHAR(48) DEFAULT NULL,
   `admin_addr` VARCHAR(48) DEFAULT NULL,

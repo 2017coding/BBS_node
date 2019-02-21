@@ -7,7 +7,8 @@ class User extends Base {
   constructor () {
     super();
     this.login = this.login.bind(this)
-		this.registered = this.registered.bind(this)
+    this.registered = this.registered.bind(this)
+    this.userInfo = this.userInfo.bind(this)
   }
   // 注册
   async registered (req, res, next) {
@@ -61,16 +62,22 @@ class User extends Base {
   async login (req, res, next) {
     const account = req.body.account
     const password = req.body.password
-    const type = req.body.type
+    const type = req.body.type || 'bbs'
     let search,
         token
     // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
     try {
       search = await userModel.login([account, password])
-      if (search.id) {
-        token = await this.setToken(search, [
-          {[type + '_token']: JWT.sign(search, 'BBS', {})},
-          search.id
+      let data = JSON.parse(JSON.stringify(search[0]))
+      for (let key in data) {
+        if (!data[key]) {
+          delete data[key]
+        }
+      }
+      if (data) {
+        token = await this.setToken(data, [
+          {[type + '_token']: JWT.sign(data, 'BBS', {}), user_id: data.id},
+          data.id
         ])
       }
     } catch (e) {
@@ -83,7 +90,7 @@ class User extends Base {
       return
     }
     // 查询为空即用户信息不正确，不为空说明查询成功
-    if (search === 0) {
+    if (search.length === 0) {
       res.json({
         code: 200,
         success: false,
@@ -93,8 +100,8 @@ class User extends Base {
       res.json({
         code: 200,
         success: true,
-        content: {data: search},
-        token,
+        content: {data: search[0]},
+        token: token[0] ? token[0][type + '_token'] : '',
         message: '登录成功'
       })
     }

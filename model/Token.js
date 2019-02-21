@@ -14,9 +14,9 @@ class Token{
     }
     // 用户不存在则创建一条数据，存在则将原来的token替换掉
     if (search.length === 0) {
-      sql = `INSERT INTO bbs_user set ? where user_id = ?`
+      sql = `INSERT INTO bbs_token set ?`
     } else {
-      sql = `UPDATE bbs_user set ? where user_id = ?`
+      sql = `UPDATE bbs_token set ? where user_id = ?`
     }
     return query(sql, params)
   }
