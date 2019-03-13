@@ -1,12 +1,12 @@
 var mysql = require('mysql');
 var pool = mysql.createPool({
-  host     : 'host',
+  host     : 'localhost',
   user     : 'root',
-  password : 'password',
+  password : '',
   port: '3306',
-  database : 'database'
+  database : 'LLLyh_BBS'
 });
-function query (sql) {
+function query (sql, param) {
   return new Promise((resolve, reject) => {
     pool.getConnection((err, conn) => {
       if (err) {
@@ -20,10 +20,14 @@ function query (sql) {
         }
       } else {
         // 得到结果
-        conn.query(sql, (queryErr, result) => {
+        conn.query(sql, param, (queryErr, result) => {
+          if (queryErr) {
+            reject(queryErr);
+          } else {
+            resolve(result);
+          }
           // 释放连接
           conn.release();
-          resolve({err: queryErr, result});
         })
       }
     })
