@@ -40,7 +40,7 @@
     "babel-plugin-transform-export-extensions": "^6.22.0"
   },
   "apidoc": {
-    "title": "接口文档",
+    "title": "BBS接口文档",
     "url": "http://localhost:1313"
   }
 }

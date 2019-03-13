@@ -31,7 +31,7 @@ class User extends Base {
         result = await userModel.registered({
           role_id: 1,
           account: req.body.account,
-          name: req.body.name,
+          name: req.body.name || req.body.account,
           password: req.body.password,
           type: 2,
           status: 1
@@ -180,11 +180,13 @@ class User extends Base {
   async getList (req, res, next) {
     let curPage = req.query.curPage,
         pageSize = req.query.pageSize,
+        create_user = req.query.userId,
         result,
-        length
+        length,
+        params = create_user ? [{create_user}] : ['id']
     try {
-      result = await userModel.getList(curPage, pageSize)
-      length = await userModel.getTotals()
+      result = await userModel.getList(curPage, pageSize, params)
+      length = await userModel.getTotals(params)
     } catch (e) {
     }
     res.json({

@@ -21,17 +21,17 @@ class User{
     const sql = `select * from bbs_user where ${key} = ?`
     return query(sql, params)
   }
-  async getList (curPage, pageSize) {
-    const sql = `select * from bbs_user limit ${(curPage - 1) * pageSize}, ${pageSize}`
-    return query(sql)
+  async getList (curPage, pageSize, params) {
+    const sql = `select * from bbs_user where ? limit ${(curPage - 1) * pageSize}, ${pageSize}`
+    return query(sql, params)
   }
   async getAll () {
     const sql = 'select * from bbs_user'
     return query(sql)
   }
-  async getTotals () {
-    const sql = 'select COUNT(*) as count from bbs_user'
-    return query(sql)
+  async getTotals (params) {
+    const sql = 'select COUNT(*) as count from bbs_user where ?'
+    return query(sql, params)
   }
 }
 
