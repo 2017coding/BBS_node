@@ -7,11 +7,18 @@ npm install
 # 运行项目
 npm run dev
 
-# 使用热更新打开node服务，主要用于调试
+# 运行node服务
+npm run dev
+
+# 使用热更新打开node服务，方便边开发边调试 (调试时用Debug)
 npm run hot
 
 # 更新接口后使用此命令重新生成api相关文档
 npm run apidoc
+
+# 使用forever 实现在服务器上关闭控制台时node服务正常访问
+npm run start # 启用node服务
+npm run stop  # 关闭node服务
 
 # 项目基本结构
 ├── config                     // 配置相关

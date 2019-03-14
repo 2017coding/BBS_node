@@ -140,19 +140,26 @@ class User extends Base {
   // 删除用户
   async delete (req, res, next) {
     let id = req.params.id
-    console.log(id)
+    if (id === 1) {
+      res.json({
+        code: 300,
+        success: false,
+        message: '无法删除管理员'
+      })
+      return
+    }
     const result = await userModel.delete(id)
     if (result.affectedRows) {
       res.json({
         code: 200,
         success: true,
-        message: '操作成功'
+        message: '删除成功'
       })
     } else {
       res.json({
         code: 200,
         success: true,
-        message: '操作失败'
+        message: '删除失败'
       })
     }
   }
@@ -180,13 +187,12 @@ class User extends Base {
   async getList (req, res, next) {
     let curPage = req.query.curPage,
         pageSize = req.query.pageSize,
-        create_user = req.query.userId,
+        create_user = req.query.create_user,
         result,
-        length,
-        params = create_user ? [{create_user}] : ['id']
+        length
     try {
-      result = await userModel.getList(curPage, pageSize, params)
-      length = await userModel.getTotals(params)
+      result = await userModel.getList(curPage, pageSize, [{create_user}])
+      length = await userModel.getTotals([{create_user}])
     } catch (e) {
     }
     res.json({

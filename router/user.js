@@ -11,7 +11,7 @@ const router = express.Router()
  * @apiParam (参数) {String} password 密码
  * @apiSampleRequest /api/user/registered
  * @apiGroup User
- * @apiVersion 1.0.0
+ * @apiVersion 0.0.1
  */
 router.post('/registered', User.registered)
 /**
@@ -23,7 +23,7 @@ router.post('/registered', User.registered)
  * @apiParam (参数) {String} password 密码
  * @apiSampleRequest /api/user/login
  * @apiGroup User
- * @apiVersion 1.0.0
+ * @apiVersion 0.0.1
  */
 router.post('/login', User.login)
 /**
@@ -34,7 +34,7 @@ router.post('/login', User.login)
  * @apiParam (参数) {Object} data
  * @apiSampleRequest /api/user/update
  * @apiGroup User
- * @apiVersion 1.0.0
+ * @apiVersion 0.0.1
  */
 router.put('/update', User.update)
 /**
@@ -45,7 +45,7 @@ router.put('/update', User.update)
  * @apiParam (path参数) {Number} id
  * @apiSampleRequest /api/user/delete
  * @apiGroup User
- * @apiVersion 1.0.0
+ * @apiVersion 0.0.1
  */
 router.delete('/delete/:id', User.delete)
 /**
@@ -56,7 +56,7 @@ router.delete('/delete/:id', User.delete)
  * @apiParam (path参数) {Number} id
  * @apiSampleRequest /api/user/userInfo
  * @apiGroup User
- * @apiVersion 1.0.0
+ * @apiVersion 0.0.1
  */
 router.get('/userInfo', User.userInfo)
 /**
@@ -69,7 +69,7 @@ router.get('/userInfo', User.userInfo)
  * @apiParam (path参数) {Number} create_user
  * @apiSampleRequest /api/user/getList
  * @apiGroup User
- * @apiVersion 1.0.0
+ * @apiVersion 0.0.1
  */
 router.get('/getList', User.getList)
 /**
@@ -79,7 +79,7 @@ router.get('/getList', User.getList)
  * @apiName getAll
  * @apiSampleRequest /api/user/getAll
  * @apiGroup User
- * @apiVersion 1.0.0
+ * @apiVersion 0.0.1
  */
 router.get('/getAll', User.getAll)
 
