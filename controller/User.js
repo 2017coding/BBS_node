@@ -140,7 +140,7 @@ class User extends Base {
   // 删除用户
   async delete (req, res, next) {
     let id = req.params.id
-    if (id === 1) {
+    if (id === 1 || id === '1') {
       res.json({
         code: 300,
         success: false,
