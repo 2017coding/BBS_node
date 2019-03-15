@@ -33,8 +33,8 @@ class User extends Base {
           account: req.body.account,
           name: req.body.name || req.body.account,
           password: req.body.password,
-          type: 2,
-          status: 1
+          type: req.body.type || 2,
+          status: req.body.status || 1
         })
       } catch (e) {
         res.json({
@@ -187,12 +187,14 @@ class User extends Base {
   async getList (req, res, next) {
     let curPage = req.query.curPage,
         pageSize = req.query.pageSize,
-        create_user = req.query.create_user,
+        params = JSON.parse(JSON.stringify(req.query)),
         result,
         length
+        delete params.curPage
+        delete params.pageSize
     try {
-      result = await userModel.getList(curPage, pageSize, [{create_user}])
-      length = await userModel.getTotals([{create_user}])
+      result = await userModel.getList(curPage, pageSize, [params])
+      length = await userModel.getTotals([params])
     } catch (e) {
     }
     res.json({
@@ -202,7 +204,7 @@ class User extends Base {
         result,
         curPage,
         pageSize,
-        totals: length ? length[0].count : ''
+        totals: length ? length[0].count : 0
       },
       message: '操作成功'
     })

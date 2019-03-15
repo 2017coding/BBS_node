@@ -107,17 +107,6 @@ CREATE TABLE `bbs_role_mod` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色功能关系表';
 
 -- ----------------------------
--- 角色功能关系表
--- ----------------------------
-DROP TABLE IF EXISTS `bbs_role_mod`;
-CREATE TABLE `bbs_role_mod` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `role_id` INT(11) NOT NULL,
-  `mod_id` INT(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色功能关系表';
-
--- ----------------------------
 -- 专栏表
 -- ----------------------------
 -- DROP TABLE IF EXISTS `bbs_column`;

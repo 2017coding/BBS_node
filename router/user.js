@@ -27,6 +27,18 @@ router.post('/registered', User.registered)
  */
 router.post('/login', User.login)
 /**
+ * 创建
+ * @api {POST} /api/user/create 创建
+ * @apiDescription 创建用户
+ * @apiName create
+ * @apiParam (参数) {String} account 账号
+ * @apiParam (参数) {String} password 密码
+ * @apiSampleRequest /api/user/create
+ * @apiGroup User
+ * @apiVersion 0.0.1
+ */
+router.post('/create', User.registered)
+/**
  * 编辑
  * @api {put} /api/user/update 编辑
  * @apiDescription 编辑
