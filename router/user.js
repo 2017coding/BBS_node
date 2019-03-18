@@ -1,5 +1,6 @@
 import express from 'express'
 import User from '../controller/User'
+import BaseValidate from '../validate/BaseValidate'
 const router = express.Router()
 
 /**
@@ -13,7 +14,7 @@ const router = express.Router()
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.post('/registered', User.registered)
+router.post('/registered', BaseValidate.check, User.registered)
 /**
  * 登录
  * @api {POST} /api/user/login 登录
@@ -54,7 +55,7 @@ router.put('/update', User.update)
  * @api {delete} /api/user/delete/:id 删除
  * @apiDescription 用户登录
  * @apiName delete
- * @apiParam (path参数) {Number} id
+ * @apiParam {Number} id
  * @apiSampleRequest /api/user/delete
  * @apiGroup User
  * @apiVersion 0.0.1
@@ -83,7 +84,7 @@ router.get('/userInfo', User.userInfo)
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.get('/getList', User.getList)
+router.get('/getList', BaseValidate.check, User.getList)
 /**
  * 获取所有用户
  * @api {get} /api/user/getAll 获取所有用户

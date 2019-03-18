@@ -1,7 +1,7 @@
 import express from 'express'
-import Base from '../controller/Base'
+import Authority from '../controller/Authority'
 const router = express.Router()
 
-router.get('/getToken', new Base().getToken)
+router.get('/getToken', Authority.getToken)
 
 export default router

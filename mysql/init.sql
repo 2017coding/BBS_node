@@ -24,9 +24,9 @@ CREATE TABLE `bbs_token` (
   `bbs_ip` VARCHAR(48) DEFAULT NULL,
   `phone_ip` VARCHAR(48) DEFAULT NULL,
   `admin_ip` VARCHAR(48) DEFAULT NULL,
-  `bbs_expire_time` int(11) DEFAULT NULL,
-  `phone_expire_time` int(11) DEFAULT NULL,
-  `admin_expire_time` int(11) DEFAULT NULL,
+  `bbs_expire_time` datetime DEFAULT NULL,
+  `phone_expire_time` datetime DEFAULT NULL,
+  `admin_expire_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='token表';
 
@@ -36,7 +36,7 @@ CREATE TABLE `bbs_token` (
 DROP TABLE IF EXISTS `bbs_user`;
 CREATE TABLE `bbs_user` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `role_id` INT(11) NOT NULL COMMENT '关联角色',
+  `role_id` INT(11) COMMENT '关联角色',
   `account` VARCHAR(48) NOT NULL COMMENT '用户账号',
   `name` VARCHAR(24) NOT NULL COMMENT '用户昵称',
   `password` VARCHAR(48) NOT NULL COMMENT '用户密码',
@@ -48,10 +48,10 @@ CREATE TABLE `bbs_user` (
   `qq` VARCHAR(24) DEFAULT NULL COMMENT 'qq',
   `email` VARCHAR(48) DEFAULT NULL COMMENT '邮箱',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
-  `create_user` int(11) DEFAULT NULL,
-  `create_time` int(11) DEFAULT NULL,
-  `update_user` int(11) DEFAULT NULL,
-  `update_time` int(11) DEFAULT NULL,
+  `create_user` datetime DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
@@ -66,10 +66,10 @@ CREATE TABLE `bbs_role` (
   `columns` VARCHAR(48) DEFAULT '1' COMMENT '专栏数量',
   `desc` VARCHAR(128) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
-  `create_user` int(11) DEFAULT NULL,
-  `create_time` int(11) DEFAULT NULL,
-  `update_user` int(11) DEFAULT NULL,
-  `update_time` int(11) DEFAULT NULL,
+  `create_user` datetime DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色表';
 
@@ -88,10 +88,10 @@ CREATE TABLE `bbs_mod` (
   `sort` INT(11) NOT NULL,
   `desc` VARCHAR(128) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
-  `create_user` int(11) DEFAULT NULL,
-  `create_time` int(11) DEFAULT NULL,
-  `update_user` int(11) DEFAULT NULL,
-  `update_time` int(11) DEFAULT NULL,
+  `create_user` datetime DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='模块表';
 
@@ -106,21 +106,21 @@ CREATE TABLE `bbs_role_mod` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色功能关系表';
 
--- ----------------------------
+----------------------------
 -- 专栏表
--- ----------------------------
--- DROP TABLE IF EXISTS `bbs_column`;
--- CREATE TABLE `bbs_column` (
---   `id` INT(11) NOT NULL AUTO_INCREMENT,
---   `name` INT(11) NOT NULL COMMENT '专栏名称',
---   `url` VARCHAR(128) NOT NULL COMMENT '专栏地址',
---   `desc` VARCHAR(128) DEFAULT NULL,
---   `sort` INT(11) NOT NULL,
---   `desc` VARCHAR(128) DEFAULT NULL,
---   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
---   `create_user` int(11) DEFAULT NULL,
---   `create_time` int(11) DEFAULT NULL,
---   `update_user` int(11) DEFAULT NULL,
---   `update_time` int(11) DEFAULT NULL,
---   PRIMARY KEY (`id`)
--- ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='专栏表';
+----------------------------
+DROP TABLE IF EXISTS `bbs_column`;
+CREATE TABLE `bbs_column` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` INT(11) NOT NULL COMMENT '专栏名称',
+  `url` VARCHAR(128) NOT NULL COMMENT '专栏地址',
+  `desc` VARCHAR(128) DEFAULT NULL,
+  `sort` INT(11) NOT NULL,
+  `desc` VARCHAR(128) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` datetime DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='专栏表';

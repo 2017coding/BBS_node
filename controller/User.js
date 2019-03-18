@@ -1,21 +1,27 @@
 import userModel from '../model/User'
-import Base from './Base'
+import Authority from './Authority'
+import Base from './Authority'
 import JWT from 'jsonwebtoken'
 import crypto from 'crypto'
 
-class User extends Base {
+class User {
   constructor () {
-    super();
-    this.login = this.login.bind(this)
-    this.registered = this.registered.bind(this)
-    this.userInfo = this.userInfo.bind(this)
+    // super()
+    // // 继承Base的方法
+    // this.registered = this.registered.bind(this)
+    // this.login = this.login.bind(this)
+    // this.update = this.update.bind(this)
+    // this.delete = this.delete.bind(this)
+    // this.userInfo = this.userInfo.bind(this)
+    // this.getList = this.getList.bind(this)
+    // this.getAll = this.getAll.bind(this)
   }
   // 注册
   async registered (req, res, next) {
     let search, result
     // 查询用户是否存在
     try {
-      search = await userModel.getRow('account', req.body.account)
+      search = await userModel.getRow({account: req.body.account})
     } catch (e) {
       res.json({
         code: 500,
@@ -75,7 +81,8 @@ class User extends Base {
         }
       }
       if (data) {
-        token = await this.setToken(data, [
+        data.type = type
+        token = await Authority.setToken(data, [
           {[type + '_token']: JWT.sign(data, 'BBS', {}), user_id: data.id},
           data.id
         ])
@@ -140,6 +147,7 @@ class User extends Base {
   // 删除用户
   async delete (req, res, next) {
     let id = req.params.id
+    // 不能删除管理员
     if (id === 1 || id === '1') {
       res.json({
         code: 300,
@@ -166,7 +174,7 @@ class User extends Base {
   // 获取用户信息
   async userInfo (req, res, next) {
     const id = req.query.id
-    const search = await userModel.getRow('id', [id])
+    const search = await userModel.getRow({id})
     if (search.length === 0) {
       res.json({
         code: 200,
@@ -185,6 +193,28 @@ class User extends Base {
   }
   // 查询用户列表
   async getList (req, res, next) {
+    // // 验证Token
+    // let checkToken
+    // try {
+    //   checkToken = await this.checkToken(req.headers.authorization)
+    // } catch (e) {
+    //   res.json({
+    //     code: 500,
+    //     success: false,
+    //     content: e,
+    //     message: '服务器内部错误'
+    //   })
+    //   return
+    // }
+    // if (checkToken && !checkToken.result) {
+    //   res.json({
+    //     code: 403,
+    //     success: false,
+    //     content: {},
+    //     message: checkToken.message
+    //   })
+    //   return
+    // }
     let curPage = req.query.curPage,
         pageSize = req.query.pageSize,
         params = JSON.parse(JSON.stringify(req.query)),
@@ -193,7 +223,7 @@ class User extends Base {
         delete params.curPage
         delete params.pageSize
     try {
-      result = await userModel.getList(curPage, pageSize, [params])
+      result = await userModel.getList(curPage, pageSize, params)
       length = await userModel.getTotals([params])
     } catch (e) {
     }

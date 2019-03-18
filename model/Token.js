@@ -1,14 +1,14 @@
 import query from '../mysql'
 
 class Token{
-  async getToken (key, params) {
-    const sql = `select * from bbs_token where ${key} = ?`
+  async getToken (params) {
+    const sql = `select * from bbs_token where ?`
     return query(sql, params)
   }
   async setToken (data, params) {
     let search, sql
     try {
-      search = await this.getToken('user_id', [data.id])
+      search = await this.getToken([{user_id: data.id}])
     } catch (e) {
       return e
     }
