@@ -20,7 +20,7 @@ class User extends BaseValidate{
           result = this.check(arr)
     if (!result.success) {
       res.json({
-        code: 200,
+        code: 20301,
         success: false,
         message: result.message
       })
@@ -38,7 +38,7 @@ class User extends BaseValidate{
           result = this.check(arr)
     if (!result.success) {
       res.json({
-        code: 200,
+        code: 20301,
         success: false,
         message: result.message
       })

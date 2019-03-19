@@ -1,20 +1,17 @@
 import userModel from '../model/User'
 import Authority from './Authority'
-import Base from './Authority'
 import JWT from 'jsonwebtoken'
 import crypto from 'crypto'
 
 class User {
   constructor () {
-    // super()
-    // // 继承Base的方法
-    // this.registered = this.registered.bind(this)
-    // this.login = this.login.bind(this)
-    // this.update = this.update.bind(this)
-    // this.delete = this.delete.bind(this)
-    // this.userInfo = this.userInfo.bind(this)
-    // this.getList = this.getList.bind(this)
-    // this.getAll = this.getAll.bind(this)
+    this.registered = this.registered.bind(this)
+    this.login = this.login.bind(this)
+    this.update = this.update.bind(this)
+    this.delete = this.delete.bind(this)
+    this.userInfo = this.userInfo.bind(this)
+    this.getList = this.getList.bind(this)
+    this.getAll = this.getAll.bind(this)
   }
   // 注册
   async registered (req, res, next) {
@@ -24,7 +21,7 @@ class User {
       search = await userModel.getRow({account: req.body.account})
     } catch (e) {
       res.json({
-        code: 500,
+        code: 20501,
         success: false,
         content: e,
         message: '服务器内部错误'
@@ -44,7 +41,7 @@ class User {
         })
       } catch (e) {
         res.json({
-          code: 500,
+          code: 20501,
           success: false,
           content: e,
           message: '服务器内部错误'
@@ -52,63 +49,76 @@ class User {
         return
       }
       res.json({
-        code: 200,
+        code: 20000,
         success: true,
         message: '注册成功'
       })
     } else {
       res.json({
-        code: 200,
-        success: false,
+        code: 20001,
+        success: true,
         message: '用户已存在'
       })
     }
   }
   // 登录
   async login (req, res, next) {
-    const account = req.body.account
-    const password = req.body.password
-    const type = req.body.type || 'bbs'
-    let search,
-        token
+    let account = req.body.account,
+          password = req.body.password,
+          type = req.body.type,
+          search, token, data
     // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
     try {
       search = await userModel.login([account, password])
-      let data = JSON.parse(JSON.stringify(search[0]))
+      data = JSON.parse(JSON.stringify(search[0]))
       for (let key in data) {
         if (!data[key]) {
           delete data[key]
         }
       }
       if (data) {
-        data.type = type
+        // TODO: 得到要设置的token类型和过期时间, 功能以后再做
+        switch (type) {
+          case 0:
+            data.type = 'phone'
+            data[data.type + 'expire_time'] = +new Date() + 60 * 60 * 24 * 180 * 1000 // 半年
+            break
+          case 1:
+            data.type = 'bbs'
+            data[data.type + 'expire_time'] = +new Date() + 60 * 60 * 24 * 60 * 1000 // 两个月
+            break
+          case 2:
+            data.type = 'admin'
+            data[data.type + 'expire_time'] = +new Date() + 60 * 60 * 24 * 1 * 1000 // 重新登录则上次的失效
+            break
+        }
         token = await Authority.setToken(data, [
-          {[type + '_token']: JWT.sign(data, 'BBS', {}), user_id: data.id},
+          {[data.type + '_token']: JWT.sign(data, 'BBS', {}), user_id: data.id},
           data.id
         ])
       }
     } catch (e) {
       res.json({
-        code: 200,
-        success: false,
+        code: 20501,
+        success: true,
         content: e,
-        message: '登录失败'
+        message: '服务器内部错误'
       })
       return
     }
     // 查询为空即用户信息不正确，不为空说明查询成功
     if (search.length === 0) {
       res.json({
-        code: 200,
-        success: false,
+        code: 20301,
+        success: true,
         message: '账号或密码错误'
       })
     } else {
       res.json({
-        code: 200,
+        code: 20000,
         success: true,
         content: {data: search[0]},
-        token: token[0] ? token[0][type + '_token'] : '',
+        token: token[0] ? token[0][data.type + '_token'] : '',
         message: '登录成功'
       })
     }
@@ -123,22 +133,22 @@ class User {
       result = await userModel.update([data, id])
     } catch (e) {
       res.json({
-        code: 500,
+        code: 20501,
         success: false,
         content: e,
-        message: '编辑失败'
+        message: '服务器内部错误'
       })
       return
     }
     if (result.affectedRows) {
       res.json({
-        code: 200,
+        code: 20000,
         success: true,
         message: '编辑成功'
       })
     } else {
       res.json({
-        code: 200,
+        code: 20001,
         success: true,
         message: '编辑失败'
       })
@@ -150,8 +160,8 @@ class User {
     // 不能删除管理员
     if (id === 1 || id === '1') {
       res.json({
-        code: 300,
-        success: false,
+        code: 20202,
+        success: true,
         message: '无法删除管理员'
       })
       return
@@ -159,13 +169,13 @@ class User {
     const result = await userModel.delete(id)
     if (result.affectedRows) {
       res.json({
-        code: 200,
+        code: 20000,
         success: true,
         message: '删除成功'
       })
     } else {
       res.json({
-        code: 200,
+        code: 20001,
         success: true,
         message: '删除失败'
       })
@@ -177,14 +187,14 @@ class User {
     const search = await userModel.getRow({id})
     if (search.length === 0) {
       res.json({
-        code: 200,
+        code: 20401,
         success: false,
         content: search,
         message: '用户不存在'
       })
     } else {
       res.json({
-        code: 200,
+        code: 20000,
         success: true,
         content: search,
         message: '操作成功'
@@ -204,9 +214,16 @@ class User {
       result = await userModel.getList(curPage, pageSize, params)
       length = await userModel.getTotals([params])
     } catch (e) {
+      res.json({
+        code: 20501,
+        success: false,
+        content: e,
+        message: '服务器内部错误'
+      })
+      return
     }
     res.json({
-      code: 200,
+      code: 20000,
       success: true,
       content: {
         result,
@@ -219,9 +236,20 @@ class User {
   }
   // 获取所有用户
   async getAll (req, res, next) {
-    const result = await userModel.getAll()
+    let result
+    try {
+      await userModel.getAll()
+    } catch (e) {
+      res.json({
+        code: 20501,
+        success: false,
+        content: e,
+        message: '服务器内部错误'
+      })
+      return
+    }
     res.json({
-      code: 200,
+      code: 20000,
       success: true,
       content: result,
       message: '操作成功'

@@ -1,6 +1,6 @@
 .DS_Store
 node_modules/
-/dist/
+/log/*.log
 /public/apidoc
 /mysql/index.js
 npm-debug.log*

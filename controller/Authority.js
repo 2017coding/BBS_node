@@ -22,7 +22,7 @@ class Authority{
     // token不存在
     if (!token) {
       res.json({
-        code: 500,
+        code: 20201,
         success: false,
         content: {},
         message: '无访问权限'
@@ -43,7 +43,7 @@ class Authority{
     // 验证token格式失败
     if (!success) {
       res.json({
-        code: 500,
+        code: 20201,
         success: false,
         content: {},
         message: '无效的token'
@@ -55,7 +55,7 @@ class Authority{
       search = await this.getToken([{[content.type + '_token']: token}])
     } catch (e) {
       res.json({
-        code: 500,
+        code: 20201,
         success: false,
         content: {},
         message: '服务器内部错误'
@@ -65,18 +65,18 @@ class Authority{
     // 验证Token不存在或者Token过期
     if (search.length === 0) {
       res.json({
-        code: 500,
+        code: 20201,
         success: false,
         content: {},
         message: '无访问权限'
       })
       return
-    } else if ((search.bbs_expire_time + 30 * 60 * 60 * 24 * 1000) < +new Date()) {
+    } else if ((search[content.type + '_expire_time']) < +new Date()) {
       res.json({
-        code: 500,
+        code: 20201,
         success: false,
         content: {},
-        message: '无效token'
+        message: 'token过期'
       })
       return
     }
