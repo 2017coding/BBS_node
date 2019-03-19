@@ -1,20 +1,17 @@
-import TokenModel from '../model/Token'
+import validate from '../lib/js/validate'
+
 class BaseValidate{
-  async check (req, res, next) {
-     // 登录和注册页面不作限制
-     if (req.path === '/login' || req.path === 'registered') {
-      next()
-      return
+  check (arr) {
+    let success = true, message
+    for (let item of arr) {
+      if (!validate(item).success) {
+        message = validate(item).message
+        success = false
+        return {success, message}
+      }
     }
-    res.json({
-      code: 500,
-      success: false,
-      content: {},
-      message: '验证失败'
-    })
-    return
-    next()
+    return {success, message}
   }
 }
 
-export default new BaseValidate()
+export default BaseValidate

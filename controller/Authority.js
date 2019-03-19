@@ -2,6 +2,11 @@ import TokenModel from '../model/Token'
 import JWT from 'jsonwebtoken'
 
 class Authority{
+  constructor () {
+    this.checkToken = this.checkToken.bind(this)
+    this.setToken = this.setToken.bind(this)
+    this.getToken = this.getToken.bind(this)
+  }
   // 验证Token令牌
   async checkToken (req, res, next) {
     // 登录和注册页面不作限制
@@ -11,8 +16,9 @@ class Authority{
     }
     let token = req.headers.authorization,
         message = '',
-        result = false,
-        content = {}
+        success = false,
+        content = {},
+        search
     // token不存在
     if (!token) {
       res.json({
@@ -26,16 +32,16 @@ class Authority{
     // 验证 Token
     JWT.verify(token, 'BBS', (error, decoded) => {
       if (error) {
-        result = false
+        success = false
         message = 'token验证失败'
         return
       }
-      result = true
+      success = true
       content = decoded
       message = '验证tonken成功'
     })
     // 验证token格式失败
-    if (!result) {
+    if (!success) {
       res.json({
         code: 500,
         success: false,

@@ -193,28 +193,6 @@ class User {
   }
   // 查询用户列表
   async getList (req, res, next) {
-    // // 验证Token
-    // let checkToken
-    // try {
-    //   checkToken = await this.checkToken(req.headers.authorization)
-    // } catch (e) {
-    //   res.json({
-    //     code: 500,
-    //     success: false,
-    //     content: e,
-    //     message: '服务器内部错误'
-    //   })
-    //   return
-    // }
-    // if (checkToken && !checkToken.result) {
-    //   res.json({
-    //     code: 403,
-    //     success: false,
-    //     content: {},
-    //     message: checkToken.message
-    //   })
-    //   return
-    // }
     let curPage = req.query.curPage,
         pageSize = req.query.pageSize,
         params = JSON.parse(JSON.stringify(req.query)),

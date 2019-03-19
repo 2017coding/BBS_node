@@ -1,6 +1,6 @@
 import express from 'express'
 import User from '../controller/User'
-import BaseValidate from '../validate/BaseValidate'
+import ValidateUser from '../validate/User'
 const router = express.Router()
 
 /**
@@ -14,7 +14,7 @@ const router = express.Router()
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.post('/registered', BaseValidate.check, User.registered)
+router.post('/registered', User.registered)
 /**
  * 登录
  * @api {POST} /api/user/login 登录
@@ -26,7 +26,7 @@ router.post('/registered', BaseValidate.check, User.registered)
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.post('/login', User.login)
+router.post('/login', ValidateUser.login, User.login)
 /**
  * 创建
  * @api {POST} /api/user/create 创建
@@ -84,7 +84,7 @@ router.get('/userInfo', User.userInfo)
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.get('/getList', BaseValidate.check, User.getList)
+router.get('/getList', User.getList)
 /**
  * 获取所有用户
  * @api {get} /api/user/getAll 获取所有用户
