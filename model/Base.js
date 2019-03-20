@@ -1,24 +1,25 @@
 import mysql from 'mysql'
 
 class Base{
-  getStr (type, arr) {
+  getStr (type, obj) {
     let str = ''
     switch (type) {
       case 'set':
-        for (let item of arr) {
+        for (let key in obj) {
           if (str) {
-            str += `, ${item.key} = ${mysql.escape(item.value)}`
+            str += `, ${key} = ${mysql.escape(obj[key])} `
           } else {
-            str += `${item.key} = ${mysql.escape(item.value)}`
+            str += `${key} = ${mysql.escape(obj[key])} `
           }
         }
         return str
       case 'get':
-        for (let item of arr) {
-          if (item.type === 'like') {
-            str += `and ${item.key} like %${mysql.escape(item.value)}%`
-          } else {
-            str += `and ${item.key} = ${mysql.escape(item.value)}`
+        // TODO: 暂时只对一般条件查询和模糊查询处理
+        for (let key in obj) {
+          if (obj['like'] && obj['like'].indexOf(key) !== -1) {
+            str += `and ${key} like ${mysql.escape('%' + obj[key] + '%')} `
+          } else if (key !== 'like') {
+            str += `and ${key} = ${mysql.escape(obj[key])} `
           }
         }
         return str

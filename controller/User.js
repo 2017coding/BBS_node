@@ -18,7 +18,7 @@ class User {
     let search, result
     // 查询用户是否存在
     try {
-      search = await userModel.getRow({account: req.body.account})
+      search = await userModel.getRow({get: {account: req.body.account}})
     } catch (e) {
       res.json({
         code: 20501,
@@ -32,12 +32,14 @@ class User {
     if (search.length === 0) {
       try {
         result = await userModel.registered({
-          role_id: 1,
-          account: req.body.account,
-          name: req.body.name || req.body.account,
-          password: req.body.password,
-          type: req.body.type || 2,
-          status: req.body.status || 1
+          set: {
+            role_id: 1,
+            account: req.body.account,
+            name: req.body.name || req.body.account,
+            password: req.body.password,
+            type: req.body.type || 2,
+            status: req.body.status || 1
+          }
         })
       } catch (e) {
         res.json({
@@ -56,7 +58,7 @@ class User {
     } else {
       res.json({
         code: 20001,
-        success: true,
+        success: false,
         message: '用户已存在'
       })
     }
@@ -69,7 +71,7 @@ class User {
           search, token, data
     // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
     try {
-      search = await userModel.login([account, password])
+      search = await userModel.login({get: {account, password}})
       data = JSON.parse(JSON.stringify(search[0]))
       for (let key in data) {
         if (!data[key]) {
@@ -100,7 +102,7 @@ class User {
     } catch (e) {
       res.json({
         code: 20501,
-        success: true,
+        success: false,
         content: e,
         message: '服务器内部错误'
       })
@@ -110,7 +112,7 @@ class User {
     if (search.length === 0) {
       res.json({
         code: 20301,
-        success: true,
+        success: false,
         message: '账号或密码错误'
       })
     } else {
@@ -149,7 +151,7 @@ class User {
     } else {
       res.json({
         code: 20001,
-        success: true,
+        success: false,
         message: '编辑失败'
       })
     }
@@ -161,7 +163,7 @@ class User {
     if (id === 1 || id === '1') {
       res.json({
         code: 20202,
-        success: true,
+        success: false,
         message: '无法删除管理员'
       })
       return
@@ -210,9 +212,15 @@ class User {
         length
         delete params.curPage
         delete params.pageSize
+        // 设置非模糊查询字段
+        for (let key in params) {
+          if (key !== 'id' || key !== 'create_user') {
+            params.like = [...params.like || [], key]
+          }
+        }
     try {
-      result = await userModel.getList(curPage, pageSize, params)
-      length = await userModel.getTotals(params)
+      result = await userModel.getList(curPage, pageSize, {get: params})
+      length = await userModel.getTotals({get: params})
     } catch (e) {
       res.json({
         code: 20501,

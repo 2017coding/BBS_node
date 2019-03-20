@@ -52,7 +52,7 @@ class Authority{
     }
     // 查询数据库中该token的相关信息
     try {
-      search = await this.getToken([{[content.type + '_token']: token}])
+      search = await this.getToken({get: {[content.type + '_token']: token}})
     } catch (e) {
       res.json({
         code: 20201,
@@ -93,7 +93,7 @@ class Authority{
     if (result.affectedRows) {
 
     }
-    return await this.getToken([{user_id: params[1]}])
+    return await this.getToken({get: {user_id: params[1]}})
   }
   // 获取Token令牌
   async getToken (params) {
