@@ -212,7 +212,7 @@ class User {
         delete params.pageSize
     try {
       result = await userModel.getList(curPage, pageSize, params)
-      length = await userModel.getTotals([params])
+      length = await userModel.getTotals(params)
     } catch (e) {
       res.json({
         code: 20501,

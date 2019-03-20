@@ -1,37 +1,48 @@
-import mysql from 'mysql'
 import query from '../mysql'
+import Base from './Base'
 
-class User{
-  async registered (params) {
-    const sql = `INSERT INTO bbs_user set ${mysql.escape(params)}`
+class User extends Base{
+  constructor () {
+    super()
+    this.registered = this.registered.bind(this)
+    this.login = this.login.bind(this)
+    this.update = this.update.bind(this)
+    this.delete = this.delete.bind(this)
+    this.getRow = this.getRow.bind(this)
+    this.getList = this.getList.bind(this)
+    this.getAll = this.getAll.bind(this)
+    this.getTotals = this.getTotals.bind(this)
+  }
+  async registered (obj) {
+    const sql = `INSERT INTO bbs_user set ${this.getStr('set', obj.set)}`
     return query(sql)
   }
-  async login (params) {
-    const sql = `select * from bbs_user where account = ? and password = ?`
-    return query(sql, params)
-  }
-  async update (params) {
-    const sql = 'UPDATE bbs_user set ? where id = ?'
+  async login (obj) {
+    const sql = `select * from bbs_user where 1 = 1 ${this.getStr('get', obj.get)}`
     return query(sql)
   }
-  async delete (params) {
-    const sql = 'DELETE from bbs_user where id = ?'
+  async update (obj) {
+    const sql = `UPDATE bbs_user set ${this.getStr('set', obj.set)} where 1 = 1 ${this.getStr('get', obj.get)}`
     return query(sql)
   }
-  async getRow (params) {
-    const sql = `select * from bbs_user where ${mysql.escape(params)}`
+  async delete (obj) {
+    const sql = `DELETE from bbs_user where 1 = 1 ${this.getStr('get', obj.get)}`
     return query(sql)
   }
-  async getList (curPage, pageSize, params) {
-    const sql = `select * from bbs_user where 1=1 ${mysql.escape(params)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
+  async getRow (obj) {
+    const sql = `select * from bbs_user where 1 = 1 ${this.getStr('get', obj.get)}`
+    return query(sql)
+  }
+  async getList (curPage, pageSize, obj) {
+    const sql = `select * from bbs_user where 1 = 1 ${this.getStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
     return query(sql)
   }
   async getAll () {
-    const sql = 'select * from bbs_user'
+    const sql = `select * from bbs_user`
     return query(sql)
   }
-  async getTotals (params) {
-    const sql = 'select COUNT(*) as count from bbs_user where ?'
+  async getTotals (obj) {
+    const sql = `select COUNT(*) as count from bbs_user where 1 = 1 ${this.getStr('get', obj.get)}`
     return query(sql)
   }
 }

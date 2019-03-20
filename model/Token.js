@@ -1,9 +1,15 @@
 import query from '../mysql'
+import Base from './Base'
 
-class Token{
-  async getToken (params) {
-    const sql = `select * from bbs_token where ?`
-    return query(sql, params)
+class Token extends Base{
+  constructor () {
+    super()
+    this.getToken = this.getToken.bind(this)
+    this.setToken = this.setToken.bind(this)
+  }
+  async getToken (obj) {
+    const sql = `select * from bbs_token where 1 = 1 ${this.getStr('get', obj.get)}`
+    return query(sql)
   }
   async setToken (data, params) {
     let search, sql
