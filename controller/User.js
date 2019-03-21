@@ -1,10 +1,12 @@
 import userModel from '../model/User'
 import Authority from './Authority'
+import Base from './Base'
 import JWT from 'jsonwebtoken'
 import crypto from 'crypto'
 
-class User {
+class User extends Base {
   constructor () {
+    super()
     this.registered = this.registered.bind(this)
     this.login = this.login.bind(this)
     this.update = this.update.bind(this)
@@ -31,15 +33,14 @@ class User {
     // 用户不存在创建用户，存在则提示
     if (search.length === 0) {
       try {
+        let data = JSON.parse(JSON.stringify(req.body)),
+            userInfo = this.getUserInfo(req)
+        // TODO: 添加时有创建人, 注册时没有
+        // 参数处理
+        data.create_user = userInfo.id,
+        data.create_time = new Date()
         result = await userModel.registered({
-          set: {
-            role_id: 1,
-            account: req.body.account,
-            name: req.body.name || req.body.account,
-            password: req.body.password,
-            type: req.body.type || 2,
-            status: req.body.status || 1
-          }
+          set: data
         })
       } catch (e) {
         res.json({
@@ -68,7 +69,7 @@ class User {
     let account = req.body.account,
           password = req.body.password,
           type = req.body.type,
-          search, token, data
+          search, token = [], data
     // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
     try {
       search = await userModel.login({get: {account, password}})
@@ -94,10 +95,21 @@ class User {
             data[data.type + 'expire_time'] = +new Date() + 60 * 60 * 24 * 1 * 1000 // 重新登录则上次的失效
             break
         }
-        token = await Authority.setToken(data, [
-          {[data.type + '_token']: JWT.sign(data, 'BBS', {}), user_id: data.id},
-          data.id
-        ])
+        try {
+          // TODO: Token过期了重新设置，没过期就获取
+          token = await Authority.setToken(data, {
+            set: {[data.type + '_token']: JWT.sign(data, 'BBS', {}), user_id: data.id},
+            get: {user_id: data.id}
+          })
+        } catch (e) {
+          res.json({
+            code: 20501,
+            success: false,
+            content: e,
+            message: '服务器内部错误'
+          })
+          return
+        }
       }
     } catch (e) {
       res.json({
@@ -129,10 +141,14 @@ class User {
   async update (req, res, next) {
     let id = req.body.id,
         data = JSON.parse(JSON.stringify(req.body)),
-        result
+        result,
+        userInfo = this.getUserInfo(req)
+        // 参数处理
+        data.update_user = userInfo.id
+        data.update_time = new Date()
         delete data.id
     try {
-      result = await userModel.update([data, id])
+      result = await userModel.update({set: data, get: {id}})
     } catch (e) {
       res.json({
         code: 20501,
@@ -168,7 +184,7 @@ class User {
       })
       return
     }
-    const result = await userModel.delete(id)
+    const result = await userModel.delete({get: {id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -186,7 +202,7 @@ class User {
   // 获取用户信息
   async userInfo (req, res, next) {
     const id = req.query.id
-    const search = await userModel.getRow({id})
+    const search = await userModel.getRow({get: {id}})
     if (search.length === 0) {
       res.json({
         code: 20401,

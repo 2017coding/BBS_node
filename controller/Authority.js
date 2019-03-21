@@ -83,21 +83,21 @@ class Authority{
     next()
   }
   // 设置Token令牌
-  async setToken (data, params) {
+  async setToken (data, obj) {
     let result
     try {
-      result = await TokenModel.setToken(data, params)
+      result = await TokenModel.setToken(data, obj)
     } catch (e) {
       return e
     }
     if (result.affectedRows) {
 
     }
-    return await this.getToken({get: {user_id: params[1]}})
+    return await this.getToken(obj)
   }
   // 获取Token令牌
-  async getToken (params) {
-    return TokenModel.getToken(params)
+  async getToken (obj) {
+    return TokenModel.getToken(obj)
   }
 }
 

@@ -1,7 +1,7 @@
 import mysql from 'mysql'
 
 class Base{
-  getStr (type, obj) {
+  joinStr (type, obj) {
     let str = ''
     switch (type) {
       case 'set':

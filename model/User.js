@@ -14,27 +14,32 @@ class User extends Base{
     this.getTotals = this.getTotals.bind(this)
   }
   async registered (obj) {
-    const sql = `INSERT INTO bbs_user set ${this.getStr('set', obj.set)}`
+    const sql = `INSERT INTO bbs_user set ${this.joinStr('set', obj.set)}`
     return query(sql)
   }
   async login (obj) {
-    const sql = `select * from bbs_user where 1 = 1 ${this.getStr('get', obj.get)}`
+    const sql = `select * from bbs_user where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async update (obj) {
-    const sql = `UPDATE bbs_user set ${this.getStr('set', obj.set)} where 1 = 1 ${this.getStr('get', obj.get)}`
+    const sql = `UPDATE bbs_user set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async delete (obj) {
-    const sql = `DELETE from bbs_user where 1 = 1 ${this.getStr('get', obj.get)}`
+    const sql = `DELETE from bbs_user where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async getRow (obj) {
-    const sql = `select * from bbs_user where 1 = 1 ${this.getStr('get', obj.get)}`
+    const sql = `select * from bbs_user where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async getList (curPage, pageSize, obj) {
-    const sql = `select * from bbs_user where 1 = 1 ${this.getStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
+    // const sql = `select a.*, b.account as create_user_name, c.account as update_user_name from bbs_user as a 
+    //             left join bbs_user as b on a.id = b.create_user
+    //             left join bbs_user as c on a.id = c.update_user
+    //             where 1 = 1 ${this.joinStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
+    const sql = `select * from bbs_user
+                where 1 = 1 ${this.joinStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
     return query(sql)
   }
   async getAll () {
@@ -42,7 +47,7 @@ class User extends Base{
     return query(sql)
   }
   async getTotals (obj) {
-    const sql = `select COUNT(*) as count from bbs_user where 1 = 1 ${this.getStr('get', obj.get)}`
+    const sql = `select COUNT(*) as count from bbs_user where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
 }
