@@ -66,13 +66,13 @@ class User extends Base {
     // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
     try {
       search = await userModel.login({get: {account, password}})
-      data = search[0]
-      for (let key in data) {
-        if (!data[key]) {
-          delete data[key]
-        }
-      }
+      data = search[0] ? JSON.parse(JSON.stringify(search[0])) : {}
       if (data) {
+        for (let key in data) {
+          if (!data[key]) {
+            delete data[key]
+          }
+        }
         // TODO: 得到要设置的token类型和过期时间, 功能以后再做
         switch (type) {
           case 0:
