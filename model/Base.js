@@ -6,20 +6,20 @@ class Base{
     switch (type) {
       case 'set':
         for (let key in obj) {
-          if (str) {
-            str += `, ${key} = ${mysql.escape(obj[key])} `
-          } else {
-            str += `${key} = ${mysql.escape(obj[key])} `
-          }
+          let separated = str ? ',' : ''
+          // str += `${separated} ${key} = ${mysql.escape(obj[key])} `
+          str +=  separated + '`' + key + '` = ' + mysql.escape(obj[key])
         }
         return str
       case 'get':
         // TODO: 暂时只对一般条件查询和模糊查询处理
         for (let key in obj) {
           if (obj['like'] && obj['like'].indexOf(key) !== -1) {
-            str += `and ${key} like ${mysql.escape('%' + obj[key] + '%')} `
+            // str += `and ${key} like ${mysql.escape('%' + obj[key] + '%')} `
+            str += 'and `' + key + '` like' + mysql.escape('%' + obj[key] + '%')
           } else if (key !== 'like') {
-            str += `and ${key} = ${mysql.escape(obj[key])} `
+            // str += `and ${key} = ${mysql.escape(obj[key])} `
+            str += 'and `' + key + '` =' + mysql.escape(obj[key])
           }
         }
         return str

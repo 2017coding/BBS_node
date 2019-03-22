@@ -6,6 +6,7 @@ class Log extends Base{
     super()
     this.writeLog = this.writeLog.bind(this)
     this.getList = this.getList.bind(this)
+    this.getTotals = this.getTotals.bind(this)
   }
   async writeLog (obj) {
     const sql = `INSERT INTO bbs_log set ${this.joinStr('set', obj.set)}`

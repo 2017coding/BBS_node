@@ -66,7 +66,7 @@ class User extends Base {
     // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
     try {
       search = await userModel.login({get: {account, password}})
-      data = JSON.parse(JSON.stringify(search[0]))
+      data = search[0]
       for (let key in data) {
         if (!data[key]) {
           delete data[key]
