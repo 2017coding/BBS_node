@@ -10,6 +10,7 @@ const router = express.Router()
  * @apiName registered
  * @apiParam (参数) {String} account 账号
  * @apiParam (参数) {String} password 密码
+ * @apiParam (参数) {Number} type 用户类型: 0: 手机注册 1: 论坛注册 2: 管理平台添加
  * @apiSampleRequest /api/user/registered
  * @apiGroup User
  * @apiVersion 0.0.1
@@ -22,6 +23,7 @@ router.post('/registered', ValidateUser.registered, User.registered)
  * @apiName login
  * @apiParam (参数) {String} account 账号
  * @apiParam (参数) {String} password 密码
+ * @apiParam (参数) {Number} type 用户类型: 0: 手机注册 1: 论坛注册 2: 管理平台添加
  * @apiSampleRequest /api/user/login
  * @apiGroup User
  * @apiVersion 0.0.1
@@ -43,7 +45,16 @@ router.post('/loginOut', User.loginOut)
  * @apiDescription 创建用户
  * @apiName create
  * @apiParam (参数) {String} account 账号
+ * @apiParam (参数) {String} name 昵称
  * @apiParam (参数) {String} password 密码
+ * @apiParam (参数) {Number} type 用户类型: 0: 手机注册 1: 论坛注册 2: 管理平台添加
+ * @apiParam (参数) {Number} sex 性别: 0:男 1:女
+ * @apiParam (参数) {String} avatar 头像
+ * @apiParam (参数) {String} phone 手机号
+ * @apiParam (参数) {String} wechat 微信
+ * @apiParam (参数) {String} qq qq
+ * @apiParam (参数) {String} email email
+ * @apiParam (参数) {String} status 状态: 0：停用，1：启用(默认为1)
  * @apiSampleRequest /api/user/create
  * @apiGroup User
  * @apiVersion 0.0.1
@@ -54,7 +65,19 @@ router.post('/create', ValidateUser.create, User.registered)
  * @api {put} /api/user/update 编辑
  * @apiDescription 编辑
  * @apiName update
- * @apiParam (参数) {Object} data
+ * @apiParam (参数) {Number} id
+ * @apiParam (参数) {Number} role_id 关联角色
+ * @apiParam (参数) {String} account 账号
+ * @apiParam (参数) {String} name 昵称
+ * @apiParam (参数) {String} password 密码
+ * @apiParam (参数) {Number} type 用户类型: 0: 手机注册 1: 论坛注册 2: 管理平台添加
+ * @apiParam (参数) {Number} sex 性别: 0:男 1:女
+ * @apiParam (参数) {String} avatar 头像
+ * @apiParam (参数) {String} phone 手机号
+ * @apiParam (参数) {String} wechat 微信
+ * @apiParam (参数) {String} qq qq
+ * @apiParam (参数) {String} email email
+ * @apiParam (参数) {String} status 状态: 0：停用，1：启用(默认为1)
  * @apiSampleRequest /api/user/update
  * @apiGroup User
  * @apiVersion 0.0.1
@@ -91,7 +114,7 @@ router.get('/userInfo', User.userInfo)
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.get('/getRow', User.getRow)
+router.get('/getRow/:id', ValidateUser.getRow, User.getRow)
 /**
  * 获取用户列表
  * @api {get} /api/user/getList 获取用户列表
@@ -99,6 +122,8 @@ router.get('/getRow', User.getRow)
  * @apiName getList
  * @apiParam (path参数) {Number} curPage
  * @apiParam (path参数) {Number} pageSize
+ * @apiParam (参数) {String} account 账号
+ * @apiParam (参数) {String} name 昵称
  * @apiParam (path参数) {Number} create_user
  * @apiSampleRequest /api/user/getList
  * @apiGroup User

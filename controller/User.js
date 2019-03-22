@@ -1,5 +1,5 @@
 import Base from './Base'
-import userModel from '../model/User'
+import UserModel from '../model/User'
 import logModel from '../model/Log'
 import Authority from './Authority'
 import JWT from 'jsonwebtoken'
@@ -23,7 +23,7 @@ class User extends Base {
     let search, result
     // 查询用户是否存在
     try {
-      search = await userModel.getRow({get: {account: req.body.account}})
+      search = await UserModel.getRow({get: {account: req.body.account}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -37,7 +37,7 @@ class User extends Base {
         // 参数处理
         data.create_user = userInfo.id,
         data.create_time = new Date()
-        result = await userModel.registered({
+        result = await UserModel.registered({
           set: data
         })
       } catch (e) {
@@ -65,7 +65,7 @@ class User extends Base {
           search, token = [], data
     // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
     try {
-      search = await userModel.login({get: {account, password}})
+      search = await UserModel.login({get: {account, password}})
       data = search[0] ? JSON.parse(JSON.stringify(search[0])) : {}
       if (data) {
         for (let key in data) {
@@ -191,7 +191,7 @@ class User extends Base {
         data.update_time = new Date()
         delete data.id
     try {
-      result = await userModel.update({set: data, get: {id}})
+      result = await UserModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -212,8 +212,7 @@ class User extends Base {
   }
   // 删除用户
   async delete (req, res, next) {
-    let id = req.params.id
-    const result = await userModel.delete({get: {id}})
+    const result = await UserModel.delete({get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -231,7 +230,7 @@ class User extends Base {
   // 获取用户信息
   async userInfo (req, res, next) {
     const userInfo = this.getUserInfo(req),
-          search = await userModel.getRow({get: {id: userInfo.id}})
+          search = await UserModel.getRow({get: {id: userInfo.id}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -250,7 +249,7 @@ class User extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await userModel.getRow({get: req.query})
+    const search = await UserModel.getRow({get: {id: req.params.id}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -284,8 +283,8 @@ class User extends Base {
           }
         }
     try {
-      result = await userModel.getList(curPage, pageSize, {get: params})
-      length = await userModel.getTotals({get: params})
+      result = await UserModel.getList(curPage, pageSize, {get: params})
+      length = await UserModel.getTotals({get: params})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -306,7 +305,7 @@ class User extends Base {
   async getAll (req, res, next) {
     let result
     try {
-      await userModel.getAll()
+      await UserModel.getAll()
     } catch (e) {
       this.handleException(req, res, e)
       return

@@ -124,6 +124,22 @@ class User extends BaseValidate{
   async userInfo (req, res, next) {
     next()
   }
+  async getRow (req, res, next) {
+    const ID = req.params.id,
+          arr = [
+            {label: 'ID', value: ID, rules: ['notnull']}
+          ],
+          result = this.check(arr)
+    if (!result.success) {
+      res.json({
+        code: 20301,
+        success: false,
+        message: result.message
+      })
+      return
+    }    
+    next()
+  }
   async getAll (req, res, next) {
     next()
   }

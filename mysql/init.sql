@@ -180,6 +180,18 @@ CREATE TABLE `bbs_file` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文件表';
 
 ----------------------------
+-- 区域表
+----------------------------
+DROP TABLE IF EXISTS `bbs_area`;
+CREATE TABLE `bbs_area` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(48) NOT NULL COMMENT '区域名称',
+  `pid` INT(11) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='区域表';
+
+----------------------------
 -- 日志表
 ----------------------------
 DROP TABLE IF EXISTS `bbs_log`;
