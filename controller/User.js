@@ -1,6 +1,6 @@
+import Base from './Base'
 import userModel from '../model/User'
 import Authority from './Authority'
-import Base from './Base'
 import JWT from 'jsonwebtoken'
 import crypto from 'crypto'
 
@@ -175,15 +175,6 @@ class User extends Base {
   // 删除用户
   async delete (req, res, next) {
     let id = req.params.id
-    // 不能删除管理员
-    if (id === 1 || id === '1') {
-      res.json({
-        code: 20202,
-        success: false,
-        message: '无法删除管理员'
-      })
-      return
-    }
     const result = await userModel.delete({get: {id}})
     if (result.affectedRows) {
       res.json({

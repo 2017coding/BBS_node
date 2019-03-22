@@ -1,8 +1,8 @@
-var mysql = require('mysql');
+import mysql from 'mysql'
 var pool = mysql.createPool({
   host     : 'localhost',
   user     : 'root',
-  password : '',
+  password : '123456',
   port: '3306',
   database : 'LLLyh_BBS'
 });

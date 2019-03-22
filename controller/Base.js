@@ -6,9 +6,11 @@ class Base{
   getUserInfo (req) {
     let userInfo = {}
     JWT.verify(req.headers.authorization, 'BBS', (error, decoded) => {
+      if (error) {
+        return {}
+      }
       userInfo = decoded
     })
-
     return userInfo
   }
 }

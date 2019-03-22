@@ -48,9 +48,9 @@ CREATE TABLE `bbs_user` (
   `qq` VARCHAR(24) DEFAULT NULL COMMENT 'qq',
   `email` VARCHAR(48) DEFAULT NULL COMMENT '邮箱',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
-  `create_user` datetime DEFAULT NULL,
+  `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
-  `update_user` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
@@ -66,12 +66,23 @@ CREATE TABLE `bbs_role` (
   `columns` VARCHAR(48) DEFAULT '1' COMMENT '专栏数量',
   `desc` VARCHAR(128) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
-  `create_user` datetime DEFAULT NULL,
+  `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
-  `update_user` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色表';
+
+-- ----------------------------
+-- 角色功能关系表
+-- ----------------------------
+DROP TABLE IF EXISTS `bbs_role_mod`;
+CREATE TABLE `bbs_role_mod` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `role_id` INT(11) NOT NULL,
+  `mod_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色功能关系表';
 
 -- ----------------------------
 -- 功能模块表
@@ -88,23 +99,25 @@ CREATE TABLE `bbs_mod` (
   `sort` INT(11) NOT NULL,
   `desc` VARCHAR(128) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
-  `create_user` datetime DEFAULT NULL,
+  `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
-  `update_user` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='模块表';
 
 -- ----------------------------
--- 角色功能关系表
+-- 功能按钮表
 -- ----------------------------
-DROP TABLE IF EXISTS `bbs_role_mod`;
-CREATE TABLE `bbs_role_mod` (
+DROP TABLE IF EXISTS `bbs_mod_bt`;
+CREATE TABLE `bbs_mod_bt` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `role_id` INT(11) NOT NULL,
   `mod_id` INT(11) NOT NULL,
+  `name` VARCHAR(48) NOT NULL COMMENT '按钮名称',
+  `code` VARCHAR(48) NOT NULL COMMENT '按钮编码',
+  `code` VARCHAR(48) NOT NULL COMMENT '按钮功能',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色功能关系表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='功能按钮表';
 
 ----------------------------
 -- 专栏表
@@ -114,13 +127,69 @@ CREATE TABLE `bbs_column` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` INT(11) NOT NULL COMMENT '专栏名称',
   `url` VARCHAR(128) NOT NULL COMMENT '专栏地址',
-  `desc` VARCHAR(128) DEFAULT NULL,
   `sort` INT(11) NOT NULL,
   `desc` VARCHAR(128) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
-  `create_user` datetime DEFAULT NULL,
+  `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
-  `update_user` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='专栏表';
+
+----------------------------
+-- 文件目录表
+----------------------------
+DROP TABLE IF EXISTS `bbs_directory`;
+CREATE TABLE `bbs_directory` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `pid` INT(11) NOT NULL,
+  `name` VARCHAR(48) NOT NULL COMMENT '目录名称',
+  `type` INT(11) NOT NULL COMMENT '目录类型: 1.文件 2.图片 3.音乐 4.视频',
+  `desc` VARCHAR(128) DEFAULT NULL COMMENT '目录描述',
+  `sort` INT(11) DEFAULT NULL COMMENT '排序',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文件目录表';
+
+----------------------------
+-- 文件表
+----------------------------
+DROP TABLE IF EXISTS `bbs_file`;
+CREATE TABLE `bbs_file` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `pid` INT(11) NOT NULL,
+  `name` VARCHAR(48) NOT NULL COMMENT '文件名称',
+  `type` INT(11) NOT NULL COMMENT '文件类型: 1.文件 2.图片 3.音乐 4.视频',
+  `path` varchar(128) NOT NULL COMMENT '文件路径',
+  `suffix` VARCHAR(24) NOT NULL COMMENT '文件后缀',
+  `size` INT(11) NOT NULL COMMENT '文件大小',
+  `desc` VARCHAR(128) DEFAULT NULL COMMENT '文件描述',
+  `sort` INT(11) DEFAULT NULL COMMENT '排序',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文件表';
+
+----------------------------
+-- 日志表
+----------------------------
+DROP TABLE IF EXISTS `bbs_log`;
+CREATE TABLE `bbs_log` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `origin` INT(11) NOT NULL COMMENT '日志来源: 0: 手机 1: 论坛 2: 管理平台',
+  `type` INT(11) NOT NULL COMMENT '日志类型: 1.用户登录 2. 用户注销 3. 模块访问 4.功能操作',
+  `log_title` VARCHAR(48) DEFAULT NULL COMMENT '日志标题',
+  `log_desc` VARCHAR(48) DEFAULT NULL COMMENT '日志描述',
+  `log_ip` VARCHAR(48) DEFAULT NULL COMMENT '访问IP',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='日志表';

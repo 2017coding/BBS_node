@@ -14,7 +14,7 @@ const router = express.Router()
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.post('/registered', User.registered)
+router.post('/registered', ValidateUser.registered, User.registered)
 /**
  * 登录
  * @api {POST} /api/user/login 登录
@@ -38,7 +38,7 @@ router.post('/login', ValidateUser.login, User.login)
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.post('/create', User.registered)
+router.post('/create', ValidateUser.create, User.registered)
 /**
  * 编辑
  * @api {put} /api/user/update 编辑
@@ -49,7 +49,7 @@ router.post('/create', User.registered)
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.put('/update', User.update)
+router.put('/update', ValidateUser.update, User.update)
 /**
  * 删除
  * @api {delete} /api/user/delete/:id 删除
@@ -60,7 +60,7 @@ router.put('/update', User.update)
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.delete('/delete/:id', User.delete)
+router.delete('/delete/:id', ValidateUser.delete, User.delete)
 /**
  * 获取用户信息
  * @api {get} /api/user/userInfo 获取用户信息
@@ -71,7 +71,7 @@ router.delete('/delete/:id', User.delete)
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.get('/userInfo', User.userInfo)
+router.get('/userInfo', ValidateUser.userInfo, User.userInfo)
 /**
  * 获取用户列表
  * @api {get} /api/user/getList 获取用户列表
@@ -94,6 +94,6 @@ router.get('/getList', User.getList)
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.get('/getAll', User.getAll)
+router.get('/getAll', ValidateUser.getAll, User.getAll)
 
 export default router
