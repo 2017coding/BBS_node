@@ -122,19 +122,6 @@ class User extends BaseValidate{
     next()
   }
   async userInfo (req, res, next) {
-    const ID = req.query.id,
-          arr = [
-            {label: 'ID', value: ID, rules: ['notnull']}
-          ],
-          result = this.check(arr)
-    if (!result.success) {
-      res.json({
-        code: 20301,
-        success: false,
-        message: result.message
-      })
-      return
-    }    
     next()
   }
   async getAll (req, res, next) {

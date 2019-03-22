@@ -1,5 +1,6 @@
 import Base from './Base'
 import userModel from '../model/User'
+import logModel from '../model/Log'
 import Authority from './Authority'
 import JWT from 'jsonwebtoken'
 import crypto from 'crypto'
@@ -9,9 +10,11 @@ class User extends Base {
     super()
     this.registered = this.registered.bind(this)
     this.login = this.login.bind(this)
+    this.loginOut = this.loginOut.bind(this)
     this.update = this.update.bind(this)
     this.delete = this.delete.bind(this)
     this.userInfo = this.userInfo.bind(this)
+    this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
     this.getAll = this.getAll.bind(this)
   }
@@ -22,12 +25,7 @@ class User extends Base {
     try {
       search = await userModel.getRow({get: {account: req.body.account}})
     } catch (e) {
-      res.json({
-        code: 20501,
-        success: false,
-        content: e,
-        message: '服务器内部错误'
-      })
+      this.handleException(req, res, e)
       return
     }
     // 用户不存在创建用户，存在则提示
@@ -43,12 +41,7 @@ class User extends Base {
           set: data
         })
       } catch (e) {
-        res.json({
-          code: 20501,
-          success: false,
-          content: e,
-          message: '服务器内部错误'
-        })
+        this.handleException(req, res, e)
         return
       }
       res.json({
@@ -97,27 +90,16 @@ class User extends Base {
         }
         try {
           // TODO: Token过期了重新设置，没过期就获取
-          token = await Authority.setToken(data, {
-            set: {[data.type + '_token']: JWT.sign(data, 'BBS', {}), user_id: data.id},
-            get: {user_id: data.id}
+          await Authority.setToken(data, {
+            set: {[data.type + '_token']: JWT.sign(data, 'BBS', {}), user_id: data.id}
           })
         } catch (e) {
-          res.json({
-            code: 20501,
-            success: false,
-            content: e,
-            message: '服务器内部错误'
-          })
+          this.handleException(req, res, e)
           return
         }
       }
     } catch (e) {
-      res.json({
-        code: 20501,
-        success: false,
-        content: e,
-        message: '服务器内部错误'
-      })
+      this.handleException(req, res, e)
       return
     }
     // 查询为空即用户信息不正确，不为空说明查询成功
@@ -128,14 +110,75 @@ class User extends Base {
         message: '账号或密码错误'
       })
     } else {
+      try {
+        // 写入登录日志
+        await logModel.writeLog({
+          set: {
+            origin: type,
+            type: 1,
+            title: '用户登录',
+            desc: '',
+            ip: this.getClientIp(req),
+            create_user: search[0].id,
+            create_time: new Date()
+          }
+        })
+      } catch (e) {
+        this.handleException(req, res, e)
+        return
+      }
+      try {
+        token = await Authority.getToken({get: {user_id: data.id}})
+      } catch (e) {
+        this.handleException(req, res, e)
+        return
+      }
       res.json({
         code: 20000,
         success: true,
-        content: {data: search[0]},
+        content: {},
         token: token[0] ? token[0][data.type + '_token'] : '',
         message: '登录成功'
       })
     }
+  }
+  // 退出登录
+  async loginOut (req, res, next) {
+    let userInfo = this.getUserInfo(req)
+    // 设置Token过期时间为现在
+    userInfo[userInfo.type + 'expire_time'] = +new Date()
+    try {
+      await Authority.setToken(userInfo, {
+        set: {[userInfo.type + '_token']: JWT.sign(userInfo, 'BBS', {}), user_id: userInfo.id}
+      })
+    } catch (e) {
+      this.handleException(req, res, e)
+      return
+    }
+    try {
+      let type = userInfo.type === 'phone' ? 0 : userInfo.type === 'bbs' ? 1 : 2
+      // 写入登出日志
+      await logModel.writeLog({
+        set: {
+          origin: type,
+          type: 2,
+          title: '用户登出',
+          desc: '',
+          ip: this.getClientIp(req),
+          create_user: userInfo.id,
+          create_time: new Date()
+        }
+      })
+    } catch (e) {
+      this.handleException(req, res, e)
+      return
+    }
+    res.json({
+      code: 20000,
+      success: true,
+      content: {},
+      message: '操作成功'
+    })
   }
   // 编辑用户
   async update (req, res, next) {
@@ -150,12 +193,7 @@ class User extends Base {
     try {
       result = await userModel.update({set: data, get: {id}})
     } catch (e) {
-      res.json({
-        code: 20501,
-        success: false,
-        content: e,
-        message: '服务器内部错误'
-      })
+      this.handleException(req, res, e)
       return
     }
     if (result.affectedRows) {
@@ -192,8 +230,27 @@ class User extends Base {
   }
   // 获取用户信息
   async userInfo (req, res, next) {
-    const id = req.query.id
-    const search = await userModel.getRow({get: {id}})
+    const userInfo = this.getUserInfo(req),
+          search = await userModel.getRow({get: {id: userInfo.id}})
+    if (search.length === 0) {
+      res.json({
+        code: 20401,
+        success: false,
+        content: search,
+        message: '用户不存在'
+      })
+    } else {
+      res.json({
+        code: 20000,
+        success: true,
+        content: search,
+        message: '操作成功'
+      })
+    }
+  }
+  // 获取单条数据
+  async getRow (req, res, next) {
+    const search = await userModel.getRow({get: req.query})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -216,12 +273,13 @@ class User extends Base {
         pageSize = req.query.pageSize,
         params = JSON.parse(JSON.stringify(req.query)),
         result,
-        length
+        length,
+        userInfo = this.getUserInfo(req)
         delete params.curPage
         delete params.pageSize
         // 设置非模糊查询字段
         for (let key in params) {
-          if (key !== 'id' || key !== 'create_user') {
+          if (key !== 'id' && key !== 'create_user') {
             params.like = [...params.like || [], key]
           }
         }
@@ -229,12 +287,7 @@ class User extends Base {
       result = await userModel.getList(curPage, pageSize, {get: params})
       length = await userModel.getTotals({get: params})
     } catch (e) {
-      res.json({
-        code: 20501,
-        success: false,
-        content: e,
-        message: '服务器内部错误'
-      })
+      this.handleException(req, res, e)
       return
     }
     res.json({
@@ -255,12 +308,7 @@ class User extends Base {
     try {
       await userModel.getAll()
     } catch (e) {
-      res.json({
-        code: 20501,
-        success: false,
-        content: e,
-        message: '服务器内部错误'
-      })
+      this.handleException(req, res, e)
       return
     }
     res.json({

@@ -1,8 +1,10 @@
+import Base from './Base'
 import TokenModel from '../model/Token'
 import JWT from 'jsonwebtoken'
 
-class Authority{
+class Authority extends Base{
   constructor () {
+    super()
     this.checkToken = this.checkToken.bind(this)
     this.setToken = this.setToken.bind(this)
     this.getToken = this.getToken.bind(this)
@@ -88,12 +90,9 @@ class Authority{
     try {
       result = await TokenModel.setToken(data, obj)
     } catch (e) {
-      return e
+      this.handleException(req, res, e)
+      return
     }
-    if (result.affectedRows) {
-
-    }
-    return await this.getToken(obj)
   }
   // 获取Token令牌
   async getToken (obj) {

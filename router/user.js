@@ -28,6 +28,16 @@ router.post('/registered', ValidateUser.registered, User.registered)
  */
 router.post('/login', ValidateUser.login, User.login)
 /**
+ * 登出
+ * @api {POST} /api/user/loginOut 登出
+ * @apiDescription 用户登出
+ * @apiName loginOut
+ * @apiSampleRequest /api/user/loginOut
+ * @apiGroup User
+ * @apiVersion 0.0.1
+ */
+router.post('/loginOut', User.loginOut)
+/**
  * 创建
  * @api {POST} /api/user/create 创建
  * @apiDescription 创建用户
@@ -62,16 +72,26 @@ router.put('/update', ValidateUser.update, User.update)
  */
 router.delete('/delete/:id', ValidateUser.delete, User.delete)
 /**
- * 获取用户信息
- * @api {get} /api/user/userInfo 获取用户信息
- * @apiDescription 获取用户信息
+ * 获取当前用户信息
+ * @api {get} /api/user/userInfo 获取当前用户信息
+ * @apiDescription 获取当前用户信息
  * @apiName userInfo
- * @apiParam (path参数) {Number} id
  * @apiSampleRequest /api/user/userInfo
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.get('/userInfo', ValidateUser.userInfo, User.userInfo)
+router.get('/userInfo', User.userInfo)
+/**
+ * 获取用户信息
+ * @api {get} /api/user/getRow 获取用户信息
+ * @apiDescription 获取用户信息
+ * @apiName getRow
+ * @apiParam {Number} id
+ * @apiSampleRequest /api/user/getRow
+ * @apiGroup User
+ * @apiVersion 0.0.1
+ */
+router.get('/getRow', User.getRow)
 /**
  * 获取用户列表
  * @api {get} /api/user/getList 获取用户列表
