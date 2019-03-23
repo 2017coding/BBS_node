@@ -34,6 +34,7 @@ router.post('/login', ValidateUser.login, User.login)
  * @api {POST} /api/user/loginOut 登出
  * @apiDescription 用户登出
  * @apiName loginOut
+ * @apiHeader {String} Authorization token
  * @apiSampleRequest /api/user/loginOut
  * @apiGroup User
  * @apiVersion 0.0.1
@@ -44,6 +45,7 @@ router.post('/loginOut', User.loginOut)
  * @api {POST} /api/user/create 创建
  * @apiDescription 创建用户
  * @apiName create
+ * @apiHeader {String} Authorization token
  * @apiParam (参数) {String} account 账号
  * @apiParam (参数) {String} name 昵称
  * @apiParam (参数) {String} password 密码
@@ -65,6 +67,7 @@ router.post('/create', ValidateUser.create, User.registered)
  * @api {put} /api/user/update 编辑
  * @apiDescription 编辑
  * @apiName update
+ * @apiHeader {String} Authorization token
  * @apiParam (参数) {Number} id
  * @apiParam (参数) {Number} role_id 关联角色
  * @apiParam (参数) {String} account 账号
@@ -88,6 +91,7 @@ router.put('/update', ValidateUser.update, User.update)
  * @api {delete} /api/user/delete/:id 删除
  * @apiDescription 用户登录
  * @apiName delete
+ * @apiHeader {String} Authorization token
  * @apiParam {Number} id
  * @apiSampleRequest /api/user/delete
  * @apiGroup User
@@ -99,6 +103,7 @@ router.delete('/delete/:id', ValidateUser.delete, User.delete)
  * @api {get} /api/user/userInfo 获取当前用户信息
  * @apiDescription 获取当前用户信息
  * @apiName userInfo
+ * @apiHeader {String} Authorization token
  * @apiSampleRequest /api/user/userInfo
  * @apiGroup User
  * @apiVersion 0.0.1
@@ -109,6 +114,7 @@ router.get('/userInfo', User.userInfo)
  * @api {get} /api/user/getRow 获取用户信息
  * @apiDescription 获取用户信息
  * @apiName getRow
+ * @apiHeader {String} Authorization token
  * @apiParam {Number} id
  * @apiSampleRequest /api/user/getRow
  * @apiGroup User
@@ -120,21 +126,23 @@ router.get('/getRow/:id', ValidateUser.getRow, User.getRow)
  * @api {get} /api/user/getList 获取用户列表
  * @apiDescription 获取用户列表
  * @apiName getList
+ * @apiHeader {String} Authorization token
  * @apiParam (path参数) {Number} curPage
  * @apiParam (path参数) {Number} pageSize
- * @apiParam (参数) {String} account 账号
- * @apiParam (参数) {String} name 昵称
+ * @apiParam (path参数) {String} account 账号
+ * @apiParam (path参数) {String} name 昵称
  * @apiParam (path参数) {Number} create_user
  * @apiSampleRequest /api/user/getList
  * @apiGroup User
  * @apiVersion 0.0.1
  */
-router.get('/getList', User.getList)
+router.get('/getList', ValidateUser.getList, User.getList)
 /**
  * 获取所有用户
  * @api {get} /api/user/getAll 获取所有用户
  * @apiDescription 获取用户列表
  * @apiName getAll
+ * @apiHeader {String} Authorization token
  * @apiSampleRequest /api/user/getAll
  * @apiGroup User
  * @apiVersion 0.0.1

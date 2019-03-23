@@ -21,6 +21,7 @@ class User extends Base {
   // 注册
   async registered (req, res, next) {
     let search, result
+    // TODO: 需要做一个消息队列，保证注册时数据不会混乱
     // 查询用户是否存在
     try {
       search = await UserModel.getRow({get: {account: req.body.account}})
@@ -66,7 +67,7 @@ class User extends Base {
     // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
     try {
       search = await UserModel.login({get: {account, password}})
-      data = search[0] ? JSON.parse(JSON.stringify(search[0])) : {}
+      data = search[0] ? JSON.parse(JSON.stringify(search[0])) : ''
       if (data) {
         for (let key in data) {
           if (!data[key]) {
@@ -276,6 +277,13 @@ class User extends Base {
         userInfo = this.getUserInfo(req)
         delete params.curPage
         delete params.pageSize
+        // TODO: 有时间逻辑应该写为查询到当前用户创建的用户以及创建用户创建的用户
+        // 如果是admin, 查询的时候则不需要设置用户ID, 否则为用户要查询的ID或用户ID
+        if (userInfo.id === 1 || userInfo.id === '1') {
+          delete params.create_user
+        } else {
+          params.create_user = params.create_user || userInfo.id
+        }
         // 设置非模糊查询字段
         for (let key in params) {
           if (key !== 'id' && key !== 'create_user') {

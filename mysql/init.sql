@@ -108,17 +108,22 @@ CREATE TABLE `bbs_mod` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='模块表';
 
 -- ----------------------------
--- 功能按钮表
+-- 数据权限表
 -- ----------------------------
-DROP TABLE IF EXISTS `bbs_mod_bt`;
-CREATE TABLE `bbs_mod_bt` (
+DROP TABLE IF EXISTS `bbs_mod_data`;
+CREATE TABLE `bbs_mod_data` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `mod_id` INT(11) NOT NULL,
-  `name` VARCHAR(48) NOT NULL COMMENT '按钮名称',
-  `code` VARCHAR(48) NOT NULL COMMENT '按钮编码',
-  `code` VARCHAR(48) NOT NULL COMMENT '按钮功能',
+  `name` VARCHAR(48) NOT NULL COMMENT '名称',
+  `code` VARCHAR(48) NOT NULL COMMENT '编码',
+  `type` VARCHAR(48) NOT NULL COMMENT '按钮或者其他',
+  `method` VARCHAR(24) NOT NULL COMMENT '请求方式',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='功能按钮表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='数据权限表';
 
 ----------------------------
 -- 专栏表

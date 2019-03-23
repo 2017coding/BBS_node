@@ -98,6 +98,10 @@ class Authority extends Base{
   async getToken (obj) {
     return TokenModel.getToken(obj)
   }
+  // 验证用户是否有操作权限
+  async permissions (req, res, next) {
+    next()
+  }
 }
 
 export default new Authority()

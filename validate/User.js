@@ -9,6 +9,7 @@ class User extends BaseValidate{
     this.update = this.update.bind(this)
     this.delete = this.delete.bind(this)
     this.userInfo = this.userInfo.bind(this)
+    this.getList = this.getList.bind(this)
     this.getAll = this.getAll.bind(this)
   }
   async registered (req, res, next) {
@@ -135,6 +136,23 @@ class User extends BaseValidate{
         code: 20301,
         success: false,
         message: result.message
+      })
+      return
+    }    
+    next()
+  }
+  async getList (req, res, next) {
+    const data = req.query,
+          arr = [
+            {label: 'curPage', value: data.curPage, rules: ['notnull', 'number']},
+            {label: 'pageSize', value: data.curPage, rules: ['notnull', 'number']}
+          ],
+          result = this.check(arr)
+    if (!result.success) {
+      res.json({
+        code: 20301,
+        success: false,
+        message: '分页参数错误'
       })
       return
     }    
