@@ -185,7 +185,7 @@ class User extends Base {
       message: '操作成功'
     })
   }
-  // 编辑用户
+  // 编辑
   async update (req, res, next) {
     let id = req.body.id,
         data = JSON.parse(JSON.stringify(req.body)),
@@ -260,7 +260,7 @@ class User extends Base {
         code: 20401,
         success: false,
         content: search,
-        message: '用户不存在'
+        message: '查询信息不存在'
       })
     } else {
       res.json({
@@ -271,7 +271,7 @@ class User extends Base {
       })
     }
   }
-  // 查询用户列表
+  // 查询列表
   async getList (req, res, next) {
     let query = JSON.parse(JSON.stringify(req.query)),
         result,
@@ -309,7 +309,7 @@ class User extends Base {
       message: '操作成功'
     })
   }
-  // 获取所有用户
+  // 获取所有
   async getAll (req, res, next) {
     let result
     try {

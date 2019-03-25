@@ -1,7 +1,7 @@
 import Base from './Base'
-import RoleModel from '../model/Role'
+import ModDataModel from '../model/ModData'
 
-class Role extends Base {
+class ModData extends Base {
   constructor () {
     super()
     this.create = this.create.bind(this)
@@ -13,42 +13,24 @@ class Role extends Base {
   }
   // 创建
   async create (req, res, next) {
-    let search, result
-    // TODO: 需要做一个消息队列，保证创建时数据不会混乱
-    // 查询角色是否存在
     try {
-      search = await RoleModel.getRow({get: {name: req.body.name}})
+      let data = JSON.parse(JSON.stringify(req.body)),
+          userInfo = this.getUserInfo(req)
+      // 参数处理
+      data.create_user = userInfo.id,
+      data.create_time = new Date()
+      result = await ModDataModel.create({
+        set: data
+      })
     } catch (e) {
       this.handleException(req, res, e)
       return
     }
-    // 角色不存在创建角色，存在则提示
-    if (search.length === 0) {
-      try {
-        let data = JSON.parse(JSON.stringify(req.body)),
-            userInfo = this.getUserInfo(req)
-        // 参数处理
-        data.create_user = userInfo.id,
-        data.create_time = new Date()
-        result = await RoleModel.create({
-          set: data
-        })
-      } catch (e) {
-        this.handleException(req, res, e)
-        return
-      }
-      res.json({
-        code: 20000,
-        success: true,
-        message: '创建成功'
-      })
-    } else {
-      res.json({
-        code: 20001,
-        success: false,
-        message: '角色已存在'
-      })
-    }
+    res.json({
+      code: 20000,
+      success: true,
+      message: '创建成功'
+    })
   }
   // 编辑
   async update (req, res, next) {
@@ -61,7 +43,7 @@ class Role extends Base {
         data.update_time = new Date()
         delete data.id
     try {
-      result = await RoleModel.update({set: data, get: {id}})
+      result = await ModDataModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -82,7 +64,7 @@ class Role extends Base {
   }
   // 删除
   async delete (req, res, next) {
-    const result = await RoleModel.delete({get: {id: req.params.id}})
+    const result = await ModDataModel.delete({get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -99,7 +81,7 @@ class Role extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await RoleModel.getRow({get: {id: req.params.id}})
+    const search = await ModDataModel.getRow({get: {id: req.params.id}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -136,8 +118,8 @@ class Role extends Base {
           }
         }
     try {
-      result = await RoleModel.getList({get: query})
-      length = await RoleModel.getTotals({get: query})
+      result = await ModDataModel.getList({get: query})
+      length = await ModDataModel.getTotals({get: query})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -156,9 +138,9 @@ class Role extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let result
+    let pid = req.params.pid, result
     try {
-      result = await RoleModel.getAll()
+      result = await ModModel.getAll({get: pid ? {pid} : {}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -172,4 +154,4 @@ class Role extends Base {
   }
 }
 
-export default new Role()
+export default new ModData()

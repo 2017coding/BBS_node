@@ -6,8 +6,8 @@ class Area extends Base{
     super()
     this.update = this.update.bind(this)
     this.getList = this.getList.bind(this)
-    this.getAll = this.getAll.bind(this)
     this.getTotals = this.getTotals.bind(this)
+    this.getAll = this.getAll.bind(this)
   }
   async update (obj) {
     const sql = `UPDATE bbs_area set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)}`

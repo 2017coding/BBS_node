@@ -8,7 +8,7 @@ class Area extends Base {
     this.getList = this.getList.bind(this)
     this.getAll = this.getAll.bind(this)
   }
-  // 修改状态
+  // 编辑
   async update (req, res, next) {
     let data = req.body,
         result,

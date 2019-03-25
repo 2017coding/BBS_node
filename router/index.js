@@ -1,6 +1,7 @@
-import token from './token'
 import user from './user'
 import area from './area'
+import role from './area'
+import mod from './mod'
 import log from './log'
 import Authority from '../controller/Authority'
 
@@ -13,5 +14,7 @@ export default app => {
    */
   app.use('/api/user', Authority.checkToken, Authority.permissions, user)
   app.use('/api/area', Authority.checkToken, Authority.permissions, area)
+  app.use('/api/role', Authority.checkToken, Authority.permissions, role)
+  app.use('/api/mod', Authority.checkToken, Authority.permissions, mod)
   app.use('/api/log', Authority.checkToken, Authority.permissions, log)
 }

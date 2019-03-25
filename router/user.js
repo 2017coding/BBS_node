@@ -89,7 +89,7 @@ router.put('/update', ValidateUser.update, User.update)
 /**
  * 删除
  * @api {delete} /api/user/delete/:id 删除
- * @apiDescription 用户登录
+ * @apiDescription 删除
  * @apiName delete
  * @apiHeader {String} Authorization token
  * @apiParam {Number} id
