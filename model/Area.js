@@ -13,16 +13,17 @@ class Area extends Base{
     const sql = `UPDATE bbs_area set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
-  async getList (curPage, pageSize, obj) {
+  async getList (obj) {
+    let curPage = obj.get.curPage, pageSize = obj.get.pageSize
     const sql = `select * from bbs_area where 1 = 1 ${this.joinStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
-    return query(sql)
-  }
-  async getAll (obj) {
-    const sql = `select * from bbs_area where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async getTotals (obj) {
     const sql = `select COUNT(*) as count from bbs_area where 1 = 1 ${this.joinStr('get', obj.get)}`
+    return query(sql)
+  }
+  async getAll (obj) {
+    const sql = `select * from bbs_area where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
 }

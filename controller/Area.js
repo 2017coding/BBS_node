@@ -6,6 +6,7 @@ class Area extends Base {
     super()
     this.update = this.update.bind(this)
     this.getList = this.getList.bind(this)
+    this.getAll = this.getAll.bind(this)
   }
   // 修改状态
   async update (req, res, next) {
@@ -38,24 +39,19 @@ class Area extends Base {
   }
   // 查询列表
   async getList (req, res, next) {
-    // return LogModel.getList(obj)
-    let curPage = req.query.curPage,
-        pageSize = req.query.pageSize,
-        params = JSON.parse(JSON.stringify(req.query)),
+    let query = JSON.parse(JSON.stringify(req.query)),
         result,
         length,
         userInfo = this.getUserInfo(req)
-        delete params.curPage
-        delete params.pageSize
         // 设置非模糊查询字段
-        for (let key in params) {
-          if (key !== 'id' && key !== 'create_user') {
-            params.like = [...params.like || [], key]
+        for (let key in query) {
+          if (['id', 'pid'].indexOf(key) === -1) {
+            query.like = [...query.like || [], key]
           }
         }
     try {
-      result = await AreaModel.getList(curPage, pageSize, {get: params})
-      length = await AreaModel.getTotals({get: params})
+      result = await AreaModel.getList({get: query})
+      length = await AreaModel.getTotals({get: query})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -65,8 +61,8 @@ class Area extends Base {
       success: true,
       content: {
         result,
-        curPage,
-        pageSize,
+        curPage: query.curPage,
+        pageSize: query.pageSize,
         totals: length ? length[0].count : 0
       },
       message: '操作成功'
@@ -74,9 +70,9 @@ class Area extends Base {
   }
   // 根据PID获取所有下级区域
   async getAll (req, res, next) {
-    let pid = req.params.pid
+    let pid = req.params.pid, result
     try {
-      await AreaModel.getAll({get: {pid}})
+      result = await AreaModel.getAll({get: {pid}})
     } catch (e) {
       this.handleException(req, res, e)
       return

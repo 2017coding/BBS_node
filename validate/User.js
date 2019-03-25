@@ -152,7 +152,7 @@ class User extends BaseValidate{
       res.json({
         code: 20301,
         success: false,
-        message: '分页参数错误'
+        message: result.message
       })
       return
     }    

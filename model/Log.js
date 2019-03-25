@@ -12,7 +12,8 @@ class Log extends Base{
     const sql = `INSERT INTO bbs_log set ${this.joinStr('set', obj.set)}`
     return query(sql)
   }
-  async getList (curPage, pageSize, obj) {
+  async getList (obj) {
+    let curPage = obj.get.curPage, pageSize = obj.get.pageSize
     const sql = `select * from bbs_log where 1 = 1 ${this.joinStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
     return query(sql)
   }

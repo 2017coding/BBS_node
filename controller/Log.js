@@ -37,24 +37,19 @@ class Log extends Base {
   }
   // 查询列表
   async getList (req, res, next) {
-    // return LogModel.getList(obj)
-    let curPage = req.query.curPage,
-        pageSize = req.query.pageSize,
-        params = JSON.parse(JSON.stringify(req.query)),
+    let query = JSON.parse(JSON.stringify(req.query)),
         result,
         length,
         userInfo = this.getUserInfo(req)
-        delete params.curPage
-        delete params.pageSize
         // 设置非模糊查询字段
-        for (let key in params) {
-          if (key !== 'id' && key !== 'create_user') {
-            params.like = [...params.like || [], key]
+        for (let key in query) {
+          if (['id', 'create_user'].indexOf(key) === -1) {
+            query.like = [...query.like || [], key]
           }
         }
     try {
-      result = await LogModel.getList(curPage, pageSize, {get: params})
-      length = await LogModel.getTotals({get: params})
+      result = await LogModel.getList({get: query})
+      length = await LogModel.getTotals({get: query})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -64,8 +59,8 @@ class Log extends Base {
       success: true,
       content: {
         result,
-        curPage,
-        pageSize,
+        curPage: query.curPage,
+        pageSize: query.pageSize,
         totals: length ? length[0].count : 0
       },
       message: '操作成功'

@@ -22,9 +22,14 @@ class Token extends Base{
     if (search.length === 0) {
       sql = `INSERT INTO bbs_token set ${this.joinStr('set', obj.set)}`
     } else {
-      sql = `UPDATE bbs_token set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)}`
+      // 过期时间大于当前时间，不处理
+      if (+new Date(data[data.type + '_expire_time']) > +new Date()) {
+        sql = ``
+      } else {
+        sql = `UPDATE bbs_token set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)}`
+      }
     }
-    return query(sql)
+    return sql ? query(sql) : ''
   }
 }
 

@@ -1,5 +1,6 @@
 import token from './token'
 import user from './user'
+import area from './area'
 import log from './log'
 import Authority from '../controller/Authority'
 
@@ -11,5 +12,6 @@ export default app => {
    * 第三层验证参数, 验证成功后再进行事件处理
    */
   app.use('/api/user', Authority.checkToken, Authority.permissions, user)
+  app.use('/api/area', Authority.checkToken, Authority.permissions, area)
   app.use('/api/log', Authority.checkToken, Authority.permissions, log)
 }

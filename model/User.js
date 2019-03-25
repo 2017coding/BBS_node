@@ -33,7 +33,8 @@ class User extends Base{
     const sql = `select * from bbs_user where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
-  async getList (curPage, pageSize, obj) {
+  async getList (obj) {
+    let curPage = obj.get.curPage, pageSize = obj.get.pageSize
     // const sql = `select a.*, b.account as create_user_name, c.account as update_user_name from bbs_user as a 
     //             left join bbs_user as b on a.id = b.create_user
     //             left join bbs_user as c on a.id = c.update_user
@@ -42,12 +43,12 @@ class User extends Base{
                 where 1 = 1 ${this.joinStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
     return query(sql)
   }
-  async getAll () {
-    const sql = `select * from bbs_user`
-    return query(sql)
-  }
   async getTotals (obj) {
     const sql = `select COUNT(*) as count from bbs_user where 1 = 1 ${this.joinStr('get', obj.get)}`
+    return query(sql)
+  }
+  async getAll () {
+    const sql = `select * from bbs_user`
     return query(sql)
   }
 }

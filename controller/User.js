@@ -74,25 +74,28 @@ class User extends Base {
             delete data[key]
           }
         }
-        // TODO: 得到要设置的token类型和过期时间, 功能以后再做
+        // 得到要设置的token类型和过期时间
         switch (type) {
           case 0:
             data.type = 'phone'
-            data[data.type + 'expire_time'] = +new Date() + 60 * 60 * 24 * 180 * 1000 // 半年
+            data[data.type + '_expire_time'] = new Date(+new Date() + 60 * 60 * 24 * 180 * 1000) // 半年
             break
           case 1:
             data.type = 'bbs'
-            data[data.type + 'expire_time'] = +new Date() + 60 * 60 * 24 * 60 * 1000 // 两个月
+            data[data.type + '_expire_time'] = new Date(+new Date() + 60 * 60 * 24 * 60 * 1000) // 两个月
             break
           case 2:
             data.type = 'admin'
-            data[data.type + 'expire_time'] = +new Date() + 60 * 60 * 24 * 1 * 1000 // 重新登录则上次的失效
+            data[data.type + '_expire_time'] = new Date(+new Date() + 60 * 60 * 24 * 1 * 1000) // 重新登录则上次的失效 (测试期间设置为一天后失效)
             break
         }
         try {
-          // TODO: Token过期了重新设置，没过期就获取
+          // Token过期了重新设置，没过期不处理
           await Authority.setToken(data, {
-            set: {[data.type + '_token']: JWT.sign(data, 'BBS', {}), user_id: data.id}
+            set: {
+              [data.type + '_token']: JWT.sign(data, 'BBS', {}),
+              [data.type + '_expire_time']: data[data.type + '_expire_time'],
+              user_id: data.id}
           })
         } catch (e) {
           this.handleException(req, res, e)
@@ -149,9 +152,10 @@ class User extends Base {
     // 设置Token过期时间为现在
     userInfo[userInfo.type + 'expire_time'] = +new Date()
     try {
-      await Authority.setToken(userInfo, {
-        set: {[userInfo.type + '_token']: JWT.sign(userInfo, 'BBS', {}), user_id: userInfo.id}
-      })
+      // TODO: 测试期间不清除数据
+      // await Authority.setToken(userInfo, {
+      //   set: {[userInfo.type + '_token']: JWT.sign(userInfo, 'BBS', {}), user_id: userInfo.id}
+      // })
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -269,30 +273,26 @@ class User extends Base {
   }
   // 查询用户列表
   async getList (req, res, next) {
-    let curPage = req.query.curPage,
-        pageSize = req.query.pageSize,
-        params = JSON.parse(JSON.stringify(req.query)),
+    let query = JSON.parse(JSON.stringify(req.query)),
         result,
         length,
         userInfo = this.getUserInfo(req)
-        delete params.curPage
-        delete params.pageSize
         // TODO: 有时间逻辑应该写为查询到当前用户创建的用户以及创建用户创建的用户
         // 如果是admin, 查询的时候则不需要设置用户ID, 否则为用户要查询的ID或用户ID
         if (userInfo.id === 1 || userInfo.id === '1') {
-          delete params.create_user
+          delete query.create_user
         } else {
-          params.create_user = params.create_user || userInfo.id
+          query.create_user = query.create_user || userInfo.id
         }
         // 设置非模糊查询字段
-        for (let key in params) {
-          if (key !== 'id' && key !== 'create_user') {
-            params.like = [...params.like || [], key]
+        for (let key in query) {
+          if (['id', 'create_user'].indexOf(key) === -1) {
+            query.like = [...query.like || [], key]
           }
         }
     try {
-      result = await UserModel.getList(curPage, pageSize, {get: params})
-      length = await UserModel.getTotals({get: params})
+      result = await UserModel.getList({get: query})
+      length = await UserModel.getTotals({get: query})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -302,8 +302,8 @@ class User extends Base {
       success: true,
       content: {
         result,
-        curPage,
-        pageSize,
+        curPage: query.curPage,
+        pageSize: query.pageSize,
         totals: length ? length[0].count : 0
       },
       message: '操作成功'
@@ -313,7 +313,7 @@ class User extends Base {
   async getAll (req, res, next) {
     let result
     try {
-      await UserModel.getAll()
+      result = await UserModel.getAll()
     } catch (e) {
       this.handleException(req, res, e)
       return

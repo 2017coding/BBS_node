@@ -90,8 +90,7 @@ class Authority extends Base{
     try {
       result = await TokenModel.setToken(data, obj)
     } catch (e) {
-      this.handleException(req, res, e)
-      return
+      throw e
     }
   }
   // 获取Token令牌
