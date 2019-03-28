@@ -17,6 +17,9 @@ class Area extends Base {
       result = await AreaModel.update({
         set: {
           status: data.status
+        },
+        get: {
+          id: data.id
         }
       })
     } catch (e) {
@@ -27,7 +30,7 @@ class Area extends Base {
       res.json({
         code: 20000,
         success: true,
-        message: '编辑成功'
+        message: '操作成功'
       })
     } else {
       res.json({

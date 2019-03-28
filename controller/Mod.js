@@ -52,7 +52,7 @@ class Mod extends Base {
       res.json({
         code: 20000,
         success: true,
-        message: '编辑成功'
+        message: '操作成功'
       })
     } else {
       res.json({
@@ -138,9 +138,9 @@ class Mod extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let pid = req.params.pid, result
+    let result
     try {
-      result = await ModModel.getAll({get: pid ? {pid} : {}})
+      result = await ModModel.getAll()
     } catch (e) {
       this.handleException(req, res, e)
       return

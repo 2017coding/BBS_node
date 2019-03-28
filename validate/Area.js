@@ -44,7 +44,7 @@ class Area extends BaseValidate{
   async getAll (req, res, next) {
     const data = req.params,
           arr = [
-            {label: 'curPage', value: data.pid, rules: ['notnull', 'number']}
+            {label: 'pid', value: data.pid, rules: ['notnull', 'number']}
           ],
           result = this.check(arr)
     if (!result.success) {

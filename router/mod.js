@@ -96,6 +96,6 @@ router.get('/getList', ValidateMod.getList, Mod.getList)
  * @apiGroup Mod
  * @apiVersion 0.0.1
  */
-router.get('/getAll/:id', ValidateMod.getAll, Mod.getAll)
+router.get('/getAll', ValidateMod.getAll, Mod.getAll)
 
 export default router

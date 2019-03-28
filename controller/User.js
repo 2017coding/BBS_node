@@ -205,7 +205,7 @@ class User extends Base {
       res.json({
         code: 20000,
         success: true,
-        message: '编辑成功'
+        message: '操作成功'
       })
     } else {
       res.json({

@@ -1,6 +1,6 @@
 import user from './user'
 import area from './area'
-import role from './area'
+import role from './role'
 import mod from './mod'
 import log from './log'
 import Authority from '../controller/Authority'

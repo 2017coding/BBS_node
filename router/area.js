@@ -14,7 +14,7 @@ const router = express.Router()
  * @apiGroup Area
  * @apiVersion 0.0.1
  */
-router.post('/update', ValidateArea.update, Area.update)
+router.put('/update', ValidateArea.update, Area.update)
 /**
  * 获取区域列表
  * @api {get} /api/Area/getList 获取日志列表
