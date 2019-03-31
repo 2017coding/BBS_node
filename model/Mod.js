@@ -38,8 +38,8 @@ class Mod extends Base{
     const sql = `select COUNT(*) as count from bbs_mod where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
-  async getAll () {
-    const sql = `select * from bbs_mod`
+  async getAll (obj) {
+    const sql = `select * from bbs_mod where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
 }
