@@ -116,7 +116,7 @@ CREATE TABLE `bbs_mod_data` (
   `mod_id` INT(11) NOT NULL,
   `name` VARCHAR(48) NOT NULL COMMENT '名称',
   `code` VARCHAR(48) NOT NULL COMMENT '编码',
-  `type` VARCHAR(48) NOT NULL COMMENT '按钮或者其他',
+  `type` tinyint(4) NOT NULL COMMENT '按钮或者其他',
   `method` VARCHAR(24) NOT NULL COMMENT '请求方式',
   `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,

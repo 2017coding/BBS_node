@@ -15,7 +15,8 @@ class ModData extends Base {
   async create (req, res, next) {
     try {
       let data = JSON.parse(JSON.stringify(req.body)),
-          userInfo = this.getUserInfo(req)
+          userInfo = this.getUserInfo(req),
+          result
       // 参数处理
       data.create_user = userInfo.id,
       data.create_time = new Date()
@@ -138,9 +139,9 @@ class ModData extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let pid = req.params.pid, result
+    let modId = req.query.modId, result
     try {
-      result = await ModModel.getAll({get: pid ? {pid} : {}})
+      result = await ModDataModel.getAll(modId ? {get: {mod_id: modId}} : '')
     } catch (e) {
       this.handleException(req, res, e)
       return

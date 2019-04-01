@@ -74,16 +74,16 @@ router.get('/getRow/:id', ValidateModData.getRow, ModData.getRow)
  */
 router.get('/getList', ValidateModData.getList, ModData.getList)
 /**
- * 获取所有模块
- * @api {get} /api/ModData/getAll/:id 获取所有模块
- * @apiDescription 获取所有模块
+ * 获取所有模块权限
+ * @api {get} /api/ModData/getAll 获取所有模块权限
+ * @apiDescription 获取所有模块权限
  * @apiName getAll
  * @apiHeader {String} Authorization token
- * @apiParam {Number} id
+ * @apiParam {Number} modId
  * @apiSampleRequest /api/ModData/getAll
  * @apiGroup ModData
  * @apiVersion 0.0.1
  */
-router.get('/getAll/:id', ValidateModData.getAll, ModData.getAll)
+router.get('/getAll', ValidateModData.getAll, ModData.getAll)
 
 export default router
