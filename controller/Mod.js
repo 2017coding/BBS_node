@@ -64,6 +64,16 @@ class Mod extends Base {
   }
   // 删除
   async delete (req, res, next) {
+    // 如果当前模块下面有节点，则不能删除
+    const child = await ModModel.getAll({get: {pid: req.params.id}})
+    if (child.length > 0) {
+      res.json({
+        code: 20001,
+        success: false,
+        message: '请先删除子目录'
+      })
+      return
+    }
     const result = await ModModel.delete({get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
@@ -140,7 +150,7 @@ class Mod extends Base {
   async getAll (req, res, next) {
     let result, type = req.query.type
     try {
-      result = await ModModel.getAll(type ? {get: {type}} : '')
+      result = await ModModel.getAll(type ? {get: {type}} : {get: {}})
     } catch (e) {
       this.handleException(req, res, e)
       return

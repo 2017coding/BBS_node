@@ -82,6 +82,16 @@ class Role extends Base {
   }
   // 删除
   async delete (req, res, next) {
+    // 如果当前模块下面有节点，则不能删除
+    const child = await RoleModel.getAll({get: {pid: req.params.id}})
+    if (child.length > 0) {
+      res.json({
+        code: 20001,
+        success: false,
+        message: '请先删除子节点'
+      })
+      return
+    }
     const result = await RoleModel.delete({get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
@@ -158,7 +168,7 @@ class Role extends Base {
   async getAll (req, res, next) {
     let result
     try {
-      result = await RoleModel.getAll()
+      result = await RoleModel.getAll({get: {}})
     } catch (e) {
       this.handleException(req, res, e)
       return

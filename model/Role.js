@@ -38,8 +38,8 @@ class Role extends Base{
     const sql = `select COUNT(*) as count from bbs_role where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
-  async getAll () {
-    const sql = `select * from bbs_role`
+  async getAll (obj) {
+    const sql = `select * from bbs_role where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
 }
