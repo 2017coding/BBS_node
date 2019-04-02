@@ -1,5 +1,5 @@
 import Base from './Base'
-import ModDataModel from '../model/ModData'
+import DataControlModel from '../model/DataControl'
 
 class ModData extends Base {
   constructor () {
@@ -20,7 +20,7 @@ class ModData extends Base {
       // 参数处理
       data.create_user = userInfo.id,
       data.create_time = new Date()
-      result = await ModDataModel.create({
+      result = await DataControlModel.create({
         set: data
       })
     } catch (e) {
@@ -44,7 +44,7 @@ class ModData extends Base {
         data.update_time = new Date()
         delete data.id
     try {
-      result = await ModDataModel.update({set: data, get: {id}})
+      result = await DataControlModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -65,7 +65,7 @@ class ModData extends Base {
   }
   // 删除
   async delete (req, res, next) {
-    const result = await ModDataModel.delete({get: {id: req.params.id}})
+    const result = await DataControlModel.delete({get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -82,7 +82,7 @@ class ModData extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await ModDataModel.getRow({get: {id: req.params.id}})
+    const search = await DataControlModel.getRow({get: {id: req.params.id}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -119,8 +119,8 @@ class ModData extends Base {
           }
         }
     try {
-      result = await ModDataModel.getList({get: query})
-      length = await ModDataModel.getTotals({get: query})
+      result = await DataControlModel.getList({get: query})
+      length = await DataControlModel.getTotals({get: query})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -141,7 +141,7 @@ class ModData extends Base {
   async getAll (req, res, next) {
     let modId = req.query.modId, result
     try {
-      result = await ModDataModel.getAll(modId ? {get: {mod_id: modId}} : '')
+      result = await DataControlModel.getAll(modId ? {get: {mod_id: modId}} : '')
     } catch (e) {
       this.handleException(req, res, e)
       return

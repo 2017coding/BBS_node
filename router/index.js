@@ -2,7 +2,7 @@ import user from './user'
 import area from './area'
 import role from './role'
 import mod from './mod'
-import modData from './modData'
+import dataControl from './dataControl'
 import log from './log'
 import Authority from '../controller/Authority'
 
@@ -17,6 +17,6 @@ export default app => {
   app.use('/api/area', Authority.checkToken, Authority.permissions, area)
   app.use('/api/role', Authority.checkToken, Authority.permissions, role)
   app.use('/api/mod', Authority.checkToken, Authority.permissions, mod)
-  app.use('/api/modData', Authority.checkToken, Authority.permissions, modData)
+  app.use('/api/dataControl', Authority.checkToken, Authority.permissions, dataControl)
   app.use('/api/log', Authority.checkToken, Authority.permissions, log)
 }

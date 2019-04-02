@@ -27,6 +27,21 @@ class Base{
           }
         }
         return str
+      case 'ORDER BY':
+        if (obj.DESC.length > 0 || obj.other.length > 0) {
+          str = 'ORDER BY '
+        }
+        obj.DESC = obj.DESC || []
+        obj.other = obj.other || []
+        obj.DESC.forEach(val => {
+          str += `${val} DESC,`
+        })
+        obj.other.forEach(val => {
+          str += `${val},`
+        })
+        // 删除最后的逗号
+        str = str.substr(0, str.length - 1)
+        return str
     }
   }
 }

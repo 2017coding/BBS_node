@@ -95,6 +95,7 @@ CREATE TABLE `bbs_mod` (
   `type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '模块类型: 1. 管理平台模块 2. BBS模块 3. 移动端模块',
   `code` VARCHAR(48) NOT NULL COMMENT '模块编码',
   `name` VARCHAR(48) NOT NULL COMMENT '模块名称',
+  `component` tinyint(4) NOT NULL COMMENT '对应组件: -1. 根节点 1. 页面组件 2.默认布局 3456...扩展布局',
   `icon` VARCHAR(128) DEFAULT NULL COMMENT '模块图标',
   `redirect` VARCHAR(128) DEFAULT NULL COMMENT '重定向路径: 配置模块编码或URL',
   `sort` INT(11) NOT NULL,
@@ -110,13 +111,14 @@ CREATE TABLE `bbs_mod` (
 -- ----------------------------
 -- 数据权限表
 -- ----------------------------
-DROP TABLE IF EXISTS `bbs_mod_data`;
-CREATE TABLE `bbs_mod_data` (
+DROP TABLE IF EXISTS `bbs_data_permissions`;
+CREATE TABLE `bbs_data_permissions` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `mod_id` INT(11) NOT NULL,
   `name` VARCHAR(48) NOT NULL COMMENT '名称',
   `code` VARCHAR(48) NOT NULL COMMENT '编码',
   `type` tinyint(4) NOT NULL COMMENT '按钮或者其他',
+  `api` VARCHAR(24) NOT NULL COMMENT '接口',
   `method` VARCHAR(24) NOT NULL COMMENT '请求方式',
   `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,

@@ -45,6 +45,22 @@ class User extends Base {
         this.handleException(req, res, e)
         return
       }
+      try {
+        // 创建用户写入日志
+        await logModel.writeLog({
+          set: {
+            origin: req.body.type,
+            type: 4,
+            title: '创建用户',
+            desc: '',
+            ip: this.getClientIp(req),
+            create_user: userInfo.id,
+            create_time: new Date()
+          }
+        })
+      } catch (e) {
+        this.handleException(req, res, e)
+      }
       res.json({
         code: 20000,
         success: true,
@@ -129,7 +145,6 @@ class User extends Base {
         })
       } catch (e) {
         this.handleException(req, res, e)
-        return
       }
       try {
         token = await Authority.getToken({get: {user_id: data.id}})
@@ -176,7 +191,6 @@ class User extends Base {
       })
     } catch (e) {
       this.handleException(req, res, e)
-      return
     }
     res.json({
       code: 20000,
@@ -202,6 +216,22 @@ class User extends Base {
       return
     }
     if (result.affectedRows) {
+      try {
+        // 编辑用户写入日志
+        await logModel.writeLog({
+          set: {
+            origin: 2,
+            type: 4,
+            title: '编辑用户',
+            desc: '',
+            ip: this.getClientIp(req),
+            create_user: userInfo.id,
+            create_time: new Date()
+          }
+        })
+      } catch (e) {
+        this.handleException(req, res, e)
+      }
       res.json({
         code: 20000,
         success: true,
@@ -217,8 +247,25 @@ class User extends Base {
   }
   // 删除用户
   async delete (req, res, next) {
-    const result = await UserModel.delete({get: {id: req.params.id}})
+    const result = await UserModel.delete({get: {id: req.params.id}}),
+          userInfo = this.getUserInfo(req)
     if (result.affectedRows) {
+      try {
+        // 编辑用户写入日志
+        await logModel.writeLog({
+          set: {
+            origin: 2,
+            type: 4,
+            title: '删除用户',
+            desc: '',
+            ip: this.getClientIp(req),
+            create_user: userInfo.id,
+            create_time: new Date()
+          }
+        })
+      } catch (e) {
+        this.handleException(req, res, e)
+      }
       res.json({
         code: 20000,
         success: true,
