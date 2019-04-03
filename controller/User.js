@@ -80,6 +80,7 @@ class User extends Base {
           type = req.body.type,
           search, token = [], data
     // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
+    // TODO: 登录比较用户信息和token存储的信息是否一致，不一致需要重新设置token
     try {
       search = await UserModel.login({get: {account, password}})
       data = search[0] ? JSON.parse(JSON.stringify(search[0])) : ''
