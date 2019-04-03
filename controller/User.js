@@ -208,6 +208,7 @@ class User extends Base {
         data.update_user = userInfo.id
         data.update_time = new Date()
         delete data.id
+        delete data.account // 账号不能被修改
     try {
       result = await UserModel.update({set: data, get: {id}})
     } catch (e) {

@@ -86,6 +86,17 @@ CREATE TABLE `bbs_role_mod` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色功能关系表';
 
 -- ----------------------------
+-- 角色数据权限关系表
+-- ----------------------------
+DROP TABLE IF EXISTS `bbs_role_data_permissions`;
+CREATE TABLE `bbs_role_data_permissions` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `role_id` INT(11) NOT NULL,
+  `data_permissions_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色数据权限关系表';
+
+-- ----------------------------
 -- 功能模块表
 -- ----------------------------
 DROP TABLE IF EXISTS `bbs_mod`;
