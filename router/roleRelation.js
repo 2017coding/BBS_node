@@ -1,6 +1,6 @@
 import express from 'express'
 import RoleRelation from '../controller/RoleRelation'
-import ValidateRoleRelation from '../validate/roleRelation'
+import ValidateRoleRelation from '../validate/RoleRelation'
 const router = express.Router()
 
 /**
