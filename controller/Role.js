@@ -166,9 +166,11 @@ class Role extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let result
+    let result, userInfo = this.getUserInfo(req)
+    // admin获取所有，其他用户获取属于当前角色和创建的角色
     try {
-      result = await RoleModel.getAll({get: {}})
+      result = await RoleModel.getAll({
+        get: userInfo.id === 1 ? {} : {or: {create_user: userInfo.id, id: userInfo.role_id}}})
     } catch (e) {
       this.handleException(req, res, e)
       return

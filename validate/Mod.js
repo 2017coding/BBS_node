@@ -102,6 +102,9 @@ class Mod extends BaseValidate{
     }    
     next()
   }
+  async getUserMod (req, res, next) {
+    next()
+  }
   async getAll (req, res, next) {
     next()
   }

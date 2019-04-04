@@ -9,6 +9,7 @@ class Mod extends Base {
     this.delete = this.delete.bind(this)
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
+    this.getUserMod = this.getUserMod.bind(this)
     this.getAll = this.getAll.bind(this)
   }
   // 创建
@@ -143,6 +144,24 @@ class Mod extends Base {
         pageSize: query.pageSize,
         totals: length ? length[0].count : 0
       },
+      message: '操作成功'
+    })
+  }
+  // 获取用户拥有的模块
+  async getUserMod (req, res, next) {
+    let result, type = req.query.type, userInfo = this.getUserInfo(req)
+    try {
+      result = userInfo.id === 1 ?
+               await ModModel.getAll({get: {type}}) :
+               await ModModel.getUserMod({get: {type, role_id: userInfo.role_id}})
+    } catch (e) {
+      this.handleException(req, res, e)
+      return
+    }
+    res.json({
+      code: 20000,
+      success: true,
+      content: result,
       message: '操作成功'
     })
   }

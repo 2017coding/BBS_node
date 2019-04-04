@@ -10,6 +10,7 @@ class ModData extends Base{
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
     this.getTotals = this.getTotals.bind(this)
+    this.getUserDataControl = this.getUserDataControl.bind(this)
     this.getAll = this.getAll.bind(this)
   }
   async create (obj) {
@@ -36,6 +37,12 @@ class ModData extends Base{
   }
   async getTotals (obj) {
     const sql = `select COUNT(*) as count from bbs_data_control where 1 = 1 ${this.joinStr('get', obj.get)}`
+    return query(sql)
+  }
+  async getUserDataControl (obj) {
+    const sql = `select a.* from bbs_data_control as a
+                LEFT JOIN bbs_role_data_permissions as b
+                ON a.id = b.data_permissions_id where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async getAll (obj) {

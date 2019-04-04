@@ -100,6 +100,9 @@ class Mod extends BaseValidate{
     }    
     next()
   }
+  async getUserDataControl (req, res, next) {
+    next()
+  }
   async getAll (req, res, next) {
     next()
   }

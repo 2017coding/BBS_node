@@ -10,6 +10,7 @@ class Mod extends Base{
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
     this.getTotals = this.getTotals.bind(this)
+    this.getUserMod = this.getUserMod.bind(this)
     this.getAll = this.getAll.bind(this)
   }
   async create (obj) {
@@ -36,6 +37,12 @@ class Mod extends Base{
   }
   async getTotals (obj) {
     const sql = `select COUNT(*) as count from bbs_mod where 1 = 1 ${this.joinStr('get', obj.get)}`
+    return query(sql)
+  }
+  async getUserMod (obj) {
+    const sql = `select a.* from bbs_mod as a
+                LEFT JOIN bbs_role_mod as b
+                ON a.id = b.mod_id where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async getAll (obj) {

@@ -9,6 +9,7 @@ class ModData extends Base {
     this.delete = this.delete.bind(this)
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
+    this.getUserDataControl = this.getUserDataControl.bind(this)
     this.getAll = this.getAll.bind(this)
   }
   // 创建
@@ -137,6 +138,24 @@ class ModData extends Base {
       message: '操作成功'
     })
   }
+  // 获取当前用户拥有
+  async getUserDataControl (req, res, next) {
+      let modId = req.query.modId, result, userInfo = this.getUserInfo(req)
+      try {
+        result = userInfo.id === 1 ? 
+                  await DataControlModel.getAll({get: {mod_id: modId}}) :
+                  await DataControlModel.getUserDataControl({get: {mod_id: modId, role_id: userInfo.role_id}})
+      } catch (e) {
+        this.handleException(req, res, e)
+        return
+      }
+      res.json({
+        code: 20000,
+        success: true,
+        content: result,
+        message: '操作成功'
+      })
+    }
   // 获取所有
   async getAll (req, res, next) {
     let modId = req.query.modId, result

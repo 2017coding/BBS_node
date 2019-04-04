@@ -74,6 +74,18 @@ router.get('/getRow/:id', ValidateDataControl.getRow, DataControl.getRow)
  */
 router.get('/getList', ValidateDataControl.getList, DataControl.getList)
 /**
+ * 获取用户拥有模块权限
+ * @api {get} /api/DataControl/getUserDataControl 获取用户拥有模块权限
+ * @apiDescription 获取用户拥有模块权限
+ * @apiName getUserDataControl
+ * @apiHeader {String} Authorization token
+ * @apiParam {Number} modId
+ * @apiSampleRequest /api/DataControl/getUserDataControl
+ * @apiGroup DataControl
+ * @apiVersion 0.0.1
+ */
+router.get('/getUserDataControl', ValidateDataControl.getUserDataControl, DataControl.getUserDataControl)
+/**
  * 获取所有模块权限
  * @api {get} /api/DataControl/getAll 获取所有模块权限
  * @apiDescription 获取所有模块权限

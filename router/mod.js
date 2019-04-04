@@ -86,11 +86,23 @@ router.get('/getRow/:id', ValidateMod.getRow, Mod.getRow)
  */
 router.get('/getList', ValidateMod.getList, Mod.getList)
 /**
+ * 获取用户拥有的所有模块
+ * @api {get} /api/Mod/getUserMod 获取所有模块
+ * @apiDescription 获取所有模块
+ * @apiName getUserMod
+ * @apiParam {Number} type
+ * @apiHeader {String} Authorization token
+ * @apiSampleRequest /api/Mod/getUserMod
+ * @apiGroup Mod
+ * @apiVersion 0.0.1
+ */
+router.get('/getUserMod', ValidateMod.getUserMod, Mod.getUserMod)
+/**
  * 获取所有模块
- * @api {get} /api/Mod/getAll/:id 获取所有模块
+ * @api {get} /api/Mod/getAll 获取所有模块
  * @apiDescription 获取所有模块
  * @apiName getAll
- * @apiParam {Number} id
+ * @apiParam {Number} type
  * @apiHeader {String} Authorization token
  * @apiSampleRequest /api/Mod/getAll
  * @apiGroup Mod
