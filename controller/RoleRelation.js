@@ -11,18 +11,24 @@ class RoleRelation extends Base {
   // 设置权限
   async setPermissions (req, res, next) {
     let userInfo = this.getUserInfo(req), result,
-        data = req.body
+        data = req.body, modList = [], permissionsList = []
+        data.mod.forEach(item => {
+          modList.push([data.roleId, item])
+        })
+        data.permissions.forEach(item => {
+          permissionsList.push([data.roleId, item])
+        })
     try {
       result = await RoleRelationModel.setPermissions({
-        del: {get: {role_id: userInfo.role_id}},
+        del: {get: {role_id: data.roleId}},
         set: {
           key: {
-            mod: ['role_id', 'mod_id'],
-            permissions: ['role_id', 'data_permissions_id']
+            mod: [`role_id`, `mod_id`],
+            permissions: [`role_id`, `data_permissions_id`]
           }, 
           values: {
-            mod: data.mod,
-            permissions: data.permissions
+            mod: modList,
+            permissions: permissionsList || []
           }
         }
       })
@@ -49,7 +55,7 @@ class RoleRelation extends Base {
   // 获取权限
   async getPermissions (req, res, next) {
     let userInfo = this.getUserInfo(req), mod, permissions,
-        role_id = userInfo.role_id === 1 ? userInfo.role_id : req.body.roleId // admin用户不用传角色ID
+        role_id = req.query.roleId
     // TODO: 不是改用户创建的角色，用户不能查看到这个角色的权限
     try {
       mod = await RoleRelationModel.getMod({get: {role_id}})

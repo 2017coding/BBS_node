@@ -3,7 +3,6 @@ import UserModel from '../model/User'
 import logModel from '../model/Log'
 import Authority from './Authority'
 import JWT from 'jsonwebtoken'
-import crypto from 'crypto'
 
 class User extends Base {
   constructor () {
