@@ -1,7 +1,7 @@
 import Base from './Base'
-import ModModel from '../model/Mod'
+import DataPermsModel from '../model/DataPerms'
 
-class Mod extends Base {
+class DataPerms extends Base {
   constructor () {
     super()
     this.create = this.create.bind(this)
@@ -9,18 +9,19 @@ class Mod extends Base {
     this.delete = this.delete.bind(this)
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
-    this.getUserMod = this.getUserMod.bind(this)
+    this.getUserDataPerms = this.getUserDataPerms.bind(this)
     this.getAll = this.getAll.bind(this)
   }
   // 创建
   async create (req, res, next) {
     try {
       let data = JSON.parse(JSON.stringify(req.body)),
-          userInfo = this.getUserInfo(req), result
+          userInfo = this.getUserInfo(req),
+          result
       // 参数处理
       data.create_user = userInfo.id,
       data.create_time = new Date()
-      result = await ModModel.create({
+      result = await DataPermsModel.create({
         set: data
       })
     } catch (e) {
@@ -44,7 +45,7 @@ class Mod extends Base {
         data.update_time = new Date()
         delete data.id
     try {
-      result = await ModModel.update({set: data, get: {id}})
+      result = await DataPermsModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -65,17 +66,8 @@ class Mod extends Base {
   }
   // 删除
   async delete (req, res, next) {
-    // 如果当前模块下面有节点，则不能删除
-    const child = await ModModel.getAll({get: {pid: req.params.id}})
-    if (child.length > 0) {
-      res.json({
-        code: 20001,
-        success: false,
-        message: '请先删除子目录'
-      })
-      return
-    }
-    const result = await ModModel.delete({get: {id: req.params.id}})
+    const userInfo = this.getUserInfo(req),
+      result = await DataPermsModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -92,7 +84,7 @@ class Mod extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await ModModel.getRow({get: {id: req.params.id}})
+    const search = await DataPermsModel.getRow({get: {id: req.params.id}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -129,8 +121,8 @@ class Mod extends Base {
           }
         }
     try {
-      result = await ModModel.getList({get: query})
-      length = await ModModel.getTotals({get: query})
+      result = await DataPermsModel.getList({get: query})
+      length = await DataPermsModel.getTotals({get: query})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -147,13 +139,13 @@ class Mod extends Base {
       message: '操作成功'
     })
   }
-  // 获取用户拥有的模块
-  async getUserMod (req, res, next) {
-    let result, type = req.query.type, userInfo = this.getUserInfo(req)
+  // 获取当前用户拥有
+  async getUserDataPerms (req, res, next) {
+    let menuId = req.query.menuId, result, userInfo = this.getUserInfo(req)
     try {
-      result = userInfo.id === 1 ?
-               await ModModel.getAll({get: {type}}) :
-               await ModModel.getUserMod({get: {type, role_id: userInfo.role_id}})
+      result = userInfo.id === 1 ? 
+                await DataPermsModel.getAll({get: {menu_id: menuId}}) :
+                await DataPermsModel.getUserDataPerms({get: {menu_id: menuId, role_id: userInfo.role_id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -167,9 +159,9 @@ class Mod extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let result, type = req.query.type
+    let menuId = req.query.menuId, result
     try {
-      result = await ModModel.getAll(type ? {get: {type}} : {get: {}})
+      result = await DataPermsModel.getAll(menuId ? {get: {menu_id: menuId}} : '')
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -183,4 +175,4 @@ class Mod extends Base {
   }
 }
 
-export default new Mod()
+export default new DataPerms()

@@ -49,7 +49,7 @@ class User extends Base {
           set: {
             origin: req.body.type,
             type: 4,
-            title: '创建用户',
+            title: req.body.type === 2 ? '创建用户' : '注册用户',
             desc: '',
             ip: this.getClientIp(req),
             create_user: userInfo.id,
@@ -62,7 +62,7 @@ class User extends Base {
       res.json({
         code: 20000,
         success: true,
-        message: '注册成功'
+        message: req.body.type === 2 ? '创建成功' : '注册成功'
       })
     } else {
       res.json({
@@ -247,8 +247,8 @@ class User extends Base {
   }
   // 删除用户
   async delete (req, res, next) {
-    const result = await UserModel.delete({get: {id: req.params.id}}),
-          userInfo = this.getUserInfo(req)
+    const userInfo = this.getUserInfo(req),
+      result = await UserModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       try {
         // 编辑用户写入日志
@@ -282,7 +282,7 @@ class User extends Base {
   // 获取用户信息
   async userInfo (req, res, next) {
     const userInfo = this.getUserInfo(req),
-          search = await UserModel.getRow({get: {id: userInfo.id}})
+          search = await UserModel.getRow({get: {id: userInfo.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -301,7 +301,7 @@ class User extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await UserModel.getRow({get: {id: req.params.id}})
+    const search = await UserModel.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -338,8 +338,8 @@ class User extends Base {
           }
         }
     try {
-      result = await UserModel.getList({get: query})
-      length = await UserModel.getTotals({get: query})
+      result = await UserModel.getList({get: {...query, flag: 1}})
+      length = await UserModel.getTotals({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -358,10 +358,16 @@ class User extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let result, userInfo = this.getUserInfo(req)
+    let query = JSON.parse(JSON.stringify(req.query)), result, userInfo = this.getUserInfo(req)
     try {
+      // 设置非模糊查询字段
+      for (let key in query) {
+        if (['id', 'create_user'].indexOf(key) === -1) {
+          query.like = [...query.like || [], key]
+        }
+      }
       // TODO: 暂时为当前用户创建的用户，admin查询所有用户, 之后改为当前用户创建的用户以及用户创建的用户
-      result = await UserModel.getAll(userInfo.id === 1 || userInfo.id === '1' ? '' : {get: {create_user: userInfo.id}})
+      result = await UserModel.getAll({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

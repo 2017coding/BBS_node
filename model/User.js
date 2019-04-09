@@ -40,15 +40,15 @@ class User extends Base{
     //             left join bbs_user as c on a.id = c.update_user
     //             where 1 = 1 ${this.joinStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
     const sql = `select * from bbs_user
-                where 1 = 1 ${this.joinStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
+                where 1 = 1 and id <> 1 ${this.joinStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
     return query(sql)
   }
   async getTotals (obj) {
-    const sql = `select COUNT(*) as count from bbs_user where 1 = 1 ${this.joinStr('get', obj.get)}`
+    const sql = `select COUNT(*) as count from bbs_user where 1 = 1 and id <> 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
-  async getAll () {
-    const sql = `select * from bbs_user`
+  async getAll (obj) {
+    const sql = `select * from bbs_user where id <> 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
 }

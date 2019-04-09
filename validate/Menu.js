@@ -1,6 +1,6 @@
 import BaseValidate from './BaseValidate'
 
-class Mod extends BaseValidate{
+class Menu extends BaseValidate{
   constructor () {
     super()
     this.create = this.create.bind(this)
@@ -13,11 +13,12 @@ class Mod extends BaseValidate{
   async create (req, res, next) {
     const params = req.body,
           arr = [
-            {label: 'mod_id', value: params.mod_id, rules: ['notnull', 'number']},
-            {label: '类型', value: params.type, rules: ['notnull', 'number']},
-            {label: '编码', value: params.code, rules: ['notnull', 'string']},
-            {label: '名称', value: params.name, rules: ['notnull']},
-            {label: '请求方式', value: params.method, rules: ['notnull', 'string']}
+            {label: 'pid', value: params.pid, rules: ['notnull', 'number']},
+            {label: '菜单类型', value: params.type, rules: ['notnull', 'number']},
+            {label: '菜单编码', value: params.code, rules: ['notnull', 'string']},
+            {label: '菜单名称', value: params.name, rules: ['notnull']},
+            {label: '排序', value: params.sort, rules: ['notnull', 'number']},
+            {label: '状态', value: params.status, rules: ['notnull', 'number']}
           ],
           result = this.check(arr)
     if (!result.success) {
@@ -34,11 +35,12 @@ class Mod extends BaseValidate{
     const params = req.body,
           arr = [
             {label: 'ID', value: params.id, rules: ['notnull', 'number']},
-            {label: 'mod_id', value: params.mod_id, rules: ['notnull', 'number']},
-            {label: '类型', value: params.type, rules: ['notnull', 'number']},
-            {label: '编码', value: params.code, rules: ['notnull', 'string']},
-            {label: '名称', value: params.name, rules: ['notnull']},
-            {label: '请求方式', value: params.method, rules: ['notnull', 'string']}
+            {label: 'pid', value: params.pid, rules: ['notnull', 'number']},
+            {label: '菜单类型', value: params.type, rules: ['notnull', 'number']},
+            {label: '菜单编码', value: params.code, rules: ['notnull', 'string']},
+            {label: '菜单名称', value: params.name, rules: ['notnull']},
+            {label: '排序', value: params.sort, rules: ['notnull', 'number']},
+            {label: '状态', value: params.status, rules: ['notnull', 'number']}
           ],
           result = this.check(arr)
     if (!result.success) {
@@ -100,7 +102,7 @@ class Mod extends BaseValidate{
     }    
     next()
   }
-  async getUserDataControl (req, res, next) {
+  async getUserMenu (req, res, next) {
     next()
   }
   async getAll (req, res, next) {
@@ -108,4 +110,4 @@ class Mod extends BaseValidate{
   }
 }
 
-export default new Mod()
+export default new Menu()

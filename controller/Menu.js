@@ -1,7 +1,7 @@
 import Base from './Base'
-import DataControlModel from '../model/DataControl'
+import MenuMolde from '../model/Menu'
 
-class ModData extends Base {
+class Menu extends Base {
   constructor () {
     super()
     this.create = this.create.bind(this)
@@ -9,19 +9,18 @@ class ModData extends Base {
     this.delete = this.delete.bind(this)
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
-    this.getUserDataControl = this.getUserDataControl.bind(this)
+    this.getUserMenu = this.getUserMenu.bind(this)
     this.getAll = this.getAll.bind(this)
   }
   // 创建
   async create (req, res, next) {
     try {
       let data = JSON.parse(JSON.stringify(req.body)),
-          userInfo = this.getUserInfo(req),
-          result
+          userInfo = this.getUserInfo(req), result
       // 参数处理
       data.create_user = userInfo.id,
       data.create_time = new Date()
-      result = await DataControlModel.create({
+      result = await MenuMolde.create({
         set: data
       })
     } catch (e) {
@@ -45,7 +44,7 @@ class ModData extends Base {
         data.update_time = new Date()
         delete data.id
     try {
-      result = await DataControlModel.update({set: data, get: {id}})
+      result = await MenuMolde.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -66,7 +65,18 @@ class ModData extends Base {
   }
   // 删除
   async delete (req, res, next) {
-    const result = await DataControlModel.delete({get: {id: req.params.id}})
+    // 如果当前模块下面有节点，则不能删除
+    const child = await MenuMolde.getAll({get: {pid: req.params.id}})
+    if (child.length > 0) {
+      res.json({
+        code: 20001,
+        success: false,
+        message: '请先删除子目录'
+      })
+      return
+    }
+    const userInfo = this.getUserInfo(req),
+      result = await MenuMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -83,7 +93,7 @@ class ModData extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await DataControlModel.getRow({get: {id: req.params.id}})
+    const search = await MenuMolde.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -120,8 +130,8 @@ class ModData extends Base {
           }
         }
     try {
-      result = await DataControlModel.getList({get: query})
-      length = await DataControlModel.getTotals({get: query})
+      result = await MenuMolde.getList({get: {...query, flag: 1}})
+      length = await MenuMolde.getTotals({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -138,29 +148,29 @@ class ModData extends Base {
       message: '操作成功'
     })
   }
-  // 获取当前用户拥有
-  async getUserDataControl (req, res, next) {
-      let modId = req.query.modId, result, userInfo = this.getUserInfo(req)
-      try {
-        result = userInfo.id === 1 ? 
-                  await DataControlModel.getAll({get: {mod_id: modId}}) :
-                  await DataControlModel.getUserDataControl({get: {mod_id: modId, role_id: userInfo.role_id}})
-      } catch (e) {
-        this.handleException(req, res, e)
-        return
-      }
-      res.json({
-        code: 20000,
-        success: true,
-        content: result,
-        message: '操作成功'
-      })
+  // 获取用户拥有的模块
+  async getUserMenu (req, res, next) {
+    let result, type = req.query.type, userInfo = this.getUserInfo(req)
+    try {
+      result = userInfo.id === 1 ?
+               await MenuMolde.getAll({get: {type, flag: 1}}) :
+               await MenuMolde.getUserMenu({get: {type, role_id: userInfo.role_id, flag: 1}})
+    } catch (e) {
+      this.handleException(req, res, e)
+      return
     }
+    res.json({
+      code: 20000,
+      success: true,
+      content: result,
+      message: '操作成功'
+    })
+  }
   // 获取所有
   async getAll (req, res, next) {
-    let modId = req.query.modId, result
+    let result, type = req.query.type
     try {
-      result = await DataControlModel.getAll(modId ? {get: {mod_id: modId}} : '')
+      result = await MenuMolde.getAll(type ? {get: {type, flag: 1}} : {get: {flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -174,4 +184,4 @@ class ModData extends Base {
   }
 }
 
-export default new ModData()
+export default new Menu()

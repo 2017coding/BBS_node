@@ -92,7 +92,8 @@ class Role extends Base {
       })
       return
     }
-    const result = await RoleModel.delete({get: {id: req.params.id}})
+    const userInfo = this.getUserInfo(req),
+    result = await RoleModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -109,7 +110,7 @@ class Role extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await RoleModel.getRow({get: {id: req.params.id}})
+    const search = await RoleModel.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -146,8 +147,8 @@ class Role extends Base {
           }
         }
     try {
-      result = await RoleModel.getList({get: query})
-      length = await RoleModel.getTotals({get: query})
+      result = await RoleModel.getList({get: {query, flag: 1}})
+      length = await RoleModel.getTotals({get: {query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -170,7 +171,7 @@ class Role extends Base {
     // admin获取所有，其他用户获取属于当前角色和创建的角色
     try {
       result = await RoleModel.getAll({
-        get: userInfo.id === 1 ? {} : {or: {create_user: userInfo.id, id: userInfo.role_id}}})
+        get: userInfo.id === 1 ? {flag: 1} : {or: {create_user: userInfo.id, id: userInfo.role_id}, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
