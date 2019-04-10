@@ -140,7 +140,7 @@ router.get('/getList', ValidateUser.getList, User.getList)
 /**
  * 获取所有用户
  * @api {get} /api/user/getAll 获取所有用户
- * @apiDescription 获取用户列表
+ * @apiDescription 获取所有用户
  * @apiName getAll
  * @apiHeader {String} Authorization token
  * @apiSampleRequest /api/user/getAll
@@ -148,5 +148,16 @@ router.get('/getList', ValidateUser.getList, User.getList)
  * @apiVersion 0.0.1
  */
 router.get('/getAll', ValidateUser.getAll, User.getAll)
+/**
+ * 获取用户的权限数据
+ * @api {get} /api/user/getPermissions 获取用户的权限数据
+ * @apiDescription 获取用户的权限数据
+ * @apiName getPermissions
+ * @apiHeader {String} Authorization token
+ * @apiSampleRequest /api/user/getPermissions
+ * @apiGroup User
+ * @apiVersion 0.0.1
+ */
+router.get('/getPermissions', ValidateUser.getPermissions, User.getPermissions)
 
 export default router

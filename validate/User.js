@@ -161,6 +161,9 @@ class User extends BaseValidate{
   async getAll (req, res, next) {
     next()
   }
+  async getPermissions (req, res, next) {
+    next()
+  }
 }
 
 export default new User()

@@ -76,7 +76,7 @@ CREATE TABLE `bbs_user_role` (
 DROP TABLE IF EXISTS `bbs_role`;
 CREATE TABLE `bbs_role` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `pid` INT(11) DEFAULT '0',
+  `pid` INT(11) NOT NULL,
   `name` VARCHAR(24) NOT NULL COMMENT '角色名称',
   `blogs` INT(11) DEFAULT '1' COMMENT '专栏数量, -1为无限',
   `users` INT(11) DEFAULT '10' COMMENT '可创建多少个用户, -1为无限',
@@ -152,7 +152,7 @@ CREATE TABLE `bbs_data_perms` (
   `code` VARCHAR(48) NOT NULL COMMENT '编码',
   `type` tinyint(4) NOT NULL COMMENT '按钮或者其他',
   `api` VARCHAR(24) NOT NULL COMMENT '接口',
-  `method` VARCHAR(24) NOT NULL COMMENT '请求方式',
+  `method` tinyint(4) NOT NULL COMMENT '请求方式 1: GET 2: POST 3: PUT 4. DELETE',
   `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_user` INT(11) DEFAULT NULL,

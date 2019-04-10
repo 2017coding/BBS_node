@@ -1,6 +1,8 @@
 import Base from './Base'
 import UserModel from '../model/User'
 import logModel from '../model/Log'
+import MenuMolde from '../model/Menu'
+import DataPermsModel from '../model/DataPerms'
 import Authority from './Authority'
 import JWT from 'jsonwebtoken'
 
@@ -16,6 +18,7 @@ class User extends Base {
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
     this.getAll = this.getAll.bind(this)
+    this.getPermissions = this.getPermissions.bind(this)
   }
   // 注册
   async registered (req, res, next) {
@@ -376,6 +379,40 @@ class User extends Base {
       code: 20000,
       success: true,
       content: result,
+      message: '操作成功'
+    })
+  }
+  // 获取用户相关权限
+  async getPermissions (req, res, next) {
+    let userInfo = this.getUserInfo(req), type = req.query.type, mod, dataPerms
+    // 如果当前用户没有绑定角色
+    if (!userInfo.role_id) {
+      // res.json({
+      //   code: 20203,
+      //   success: false,
+      //   content: {},
+      //   message: '用户未绑定角色'
+      // })
+      // return
+    }
+    try {
+      mod = userInfo.id === 1 ?
+            await MenuMolde.getAll({get: {type, flag: 1}}) :
+            await MenuMolde.getUserMenu({get: {type, role_id: userInfo.role_id, flag: 1}})
+      dataPerms = userInfo.id === 1 ? 
+            await DataPermsModel.getAll({get: {}}) :
+            await DataPermsModel.getUserDataPerms({get: {role_id: userInfo.role_id}})
+    } catch (e) {
+      this.handleException(req, res, e)
+      return
+    }
+    res.json({
+      code: 20000,
+      success: true,
+      content: {
+        mod,
+        dataPerms
+      },
       message: '操作成功'
     })
   }

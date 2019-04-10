@@ -15,7 +15,7 @@ class DataPerms extends BaseValidate{
           arr = [
             {label: 'menu_id', value: params.menu_id, rules: ['notnull', 'number']},
             {label: '类型', value: params.type, rules: ['notnull', 'number']},
-            {label: '编码', value: params.code, rules: ['notnull', 'string']},
+            {label: '编码', value: params.code, rules: ['notnull', 'noChinese']},
             {label: '名称', value: params.name, rules: ['notnull']},
             {label: '请求方式', value: params.method, rules: ['notnull', 'string']}
           ],
@@ -36,7 +36,7 @@ class DataPerms extends BaseValidate{
             {label: 'ID', value: params.id, rules: ['notnull', 'number']},
             {label: 'menu_id', value: params.menu_id, rules: ['notnull', 'number']},
             {label: '类型', value: params.type, rules: ['notnull', 'number']},
-            {label: '编码', value: params.code, rules: ['notnull', 'string']},
+            {label: '编码', value: params.code, rules: ['notnull', 'noChinese']},
             {label: '名称', value: params.name, rules: ['notnull']},
             {label: '请求方式', value: params.method, rules: ['notnull', 'string']}
           ],

@@ -15,7 +15,7 @@ class Menu extends BaseValidate{
           arr = [
             {label: 'pid', value: params.pid, rules: ['notnull', 'number']},
             {label: '菜单类型', value: params.type, rules: ['notnull', 'number']},
-            {label: '菜单编码', value: params.code, rules: ['notnull', 'string']},
+            {label: '菜单编码', value: params.code, rules: ['notnull', 'noChinese']},
             {label: '菜单名称', value: params.name, rules: ['notnull']},
             {label: '排序', value: params.sort, rules: ['notnull', 'number']},
             {label: '状态', value: params.status, rules: ['notnull', 'number']}
@@ -37,7 +37,7 @@ class Menu extends BaseValidate{
             {label: 'ID', value: params.id, rules: ['notnull', 'number']},
             {label: 'pid', value: params.pid, rules: ['notnull', 'number']},
             {label: '菜单类型', value: params.type, rules: ['notnull', 'number']},
-            {label: '菜单编码', value: params.code, rules: ['notnull', 'string']},
+            {label: '菜单编码', value: params.code, rules: ['notnull', 'noChinese']},
             {label: '菜单名称', value: params.name, rules: ['notnull']},
             {label: '排序', value: params.sort, rules: ['notnull', 'number']},
             {label: '状态', value: params.status, rules: ['notnull', 'number']}
