@@ -6,7 +6,9 @@ class RoleRelation extends Base{
   constructor () {
     super()
     this.setPermissions = this.setPermissions.bind(this)
+    this.setBindUser = this.setBindUser.bind(this)
     this.getBindUser = this.getBindUser.bind(this)
+    this.checkBindUser = this.checkBindUser.bind(this)
     this.getMenu = this.getMenu.bind(this)
     this.getDataPerms = this.getDataPerms.bind(this)
   }
@@ -50,8 +52,8 @@ class RoleRelation extends Base{
     // 事务开始
     await query('begin')
     // 删除
-    sql1 = `DELETE from bbs_role_menu where menu_id in (${mysql.escape(deleteMenuList)})`
-    sql2 = `DELETE from bbs_role_data_perms where data_perms_id in (${mysql.escape(deleteDataPermsList)})`
+    sql1 = `DELETE from bbs_role_menu where menu_id in (${mysql.escape(deleteMenuList)}) and role_id = ${obj.get.role_id}`
+    sql2 = `DELETE from bbs_role_data_perms where data_perms_id in (${mysql.escape(deleteDataPermsList)}) and role_id = ${obj.get.role_id}`
     // 添加
     sql3 = `INSERT INTO bbs_role_menu (role_id, menu_id) VALUES ${mysql.escape(createMenuList)}`
     sql4 = `INSERT INTO bbs_role_data_perms (role_id, data_perms_id) VALUES ${mysql.escape(createDataPermsList)}`
@@ -74,15 +76,15 @@ class RoleRelation extends Base{
         createUserList = [], deleteUserList = [],
         sql1, sql2, result1, result2
     // 先查询到所有的用户
-    dbUser =  await query(`select a.user_id from bbs_user_role as a where 1 = 1 ${this.joinStr('get', obj.get)}`)
+    dbUser =  await query(`select user_id from bbs_user_role where 1 = 1 ${this.joinStr('get', obj.get)}`)
     paramsUser = obj.data.user || []
     // 得到数据库的ID列表
-    dbUser = dbMenu.map(item => item.user_id)
+    dbUser = dbUser.map(item => item.user_id)
     // 数据库数据和传入数据做对比，数据库有而传入没有的数据删除，传入而数据库没有的数据添加
     dbUser.forEach(item => {
       // 需要删除用户的数据
       if (!paramsUser.includes(item)) {
-        deleteMenuList.push(item)
+        deleteUserList.push(item)
       }
     })
     paramsUser.forEach(item => {
@@ -94,12 +96,12 @@ class RoleRelation extends Base{
     // 事务开始
     await query('begin')
     // 删除
-    sql1 = `DELETE from bbs_user_role where menu_id in (${mysql.escape(deleteUserList)})`
+    sql1 = `DELETE from bbs_user_role where user_id in (${mysql.escape(deleteUserList)}) and role_id = ${obj.get.role_id}`
     // 添加
     sql2 = `INSERT INTO bbs_user_role (role_id, user_id) VALUES ${mysql.escape(createUserList)}`
     // 运行sql
-    result1 = mysql.escape(deleteMenuList) ? await query(sql1) : {affectedRows: true}
-    result2 = mysql.escape(createDataPermsList) ? await query(sql4) : {affectedRows: true}
+    result1 = mysql.escape(deleteUserList) ? await query(sql1) : {affectedRows: true}
+    result2 = mysql.escape(createUserList) ? await query(sql2) : {affectedRows: true}
     if (result1.affectedRows >= 0 && result2.affectedRows) {
       // 事务提交
       await query('commit')
@@ -110,21 +112,28 @@ class RoleRelation extends Base{
     return result1.affectedRows >= 0 && result2.affectedRows
   }
   async getBindUser (obj) {
-    const sql = `select a.id, a.account, a.name, a.role_id from bbs_user as a
-                LEFT JOIN bbs_user_role as b
-                ON a.id =  b.id where 1 = 1 ${this.joinStr('get', obj.get)}`
+    const sql = `select a.id, a.account, a.name, b.role_id from bbs_user as a
+                LEFT JOIN bbs_user_role as b ON a.id =  b.user_id
+                where 1 = 1 and b.role_id = ${obj.get.role_id}`
+    return query(sql)
+  }
+  async checkBindUser (obj) {
+    const sql = `select a.id, a.account, a.name, b.role_id, c.name as role_name from bbs_user as a
+                LEFT JOIN bbs_user_role as b ON a.id =  b.user_id
+                LEFT JOIN bbs_role as c ON c.id = b.role_id
+                where 1 = 1 and b.user_id in (${mysql.escape(obj)})`
     return query(sql)
   }
   async getMenu (obj) {
     const sql = `select a.id from bbs_menu as a
-                LEFT JOIN bbs_role_menu as b
-                ON a.id = b.menu_id where 1 = 1 ${this.joinStr('get', obj.get)}`
+                LEFT JOIN bbs_role_menu as b ON a.id = b.menu_id
+                where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async getDataPerms (obj) {
     const sql = `select a.id from bbs_data_perms as a
-                LEFT JOIN bbs_role_data_perms as b
-                ON a.id = b.data_perms_id where 1 = 1 ${this.joinStr('get', obj.get)}`
+                LEFT JOIN bbs_role_data_perms as b ON a.id = b.data_perms_id
+                where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
 }
