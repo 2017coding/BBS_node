@@ -43,6 +43,10 @@ class Menu extends Base{
     let sql = `select a.* from bbs_menu as a
                 LEFT JOIN bbs_role_menu as b
                 ON a.id = b.menu_id where 1 = 1 ${this.joinStr('get', obj.get)}`
+    // admin则获取所有数据
+    if (+obj.get.role_id === 1) {
+      sql = `select * from bbs_menu`
+    }
     return query(sql)
   }
   async getAll (obj) {

@@ -48,6 +48,7 @@ CREATE TABLE `bbs_user` (
   `wechat` VARCHAR(24) DEFAULT NULL COMMENT '微信',
   `qq` VARCHAR(24) DEFAULT NULL COMMENT 'qq',
   `email` VARCHAR(48) DEFAULT NULL COMMENT '邮箱',
+  `desc` VARCHAR(48) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
   `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,

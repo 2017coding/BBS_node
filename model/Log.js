@@ -14,7 +14,9 @@ class Log extends Base{
   }
   async getList (obj) {
     let curPage = obj.get.curPage, pageSize = obj.get.pageSize
-    let sql = `select * from bbs_log where 1 = 1 ${this.joinStr('get', obj.get)} ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})} limit ${(curPage - 1) * pageSize}, ${pageSize}`
+    let sql = `select a.*, b.name as create_user_name from bbs_log as a
+              LEFT JOIN bbs_user as b ON a.create_user = b.id
+              where 1 = 1 ${this.joinStr('get', obj.get)} ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})} limit ${(curPage - 1) * pageSize}, ${pageSize}`
     return query(sql)
   }
   async getTotals (obj) {

@@ -150,7 +150,7 @@ class Menu extends Base {
   }
   // 获取角色拥有的模块
   async getRoleMenu (req, res, next) {
-    let result, query = req.query, userInfo = await this.getUserInfo(req)
+    let result, query = req.query
     try {
       result = await MenuMolde.getRoleMenu({get: {type: query.type, role_id: query.roleId, flag: 1}})
     } catch (e) {

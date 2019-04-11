@@ -44,9 +44,11 @@ class User extends Base{
         params = JSON.parse(JSON.stringify(obj.get))
         delete params.create_user
     try {
-      sql = `select a.*, b.name as create_user_name, c.name as update_user_name from bbs_user as a 
+      sql = `select a.*, b.name as create_user_name, c.name as update_user_name, e.name as role_name from bbs_user as a 
           left join bbs_user as b on a.create_user = b.id
-          left join bbs_user as c on a.update_user = c.id`
+          left join bbs_user as c on a.update_user = c.id
+          left join bbs_user_role as d on a.id = d.user_id
+          left join bbs_role as e on e.id = d.role_id`
       // 当前存在查询，不存在则不查询
       mysql.escape(createUserList.slice((curPage - 1) * pageSize, (curPage - 1) * pageSize + pageSize)) ?
       sql += ` where 1 = 1 ${this.joinStr('get', params)} and a.id in (${mysql.escape(createUserList.slice((curPage - 1) * pageSize, (curPage - 1) * pageSize + pageSize))})` :
