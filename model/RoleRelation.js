@@ -144,7 +144,7 @@ class RoleRelation extends Base{
     // 获取到所有的用户数据
     userList = await query(`select id, create_user from bbs_user`)
     // 通过建立树状数据，得到当前用户创建的用户树
-    userTree = utils.getTreeArr({key: 'id', pKey: 'create_user', data: userList, rootPValue})
+    userTree = utils.getTreeArr({key: 'id', pKey: 'create_user', data: userList, rootPValue: +rootPValue})
     // 递归得到所有创建的用户
     getUser(userTree)
     function getUser (arr) {

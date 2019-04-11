@@ -61,7 +61,7 @@ class Role extends Base{
     // 获取到所有的用户数据
     roleList = await query(`select id, pid from bbs_role`)
     // 通过建立树状数据，得到当前用户创建的用户树
-    roleTree = utils.getTreeArr({key: 'id', pKey: 'pid', data: roleList, rootPValue})
+    roleTree = utils.getTreeArr({key: 'id', pKey: 'pid', data: roleList, rootPValue: +rootPValue})
     // 递归得到所有创建的用户
     getRole(roleTree)
     function getRole (arr) {
