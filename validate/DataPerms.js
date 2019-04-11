@@ -100,7 +100,7 @@ class DataPerms extends BaseValidate{
     }    
     next()
   }
-  async getUserDataPerms (req, res, next) {
+  async getRoleDataPerms (req, res, next) {
     next()
   }
   async getAll (req, res, next) {

@@ -1,6 +1,7 @@
 import mysql from 'mysql'
 import query from '../mysql'
 import Base from './Base'
+import utils from '../lib/js/utils'
 
 class RoleRelation extends Base{
   constructor () {
@@ -112,29 +113,49 @@ class RoleRelation extends Base{
     return result1.affectedRows >= 0 && result2.affectedRows
   }
   async getBindUser (obj) {
-    const sql = `select a.id, a.account, a.name, b.role_id from bbs_user as a
-                LEFT JOIN bbs_user_role as b ON a.id =  b.user_id
-                where 1 = 1 and b.role_id = ${obj.get.role_id}`
+    // 查询到角色绑定的用户后，还需要判断这个用户是否是当前用户或者当前用户创建的用户所创建的
+    let sql, createUserList = await this.getCreateUser(obj.get.userId)
+    sql = `select a.id, a.account, a.name, b.role_id from bbs_user as a
+            LEFT JOIN bbs_user_role as b ON a.id =  b.user_id
+            where 1 = 1 and b.role_id = ${obj.get.role_id} and a.create_user in (${mysql.escape([obj.get.userId, ...createUserList])}) and a.flag = 1`
     return query(sql)
   }
   async checkBindUser (obj) {
-    const sql = `select a.id, a.account, a.name, b.role_id, c.name as role_name from bbs_user as a
+    let sql = `select a.id, a.account, a.name, b.role_id, c.name as role_name from bbs_user as a
                 LEFT JOIN bbs_user_role as b ON a.id =  b.user_id
                 LEFT JOIN bbs_role as c ON c.id = b.role_id
                 where 1 = 1 and b.user_id in (${mysql.escape(obj)})`
     return query(sql)
   }
   async getMenu (obj) {
-    const sql = `select a.id from bbs_menu as a
+    let sql = `select a.id from bbs_menu as a
                 LEFT JOIN bbs_role_menu as b ON a.id = b.menu_id
                 where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async getDataPerms (obj) {
-    const sql = `select a.id from bbs_data_perms as a
+    let sql = `select a.id from bbs_data_perms as a
                 LEFT JOIN bbs_role_data_perms as b ON a.id = b.data_perms_id
                 where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
+  }
+  async getCreateUser (rootPValue) {
+    let userList, userTree, createUserList = []
+    // 获取到所有的用户数据
+    userList = await query(`select id, create_user from bbs_user`)
+    // 通过建立树状数据，得到当前用户创建的用户树
+    userTree = utils.getTreeArr({key: 'id', pKey: 'create_user', data: userList, rootPValue})
+    // 递归得到所有创建的用户
+    getUser(userTree)
+    function getUser (arr) {
+      for (let val of arr) {
+        createUserList.push(val.id)
+        if (val.children.length) {
+          getUser(val.children)
+        }
+      }
+    }
+    return createUserList
   }
 }
 

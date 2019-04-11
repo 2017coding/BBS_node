@@ -87,16 +87,16 @@ router.get('/getRow/:id', ValidateMenu.getRow, Menu.getRow)
 router.get('/getList', ValidateMenu.getList, Menu.getList)
 /**
  * 获取用户拥有的所有菜单
- * @api {get} /api/Menu/getUserMenu 获取所有菜单
+ * @api {get} /api/Menu/getRoleMenu 获取所有菜单
  * @apiDescription 获取所有菜单
- * @apiName getUserMenu
+ * @apiName getRoleMenu
  * @apiParam {Number} type
  * @apiHeader {String} Authorization token
- * @apiSampleRequest /api/Menu/getUserMenu
+ * @apiSampleRequest /api/Menu/getRoleMenu
  * @apiGroup Menu
  * @apiVersion 0.0.1
  */
-router.get('/getUserMenu', ValidateMenu.getUserMenu, Menu.getUserMenu)
+router.get('/getRoleMenu', ValidateMenu.getRoleMenu, Menu.getRoleMenu)
 /**
  * 获取所有菜单
  * @api {get} /api/Menu/getAll 获取所有菜单

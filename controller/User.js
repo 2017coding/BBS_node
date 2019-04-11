@@ -84,7 +84,7 @@ class User extends Base {
     // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
     // TODO: 登录比较用户信息和token存储的信息是否一致，不一致需要重新设置token
     try {
-      search = await UserModel.login({get: {account, password}})
+      search = await UserModel.getRow({get: {account, password}})
       data = search[0] ? JSON.parse(JSON.stringify(search[0])) : ''
       if (data) {
         for (let key in data) {
@@ -108,12 +108,16 @@ class User extends Base {
             break
         }
         try {
-          // Token过期了重新设置，没过期不处理
+          // Token过期了或者用户登录获取到的信息和之前token解析出来的不一样，则重新设置，否则不处理
           await Authority.setToken(data, {
             set: {
               [data.type + '_token']: JWT.sign(data, 'BBS', {}),
               [data.type + '_expire_time']: data[data.type + '_expire_time'],
-              user_id: data.id}
+              user_id: data.id
+            },
+            get: {
+              user_id: data.id
+            }
           })
         } catch (e) {
           this.handleException(req, res, e)
@@ -354,23 +358,17 @@ class User extends Base {
         result,
         curPage: query.curPage,
         pageSize: query.pageSize,
-        totals: length ? length[0].count : 0
+        totals: length.length
       },
       message: '操作成功'
     })
   }
   // 获取所有
   async getAll (req, res, next) {
-    let query = JSON.parse(JSON.stringify(req.query)), result, userInfo = this.getUserInfo(req)
+    let result, userInfo = this.getUserInfo(req)
     try {
-      // 设置非模糊查询字段
-      for (let key in query) {
-        if (['id', 'create_user'].indexOf(key) === -1) {
-          query.like = [...query.like || [], key]
-        }
-      }
       // TODO: 暂时为当前用户创建的用户，admin查询所有用户, 之后改为当前用户创建的用户以及用户创建的用户
-      result = await UserModel.getAll({get: {...query, flag: 1}})
+      result = await UserModel.getAll({get: {create_user: userInfo.id, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -398,10 +396,10 @@ class User extends Base {
     try {
       mod = userInfo.id === 1 ?
             await MenuMolde.getAll({get: {type, flag: 1}}) :
-            await MenuMolde.getUserMenu({get: {type, role_id: userInfo.role_id, flag: 1}})
+            await MenuMolde.getRoleMenu({get: {type, role_id: userInfo.role_id, flag: 1}})
       dataPerms = userInfo.id === 1 ? 
             await DataPermsModel.getAll({get: {}}) :
-            await DataPermsModel.getUserDataPerms({get: {role_id: userInfo.role_id}})
+            await DataPermsModel.getCodeByRoleDataPerms({get: {role_id: userInfo.role_id}})
     } catch (e) {
       this.handleException(req, res, e)
       return

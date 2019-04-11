@@ -102,7 +102,7 @@ class Menu extends BaseValidate{
     }    
     next()
   }
-  async getUserMenu (req, res, next) {
+  async getRoleMenu (req, res, next) {
     next()
   }
   async getAll (req, res, next) {

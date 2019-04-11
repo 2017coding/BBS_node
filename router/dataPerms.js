@@ -75,16 +75,16 @@ router.get('/getRow/:id', ValidateDataPerms.getRow, DataPerms.getRow)
 router.get('/getList', ValidateDataPerms.getList, DataPerms.getList)
 /**
  * 获取用户拥有模块权限
- * @api {get} /api/DataPerms/getUserDataPerms 获取用户拥有模块权限
+ * @api {get} /api/DataPerms/getRoleDataPerms 获取用户拥有模块权限
  * @apiDescription 获取用户拥有模块权限
- * @apiName getUserDataPerms
+ * @apiName getRoleDataPerms
  * @apiHeader {String} Authorization token
  * @apiParam {Number} modId
- * @apiSampleRequest /api/DataPerms/getUserDataPerms
+ * @apiSampleRequest /api/DataPerms/getRoleDataPerms
  * @apiGroup DataPerms
  * @apiVersion 0.0.1
  */
-router.get('/getUserDataPerms', ValidateDataPerms.getUserDataPerms, DataPerms.getUserDataPerms)
+router.get('/getRoleDataPerms', ValidateDataPerms.getRoleDataPerms, DataPerms.getRoleDataPerms)
 /**
  * 获取所有模块权限
  * @api {get} /api/DataPerms/getAll 获取所有模块权限

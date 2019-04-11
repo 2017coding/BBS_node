@@ -9,7 +9,7 @@ class Menu extends Base {
     this.delete = this.delete.bind(this)
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
-    this.getUserMenu = this.getUserMenu.bind(this)
+    this.getRoleMenu = this.getRoleMenu.bind(this)
     this.getAll = this.getAll.bind(this)
   }
   // 创建
@@ -148,13 +148,11 @@ class Menu extends Base {
       message: '操作成功'
     })
   }
-  // 获取用户拥有的模块
-  async getUserMenu (req, res, next) {
-    let result, type = req.query.type, userInfo = this.getUserInfo(req)
+  // 获取角色拥有的模块
+  async getRoleMenu (req, res, next) {
+    let result, query = req.query, userInfo = this.getUserInfo(req)
     try {
-      result = userInfo.id === 1 ?
-               await MenuMolde.getAll({get: {type, flag: 1}}) :
-               await MenuMolde.getUserMenu({get: {type, role_id: userInfo.role_id, flag: 1}})
+      result = await MenuMolde.getRoleMenu({get: {type: query.type, role_id: query.roleId, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

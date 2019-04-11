@@ -9,7 +9,7 @@ class DataPerms extends Base {
     this.delete = this.delete.bind(this)
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
-    this.getUserDataPerms = this.getUserDataPerms.bind(this)
+    this.getRoleDataPerms = this.getRoleDataPerms.bind(this)
     this.getAll = this.getAll.bind(this)
   }
   // 创建
@@ -140,12 +140,12 @@ class DataPerms extends Base {
     })
   }
   // 获取当前用户拥有
-  async getUserDataPerms (req, res, next) {
+  async getRoleDataPerms (req, res, next) {
     let menuId = req.query.menuId, result, userInfo = this.getUserInfo(req)
     try {
       result = userInfo.id === 1 ? 
                 await DataPermsModel.getAll({get: {menu_id: menuId}}) :
-                await DataPermsModel.getUserDataPerms({get: {menu_id: menuId, role_id: userInfo.role_id}})
+                await DataPermsModel.getRoleDataPerms({get: {menu_id: menuId, role_id: userInfo.role_id}})
     } catch (e) {
       this.handleException(req, res, e)
       return

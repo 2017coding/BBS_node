@@ -110,9 +110,9 @@ class RoleRelation extends Base {
   }
   // 获取绑定用户
   async getBindUser (req, res, next) {
-    let result, role_id = req.query.roleId
+    let result, userInfo = this.getUserInfo(req), role_id = req.query.roleId
     try {
-      result = await RoleRelationModel.getBindUser({get: {role_id}})
+      result = await RoleRelationModel.getBindUser({get: {role_id, userId: userInfo.id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
