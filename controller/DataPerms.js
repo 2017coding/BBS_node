@@ -16,7 +16,7 @@ class DataPerms extends Base {
   async create (req, res, next) {
     try {
       let data = JSON.parse(JSON.stringify(req.body)),
-          userInfo = this.getUserInfo(req),
+          userInfo = await this.getUserInfo(req),
           result
       // 参数处理
       data.create_user = userInfo.id,
@@ -39,7 +39,7 @@ class DataPerms extends Base {
     let id = req.body.id,
         data = JSON.parse(JSON.stringify(req.body)),
         result,
-        userInfo = this.getUserInfo(req)
+        userInfo = await this.getUserInfo(req)
         // 参数处理
         data.update_user = userInfo.id
         data.update_time = new Date()
@@ -66,7 +66,7 @@ class DataPerms extends Base {
   }
   // 删除
   async delete (req, res, next) {
-    const userInfo = this.getUserInfo(req),
+    const userInfo = await this.getUserInfo(req),
       result = await DataPermsModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
@@ -106,7 +106,7 @@ class DataPerms extends Base {
     let query = JSON.parse(JSON.stringify(req.query)),
         result,
         length,
-        userInfo = this.getUserInfo(req)
+        userInfo = await this.getUserInfo(req)
         // TODO: 有时间逻辑应该写为查询到当前用户创建的用户以及创建用户创建的用户
         // 如果是admin, 查询的时候则不需要设置用户ID, 否则为用户要查询的ID或用户ID
         if (userInfo.id === 1 || userInfo.id === '1') {
@@ -141,7 +141,7 @@ class DataPerms extends Base {
   }
   // 获取当前用户拥有
   async getRoleDataPerms (req, res, next) {
-    let menuId = req.query.menuId, result, userInfo = this.getUserInfo(req)
+    let menuId = req.query.menuId, result, userInfo = await this.getUserInfo(req)
     try {
       result = userInfo.id === 1 ? 
                 await DataPermsModel.getAll({get: {menu_id: menuId}}) :

@@ -26,7 +26,7 @@ class Role extends Base {
     if (search.length === 0) {
       try {
         let data = JSON.parse(JSON.stringify(req.body)),
-            userInfo = this.getUserInfo(req)
+            userInfo = await this.getUserInfo(req)
         // 参数处理
         data.create_user = userInfo.id,
         data.create_time = new Date()
@@ -55,7 +55,7 @@ class Role extends Base {
     let id = req.body.id,
         data = JSON.parse(JSON.stringify(req.body)),
         result,
-        userInfo = this.getUserInfo(req)
+        userInfo = await this.getUserInfo(req)
         // 参数处理
         data.update_user = userInfo.id
         data.update_time = new Date()
@@ -92,7 +92,7 @@ class Role extends Base {
       })
       return
     }
-    const userInfo = this.getUserInfo(req),
+    const userInfo = await this.getUserInfo(req),
     result = await RoleModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
@@ -132,7 +132,7 @@ class Role extends Base {
     let query = JSON.parse(JSON.stringify(req.query)),
         result,
         length,
-        userInfo = this.getUserInfo(req)
+        userInfo = await this.getUserInfo(req)
         // TODO: 有时间逻辑应该写为查询到当前用户创建的用户以及创建用户创建的用户
         // 如果是admin, 查询的时候则不需要设置用户ID, 否则为用户要查询的ID或用户ID
         if (userInfo.id === 1 || userInfo.id === '1') {
@@ -167,7 +167,7 @@ class Role extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let result, userInfo = this.getUserInfo(req)
+    let result, userInfo = await this.getUserInfo(req)
     // admin获取所有，其他用户获取属于当前角色和创建的角色
     try {
       result = await RoleModel.getAll({get: {id: userInfo.role_id, flag: 1}})

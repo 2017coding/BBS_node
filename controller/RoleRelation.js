@@ -11,7 +11,7 @@ class RoleRelation extends Base {
   }
   // 设置权限
   async setPermissions (req, res, next) {
-    let userInfo = this.getUserInfo(req), result,
+    let userInfo = await this.getUserInfo(req), result,
         data = req.body
     try {
       result = await RoleRelationModel.setPermissions({
@@ -43,7 +43,7 @@ class RoleRelation extends Base {
   }
   // 获取权限
   async getPermissions (req, res, next) {
-    let userInfo = this.getUserInfo(req), menu, permissions,
+    let userInfo = await this.getUserInfo(req), menu, permissions,
         role_id = req.query.roleId
     // TODO: 不是改用户创建的角色，用户不能查看到这个角色的权限
     try {
@@ -65,7 +65,7 @@ class RoleRelation extends Base {
   }
   // 设置绑定用户
   async setBindUser (req, res, next) {
-    let userInfo = this.getUserInfo(req), checkBind, result,
+    let userInfo = await this.getUserInfo(req), checkBind, result,
     data = req.body
     try {
       // 当传入的用户已经有绑定的角色, 并且当前要绑定的不是之前的角色，则不往下执行
@@ -110,7 +110,7 @@ class RoleRelation extends Base {
   }
   // 获取绑定用户
   async getBindUser (req, res, next) {
-    let result, userInfo = this.getUserInfo(req), role_id = req.query.roleId
+    let result, userInfo = await this.getUserInfo(req), role_id = req.query.roleId
     try {
       result = await RoleRelationModel.getBindUser({get: {role_id, userId: userInfo.id}})
     } catch (e) {

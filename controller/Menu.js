@@ -16,7 +16,7 @@ class Menu extends Base {
   async create (req, res, next) {
     try {
       let data = JSON.parse(JSON.stringify(req.body)),
-          userInfo = this.getUserInfo(req), result
+          userInfo = await this.getUserInfo(req), result
       // 参数处理
       data.create_user = userInfo.id,
       data.create_time = new Date()
@@ -38,7 +38,7 @@ class Menu extends Base {
     let id = req.body.id,
         data = JSON.parse(JSON.stringify(req.body)),
         result,
-        userInfo = this.getUserInfo(req)
+        userInfo = await this.getUserInfo(req)
         // 参数处理
         data.update_user = userInfo.id
         data.update_time = new Date()
@@ -75,7 +75,7 @@ class Menu extends Base {
       })
       return
     }
-    const userInfo = this.getUserInfo(req),
+    const userInfo = await this.getUserInfo(req),
       result = await MenuMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
@@ -115,7 +115,7 @@ class Menu extends Base {
     let query = JSON.parse(JSON.stringify(req.query)),
         result,
         length,
-        userInfo = this.getUserInfo(req)
+        userInfo = await this.getUserInfo(req)
         // TODO: 有时间逻辑应该写为查询到当前用户创建的用户以及创建用户创建的用户
         // 如果是admin, 查询的时候则不需要设置用户ID, 否则为用户要查询的ID或用户ID
         if (userInfo.id === 1 || userInfo.id === '1') {
@@ -150,7 +150,7 @@ class Menu extends Base {
   }
   // 获取角色拥有的模块
   async getRoleMenu (req, res, next) {
-    let result, query = req.query, userInfo = this.getUserInfo(req)
+    let result, query = req.query, userInfo = await this.getUserInfo(req)
     try {
       result = await MenuMolde.getRoleMenu({get: {type: query.type, role_id: query.roleId, flag: 1}})
     } catch (e) {

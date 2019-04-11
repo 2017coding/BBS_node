@@ -31,7 +31,7 @@ class User extends Base{
                 left join bbs_user_role as b on a.id = b.user_id
                 left join bbs_role as c on c.id = b.role_id
                 where 1 = 1 ${this.joinStr('get', obj.get)}`
-    // 处理表连接字段
+    // 处理表连接字段 
     sql = sql.replace(/`id`/, 'a.id')
     sql = sql.replace(/`flag`/, 'a.flag')
     return query(sql)
@@ -52,7 +52,7 @@ class User extends Base{
       sql += ` where 1 = 1 ${this.joinStr('get', params)} and a.id in (${mysql.escape(createUserList.slice((curPage - 1) * pageSize, (curPage - 1) * pageSize + pageSize))})` :
       sql += ` where 1 !=1`
       // 根据时间排序
-      sql += `${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})}`
+      sql += ` ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})}`
     // 处理表连接字段
     sql = sql.replace(/`flag`/, 'a.flag')
     } catch (e) {

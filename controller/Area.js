@@ -12,7 +12,7 @@ class Area extends Base {
   async update (req, res, next) {
     let data = req.body,
         result,
-        userInfo = this.getUserInfo(req)
+        userInfo = await this.getUserInfo(req)
     try {
       result = await AreaModel.update({
         set: {
@@ -45,7 +45,7 @@ class Area extends Base {
     let query = JSON.parse(JSON.stringify(req.query)),
         result,
         length,
-        userInfo = this.getUserInfo(req)
+        userInfo = await this.getUserInfo(req)
         // 设置非模糊查询字段
         for (let key in query) {
           if (['id', 'pid'].indexOf(key) === -1) {

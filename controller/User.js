@@ -22,7 +22,7 @@ class User extends Base {
   }
   // 注册
   async registered (req, res, next) {
-    let search, result, userInfo = this.getUserInfo(req)
+    let search, result, userInfo = await this.getUserInfo(req)
     // TODO: 需要做一个消息队列，保证注册时数据不会混乱
     // 查询用户是否存在
     try {
@@ -169,7 +169,7 @@ class User extends Base {
   }
   // 退出登录
   async loginOut (req, res, next) {
-    let userInfo = this.getUserInfo(req)
+    let userInfo = await this.getUserInfo(req)
     // 设置Token过期时间为现在
     userInfo[userInfo.type + 'expire_time'] = +new Date()
     try {
@@ -210,7 +210,7 @@ class User extends Base {
     let id = req.body.id,
         data = JSON.parse(JSON.stringify(req.body)),
         result,
-        userInfo = this.getUserInfo(req)
+        userInfo = await this.getUserInfo(req)
         // 参数处理
         data.update_user = userInfo.id
         data.update_time = new Date()
@@ -254,7 +254,7 @@ class User extends Base {
   }
   // 删除用户
   async delete (req, res, next) {
-    const userInfo = this.getUserInfo(req),
+    const userInfo = await this.getUserInfo(req),
       result = await UserModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       try {
@@ -288,7 +288,7 @@ class User extends Base {
   }
   // 获取用户信息
   async userInfo (req, res, next) {
-    const userInfo = this.getUserInfo(req),
+    const userInfo = await this.getUserInfo(req),
           search = await UserModel.getRow({get: {id: userInfo.id, flag: 1}})
     if (search.length === 0) {
       res.json({
@@ -330,7 +330,7 @@ class User extends Base {
     let query = JSON.parse(JSON.stringify(req.query)),
         result,
         length,
-        userInfo = this.getUserInfo(req)
+        userInfo = await this.getUserInfo(req)
         // TODO: 有时间逻辑应该写为查询到当前用户创建的用户以及创建用户创建的用户
         // 如果是admin, 查询的时候则不需要设置用户ID, 否则为用户要查询的ID或用户ID
         if (userInfo.id === 1 || userInfo.id === '1') {
@@ -365,7 +365,7 @@ class User extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let result, userInfo = this.getUserInfo(req)
+    let result, userInfo = await this.getUserInfo(req)
     try {
       // TODO: 暂时为当前用户创建的用户，admin查询所有用户, 之后改为当前用户创建的用户以及用户创建的用户
       result = await UserModel.getAll({get: {create_user: userInfo.id, flag: 1}})
@@ -382,7 +382,7 @@ class User extends Base {
   }
   // 获取用户相关权限
   async getPermissions (req, res, next) {
-    let userInfo = this.getUserInfo(req), type = req.query.type, mod, dataPerms
+    let userInfo = await this.getUserInfo(req), type = req.query.type, mod, dataPerms
     // 如果当前用户没有绑定角色
     if (!userInfo.role_id) {
       // res.json({

@@ -1,17 +1,20 @@
 import TokenModel from '../model/Token'
+import UserModel from '../model/User'
 import JWT from 'jsonwebtoken'
 
 class Base{
   // 获取到用户信息
-  getUserInfo (req) {
-    let userInfo = {}
+  async getUserInfo (req) {
+    let userInfo = {}, result
     JWT.verify(req.headers.authorization, 'BBS', (error, decoded) => {
       if (error) {
         return {}
       }
       userInfo = decoded
     })
-    return userInfo
+    // 直接从数据库获取，能保证用户最新的数据
+    result = await UserModel.getRow({get: {id: userInfo.id, flag: 1}})
+    return result[0]
   }
   // 获取客户端IP
   getClientIp (req) {

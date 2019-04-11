@@ -10,7 +10,7 @@ class Log extends Base {
   // 写入日志
   async writeLog (req, res, next) {
     let data = req.body,
-        userInfo = this.getUserInfo(req)
+        userInfo = await this.getUserInfo(req)
     try {
       // 写入登录日志
       await logModel.writeLog({
@@ -40,7 +40,7 @@ class Log extends Base {
     let query = JSON.parse(JSON.stringify(req.query)),
         result,
         length,
-        userInfo = this.getUserInfo(req)
+        userInfo = await this.getUserInfo(req)
         // 设置非模糊查询字段
         for (let key in query) {
           if (['id', 'create_user'].indexOf(key) === -1) {
