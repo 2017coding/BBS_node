@@ -12,9 +12,9 @@ DROP TABLE IF EXISTS `bbs_token`;
 CREATE TABLE `bbs_token` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL COMMENT '所属用户',
-  `bbs_token` VARCHAR(512) DEFAULT NULL,
-  `phone_token` VARCHAR(512) DEFAULT NULL,
-  `admin_token` VARCHAR(512) DEFAULT NULL,
+  `bbs_token` VARCHAR(1024) DEFAULT NULL,
+  `phone_token` VARCHAR(1024) DEFAULT NULL,
+  `admin_token` VARCHAR(1024) DEFAULT NULL,
   `bbs_addr` VARCHAR(48) DEFAULT NULL,
   `phone_addr` VARCHAR(48) DEFAULT NULL,
   `admin_addr` VARCHAR(48) DEFAULT NULL,
@@ -191,3 +191,71 @@ CREATE TABLE `bbs_log` (
   `create_time` datetime DEFAULT NULL
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='日志表';
+
+----------------------------
+-- 文件目录表
+----------------------------
+DROP TABLE IF EXISTS `bbs_folder`;
+CREATE TABLE `bbs_folder` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `pid` INT(11) NOT NULL,
+  `name` VARCHAR(48) NOT NULL COMMENT '目录名称',
+  `type` INT(11) NOT NULL COMMENT '目录类型: 1.文件 2.图片 3.音乐 4.视频',
+  `desc` VARCHAR(128) DEFAULT NULL COMMENT '目录描述',
+  `sort` INT(11) DEFAULT NULL COMMENT '排序',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_user` INT(11) DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：删除，1：可用(默认为1)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文件目录表';
+
+----------------------------
+-- 文件表
+----------------------------
+DROP TABLE IF EXISTS `bbs_file`;
+CREATE TABLE `bbs_file` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `f_id` INT(11) NOT NULL COMMENT '文件目录ID',
+  `name` VARCHAR(48) NOT NULL COMMENT '文件名称',
+  `type` INT(11) NOT NULL COMMENT '文件类型: 1.文件 2.图片 3.音乐 4.视频',
+  `path` varchar(128) NOT NULL COMMENT '文件路径',
+  `suffix` VARCHAR(24) NOT NULL COMMENT '文件后缀',
+  `size` INT(11) NOT NULL COMMENT '文件大小',
+  `desc` VARCHAR(128) DEFAULT NULL COMMENT '文件描述',
+  `sort` INT(11) DEFAULT NULL COMMENT '排序',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_user` INT(11) DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：删除，1：可用(默认为1)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文件表';
+
+----------------------------
+-- 专栏表
+----------------------------
+DROP TABLE IF EXISTS `bbs_column`;
+CREATE TABLE `bbs_column` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` INT(11) NOT NULL COMMENT '专栏名称',
+  `url` VARCHAR(128) NOT NULL COMMENT '专栏地址',
+  `sort` INT(11) NOT NULL,
+  `desc` VARCHAR(128) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_user` INT(11) DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：删除，1：草稿 2: 审核中 3: 通过 4: 未通过 5: 禁止（封禁）',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='专栏表';
