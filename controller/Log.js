@@ -59,8 +59,8 @@ class Log extends Base {
       success: true,
       content: {
         result,
-        curPage: query.curPage,
-        pageSize: query.pageSize,
+        curPage: +query.curPage,
+        pageSize: +query.pageSize,
         totals: length ? length[0].count : 0
       },
       message: '操作成功'

@@ -159,5 +159,28 @@ router.get('/getAll', ValidateUser.getAll, User.getAll)
  * @apiVersion 0.0.1
  */
 router.get('/getPermissions', ValidateUser.getPermissions, User.getPermissions)
-
+/**
+ * 获取当前用户创建用户
+ * @api {getCreateUser} /api/user/getCreateUser/:id 获取当前用户创建用户
+ * @apiDescription 获取当前用户创建用户
+ * @apiName getCreateUser
+ * @apiHeader {String} Authorization token
+ * @apiParam {Number} id
+ * @apiSampleRequest /api/user/getCreateUser
+ * @apiGroup User
+ * @apiVersion 0.0.1
+ */
+router.get('/getCreateUser/:id', ValidateUser.getCreateUser, User.getCreateUser)
+/**
+ * 用户转移
+ * @api {userTransfer} /api/user/userTransfer 用户转移
+ * @apiDescription 用户转移
+ * @apiName userTransfer
+ * @apiHeader {String} Authorization token
+ * @apiParam {Object}
+ * @apiSampleRequest /api/user/userTransfer
+ * @apiGroup User
+ * @apiVersion 0.0.1
+ */
+router.post('/userTransfer', ValidateUser.userTransfer, User.userTransfer)
 export default router

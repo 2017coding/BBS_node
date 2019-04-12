@@ -11,6 +11,8 @@ class User extends BaseValidate{
     this.userInfo = this.userInfo.bind(this)
     this.getList = this.getList.bind(this)
     this.getAll = this.getAll.bind(this)
+    this.getCreateUser = this.getCreateUser.bind(this)
+    this.userTransfer = this.userTransfer.bind(this)
   }
   async registered (req, res, next) {
     const account = req.body.account,
@@ -162,6 +164,39 @@ class User extends BaseValidate{
     next()
   }
   async getPermissions (req, res, next) {
+    next()
+  }
+  async getCreateUser (req, res, next) {
+    const ID = req.params.id,
+          arr = [
+            {label: 'ID', value: ID, rules: ['notnull']}
+          ],
+          result = this.check(arr)
+    if (!result.success) {
+      res.json({
+        code: 20301,
+        success: false,
+        message: result.message
+      })
+      return
+    }    
+    next()
+  }
+  async userTransfer (req, res, next) {
+    const params = req.body,
+          arr = [
+            {label: '接收用户', value: params.toUser, rules: ['notnull', 'number']},
+            {label: '转移用户', value: params.user, rules: ['notnull', 'number']},
+          ],
+          result = this.check(arr)
+    if (!result.success) {
+      res.json({
+        code: 20301,
+        success: false,
+        message: result.message
+      })
+      return
+    }
     next()
   }
 }

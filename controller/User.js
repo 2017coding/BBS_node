@@ -19,6 +19,7 @@ class User extends Base {
     this.getList = this.getList.bind(this)
     this.getAll = this.getAll.bind(this)
     this.getPermissions = this.getPermissions.bind(this)
+    this.userTransfer = this.userTransfer.bind(this)
   }
   // 注册
   async registered (req, res, next) {
@@ -254,8 +255,18 @@ class User extends Base {
   }
   // 删除用户
   async delete (req, res, next) {
-    const userInfo = await this.getUserInfo(req),
-      result = await UserModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+    let userInfo = await this.getUserInfo(req), result, createUserList = []
+    // 先判断用户是否创建用户
+    createUserList = await UserModel.getCreateUser(req.params.id)
+    if (createUserList.length > 0) {
+      res.json({
+        code: 20001,
+        success: false,
+        message: '该用户有创建用户，无法删除'
+      })
+      return
+    }
+    result = await UserModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       try {
         // 编辑用户写入日志
@@ -351,9 +362,9 @@ class User extends Base {
       success: true,
       content: {
         result,
-        curPage: query.curPage,
-        pageSize: query.pageSize,
-        totals: length.length
+        curPage: +query.curPage,
+        pageSize: +query.pageSize,
+        totals: length[0].count
       },
       message: '操作成功'
     })
@@ -408,6 +419,67 @@ class User extends Base {
       },
       message: '操作成功'
     })
+  }
+  // 获取当前用户创建用户
+  async getCreateUser (req, res, next) {
+    let createUserList = []
+    // 先判断用户是否创建用户
+    createUserList = await UserModel.getCreateUser(req.params.id)
+    if (createUserList.length > 0) {
+      res.json({
+        code: 20001,
+        success: false,
+        result: createUserList,
+        message: '该用户有创建用户，无法删除'
+      })
+    } else {
+      res.json({
+        code: 20000,
+        success: true,
+        result: {},
+        message: '用户可删除'
+      })
+    }
+  }
+  async userTransfer (req, res, next) {
+    let data = JSON.parse(JSON.stringify(req.body)),
+      result,
+      userInfo = await this.getUserInfo(req)
+    try {
+      result = await UserModel.update({set: {create_user: data.toUser}, get: {create_user: data.user}})
+    } catch (e) {
+      this.handleException(req, res, e)
+      return
+    }
+    if (result.affectedRows) {
+      try {
+        // 用户转移写入日志
+        await logModel.writeLog({
+          set: {
+            origin: 2,
+            type: 4,
+            title: '用户转移',
+            desc: '',
+            ip: this.getClientIp(req),
+            create_user: userInfo.id,
+            create_time: new Date()
+          }
+        })
+      } catch (e) {
+        this.handleException(req, res, e)
+      }
+      res.json({
+        code: 20000,
+        success: true,
+        message: '操作成功'
+      })
+    } else {
+      res.json({
+        code: 20001,
+        success: false,
+        message: '操作失败'
+      })
+    }
   }
 }
 
