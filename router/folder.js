@@ -1,11 +1,11 @@
 import express from 'express'
-import Menu from '../controller/Menu'
-import ValidateMenu from '../validate/Menu'
+import Folder from '../controller/Folder'
+import ValidateFolder from '../validate/Folder'
 const router = express.Router()
 
 /**
  * 创建
- * @api {POST} /api/Menu/create 创建
+ * @api {POST} /api/Folder/create 创建
  * @apiDescription 创建菜单
  * @apiName create
  * @apiHeader {String} Authorization token
@@ -18,14 +18,14 @@ const router = express.Router()
  * @apiParam (参数) {String} sort 排序
  * @apiParam (参数) {String} desc 描述
  * @apiParam (参数) {String} status 状态: 0：停用，1：启用(默认为1)
- * @apiSampleRequest /api/Menu/create
- * @apiGroup Menu
+ * @apiSampleRequest /api/Folder/create
+ * @apiGroup Folder
  * @apiVersion 0.0.1
  */
-router.post('/create', ValidateMenu.create, Menu.create)
+router.post('/create', ValidateFolder.create, Folder.create)
 /**
  * 编辑
- * @api {put} /api/Menu/update 编辑
+ * @api {put} /api/Folder/update 编辑
  * @apiDescription 编辑
  * @apiName update
  * @apiHeader {String} Authorization token
@@ -39,39 +39,39 @@ router.post('/create', ValidateMenu.create, Menu.create)
  * @apiParam (参数) {String} sort 排序
  * @apiParam (参数) {String} desc 描述
  * @apiParam (参数) {String} status 状态: 0：停用，1：启用(默认为1)
- * @apiSampleRequest /api/Menu/update
- * @apiGroup Menu
+ * @apiSampleRequest /api/Folder/update
+ * @apiGroup Folder
  * @apiVersion 0.0.1
  */
-router.put('/update', ValidateMenu.update, Menu.update)
+router.put('/update', ValidateFolder.update, Folder.update)
 /**
  * 删除
- * @api {delete} /api/Menu/delete/:id 删除
+ * @api {delete} /api/Folder/delete/:id 删除
  * @apiDescription 删除
  * @apiName delete
  * @apiHeader {String} Authorization token
  * @apiParam {Number} id
- * @apiSampleRequest /api/Menu/delete
- * @apiGroup Menu
+ * @apiSampleRequest /api/Folder/delete
+ * @apiGroup Folder
  * @apiVersion 0.0.1
  */
-router.delete('/delete/:id', ValidateMenu.delete, Menu.delete)
+router.delete('/delete/:id', ValidateFolder.delete, Folder.delete)
 
 /**
  * 获取菜单信息
- * @api {get} /api/Menu/getRow 获取菜单信息
+ * @api {get} /api/Folder/getRow 获取菜单信息
  * @apiDescription 获取菜单信息
  * @apiName getRow
  * @apiHeader {String} Authorization token
  * @apiParam {Number} id
- * @apiSampleRequest /api/Menu/getRow
- * @apiGroup Menu
+ * @apiSampleRequest /api/Folder/getRow
+ * @apiGroup Folder
  * @apiVersion 0.0.1
  */
-router.get('/getRow/:id', ValidateMenu.getRow, Menu.getRow)
+router.get('/getRow/:id', ValidateFolder.getRow, Folder.getRow)
 /**
  * 获取菜单列表
- * @api {get} /api/Menu/getList 获取菜单列表
+ * @api {get} /api/Folder/getList 获取菜单列表
  * @apiDescription 获取菜单列表
  * @apiName getList
  * @apiHeader {String} Authorization token
@@ -79,35 +79,23 @@ router.get('/getRow/:id', ValidateMenu.getRow, Menu.getRow)
  * @apiParam (path参数) {Number} pageSize
  * @apiParam (path参数) {String} account 账号
  * @apiParam (path参数) {String} name 昵称
- * @apiParam (path参数) {Number} create_Menu
- * @apiSampleRequest /api/Menu/getList
- * @apiGroup Menu
+ * @apiParam (path参数) {Number} create_Folder
+ * @apiSampleRequest /api/Folder/getList
+ * @apiGroup Folder
  * @apiVersion 0.0.1
  */
-router.get('/getList', ValidateMenu.getList, Menu.getList)
-/**
- * 获取用户拥有的所有菜单
- * @api {get} /api/Menu/getRoleMenu 获取所有菜单
- * @apiDescription 获取所有菜单
- * @apiName getRoleMenu
- * @apiParam {Number} type
- * @apiHeader {String} Authorization token
- * @apiSampleRequest /api/Menu/getRoleMenu
- * @apiGroup Menu
- * @apiVersion 0.0.1
- */
-router.get('/getRoleMenu', ValidateMenu.getRoleMenu, Menu.getRoleMenu)
+router.get('/getList', ValidateFolder.getList, Folder.getList)
 /**
  * 获取所有菜单
- * @api {get} /api/Menu/getAll 获取所有菜单
+ * @api {get} /api/Folder/getAll 获取所有菜单
  * @apiDescription 获取所有菜单
  * @apiName getAll
  * @apiParam {Number} type
  * @apiHeader {String} Authorization token
- * @apiSampleRequest /api/Menu/getAll
- * @apiGroup Menu
+ * @apiSampleRequest /api/Folder/getAll
+ * @apiGroup Folder
  * @apiVersion 0.0.1
  */
-router.get('/getAll', ValidateMenu.getAll, Menu.getAll)
+router.get('/getAll', ValidateFolder.getAll, Folder.getAll)
 
 export default router

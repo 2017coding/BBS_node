@@ -1,7 +1,7 @@
 import query from '../mysql'
 import Base from './Base'
 
-class Library extends Base{
+class Folder extends Base{
   constructor () {
     super()
     this.create = this.create.bind(this)
@@ -10,55 +10,38 @@ class Library extends Base{
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
     this.getTotals = this.getTotals.bind(this)
-    this.getRoleLibrary = this.getRoleLibrary.bind(this)
     this.getAll = this.getAll.bind(this)
   }
   async create (obj) {
-    let sql = `INSERT INTO bbs_Library set ${this.joinStr('set', obj.set)}`
+    let sql = `INSERT INTO bbs_folder set ${this.joinStr('set', obj.set)}`
     return query(sql)
   }
   async update (obj) {
-    let sql = `UPDATE bbs_Library set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `UPDATE bbs_folder set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async delete (obj) {
-    let sql = `DELETE from bbs_Library where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `DELETE from bbs_folder where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async getRow (obj) {
-    let sql = `select * from bbs_Library where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `select * from bbs_folder where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async getList (obj) {
     let curPage = obj.get.curPage, pageSize = obj.get.pageSize
-    let sql = `select * from bbs_Library
+    let sql = `select * from bbs_folder
                 where 1 = 1 ${this.joinStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
     return query(sql)
   }
   async getTotals (obj) {
-    let sql = `select COUNT(*) as count from bbs_Library where 1 = 1 ${this.joinStr('get', obj.get)}`
-    return query(sql)
-  }
-  async getRoleLibrary (obj) {
-    let sql = `select a.* from bbs_Library as a
-                LEFT JOIN bbs_role_Library as b
-                ON a.id = b.Library_id where 1 = 1 ${this.joinStr('get', obj.get)}`
-    // admin则获取所有数据
-    if (+obj.get.role_id === 1) {
-      sql = `select * from bbs_Library`
-    }
+    let sql = `select COUNT(*) as count from bbs_folder where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
   async getAll (obj) {
-    let sql = `select a.*, b.name as create_user_name, c.name as update_user_name from bbs_Library as a
-                left join bbs_user as b on a.create_user = b.id
-                left join bbs_user as c on a.update_user = c.id
-                where 1 = 1 ${this.joinStr('get', obj.get)} ORDER BY sort`
-    // 处理表连接字段
-    sql = sql.replace(/`type`/, 'a.type')
-    sql = sql.replace(/`flag`/, 'a.flag')
+    let sql = `select * from bbs_folder where 1 = 1 ${this.joinStr('get', obj.get)} ORDER BY sort`
     return query(sql)
   }
 }
 
-export default new Library()
+export default new Folder()

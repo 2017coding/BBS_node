@@ -1,11 +1,11 @@
 import express from 'express'
-import Menu from '../controller/Menu'
-import ValidateMenu from '../validate/Menu'
+import File from '../controller/File'
+import ValidateFile from '../validate/File'
 const router = express.Router()
 
 /**
  * 创建
- * @api {POST} /api/Menu/create 创建
+ * @api {POST} /api/File/create 创建
  * @apiDescription 创建菜单
  * @apiName create
  * @apiHeader {String} Authorization token
@@ -18,14 +18,14 @@ const router = express.Router()
  * @apiParam (参数) {String} sort 排序
  * @apiParam (参数) {String} desc 描述
  * @apiParam (参数) {String} status 状态: 0：停用，1：启用(默认为1)
- * @apiSampleRequest /api/Menu/create
- * @apiGroup Menu
+ * @apiSampleRequest /api/File/create
+ * @apiGroup File
  * @apiVersion 0.0.1
  */
-router.post('/create', ValidateMenu.create, Menu.create)
+router.post('/create', ValidateFile.create, File.create)
 /**
  * 编辑
- * @api {put} /api/Menu/update 编辑
+ * @api {put} /api/File/update 编辑
  * @apiDescription 编辑
  * @apiName update
  * @apiHeader {String} Authorization token
@@ -39,39 +39,39 @@ router.post('/create', ValidateMenu.create, Menu.create)
  * @apiParam (参数) {String} sort 排序
  * @apiParam (参数) {String} desc 描述
  * @apiParam (参数) {String} status 状态: 0：停用，1：启用(默认为1)
- * @apiSampleRequest /api/Menu/update
- * @apiGroup Menu
+ * @apiSampleRequest /api/File/update
+ * @apiGroup File
  * @apiVersion 0.0.1
  */
-router.put('/update', ValidateMenu.update, Menu.update)
+router.put('/update', ValidateFile.update, File.update)
 /**
  * 删除
- * @api {delete} /api/Menu/delete/:id 删除
+ * @api {delete} /api/File/delete/:id 删除
  * @apiDescription 删除
  * @apiName delete
  * @apiHeader {String} Authorization token
  * @apiParam {Number} id
- * @apiSampleRequest /api/Menu/delete
- * @apiGroup Menu
+ * @apiSampleRequest /api/File/delete
+ * @apiGroup File
  * @apiVersion 0.0.1
  */
-router.delete('/delete/:id', ValidateMenu.delete, Menu.delete)
+router.delete('/delete/:id', ValidateFile.delete, File.delete)
 
 /**
  * 获取菜单信息
- * @api {get} /api/Menu/getRow 获取菜单信息
+ * @api {get} /api/File/getRow 获取菜单信息
  * @apiDescription 获取菜单信息
  * @apiName getRow
  * @apiHeader {String} Authorization token
  * @apiParam {Number} id
- * @apiSampleRequest /api/Menu/getRow
- * @apiGroup Menu
+ * @apiSampleRequest /api/File/getRow
+ * @apiGroup File
  * @apiVersion 0.0.1
  */
-router.get('/getRow/:id', ValidateMenu.getRow, Menu.getRow)
+router.get('/getRow/:id', ValidateFile.getRow, File.getRow)
 /**
  * 获取菜单列表
- * @api {get} /api/Menu/getList 获取菜单列表
+ * @api {get} /api/File/getList 获取菜单列表
  * @apiDescription 获取菜单列表
  * @apiName getList
  * @apiHeader {String} Authorization token
@@ -79,35 +79,23 @@ router.get('/getRow/:id', ValidateMenu.getRow, Menu.getRow)
  * @apiParam (path参数) {Number} pageSize
  * @apiParam (path参数) {String} account 账号
  * @apiParam (path参数) {String} name 昵称
- * @apiParam (path参数) {Number} create_Menu
- * @apiSampleRequest /api/Menu/getList
- * @apiGroup Menu
+ * @apiParam (path参数) {Number} create_File
+ * @apiSampleRequest /api/File/getList
+ * @apiGroup File
  * @apiVersion 0.0.1
  */
-router.get('/getList', ValidateMenu.getList, Menu.getList)
-/**
- * 获取用户拥有的所有菜单
- * @api {get} /api/Menu/getRoleMenu 获取所有菜单
- * @apiDescription 获取所有菜单
- * @apiName getRoleMenu
- * @apiParam {Number} type
- * @apiHeader {String} Authorization token
- * @apiSampleRequest /api/Menu/getRoleMenu
- * @apiGroup Menu
- * @apiVersion 0.0.1
- */
-router.get('/getRoleMenu', ValidateMenu.getRoleMenu, Menu.getRoleMenu)
+router.get('/getList', ValidateFile.getList, File.getList)
 /**
  * 获取所有菜单
- * @api {get} /api/Menu/getAll 获取所有菜单
+ * @api {get} /api/File/getAll 获取所有菜单
  * @apiDescription 获取所有菜单
  * @apiName getAll
  * @apiParam {Number} type
  * @apiHeader {String} Authorization token
- * @apiSampleRequest /api/Menu/getAll
- * @apiGroup Menu
+ * @apiSampleRequest /api/File/getAll
+ * @apiGroup File
  * @apiVersion 0.0.1
  */
-router.get('/getAll', ValidateMenu.getAll, Menu.getAll)
+router.get('/getAll', ValidateFile.getAll, File.getAll)
 
 export default router

@@ -8,8 +8,6 @@ class Menu extends Base{
     this.update = this.update.bind(this)
     this.delete = this.delete.bind(this)
     this.getRow = this.getRow.bind(this)
-    this.getList = this.getList.bind(this)
-    this.getTotals = this.getTotals.bind(this)
     this.getRoleMenu = this.getRoleMenu.bind(this)
     this.getAll = this.getAll.bind(this)
   }
