@@ -2,8 +2,6 @@ import Base from './Base'
 import FileMolde from '../model/File'
 import fs from 'fs'
 
-const __dirname = ''
-
 class File extends Base {
   constructor () {
     super()
@@ -17,26 +15,49 @@ class File extends Base {
   // 上传
   async upload (req, res, next) {
     try {
-      let data = JSON.parse(JSON.stringify(req.body)),
-          files = req.files,
-          userInfo = await this.getUserInfo(req), result
-      var des_file = __dirname + '/' + req.files.originalname
-      // 获取到文件
-      fs.readFile(req.files[0].path, (err, data) => {
+      let params = JSON.parse(JSON.stringify(req.body)),
+          files = req.files.file,
+          userInfo = await this.getUserInfo(req), result, 
+          writePath = files.originalFilename
+      // 获取到文件files
+      fs.readFile(files.path, (err, data) => {
         // 写入文件
-        fs.writeFile(des_file, data, (err) => {
-            if(err){
-              console.log(err)
-            }else{
-              result = req.files[0].originalname
+        fs.writeFile(writePath, data, async (err) => {
+          if (err) {
+            res.json({
+              code: 20001,
+              success: false,
+              result: err,
+              message: '上传失败'
+            })
+          } else {
+            try {
+              // 参数处理
+              let obj = {
+                f_id: params.fid,
+                type: params.type,
+                name: files.name, // 文件名
+                path: writePath,  // 文件路径
+                suffix: files.type, // 后缀名
+                size: files.size, // 大小
+                create_user: userInfo.id,
+                create_time: new Date()
+              }
+              result = await FileMolde.create({
+                set: obj
+              })
+            } catch (e) {
+              this.handleException(req, res, e)
+              return
             }
+            res.json({
+              code: 20000,
+              success: true,
+              result: writePath,
+              message: '上传成功'
+            })
+          }
         })
-      })
-      res.json({
-        code: 20000,
-        success: true,
-        result,
-        message: '上传成功'
       })
     } catch (e) {
       this.handleException(req, res, e)
@@ -75,6 +96,7 @@ class File extends Base {
   }
   // 删除
   async delete (req, res, next) {
+    // TODO: 删除数据库数据时，是否删除对应的文件，这个在之后做处理
     const userInfo = await this.getUserInfo(req),
       result = await FileMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
