@@ -3,22 +3,17 @@ import BaseValidate from './BaseValidate'
 class Menu extends BaseValidate{
   constructor () {
     super()
-    this.create = this.create.bind(this)
+    this.upload = this.upload.bind(this)
     this.update = this.update.bind(this)
     this.delete = this.delete.bind(this)
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
     this.getAll = this.getAll.bind(this)
   }
-  async create (req, res, next) {
+  async upload (req, res, next) {
     const params = req.body,
           arr = [
-            {label: 'pid', value: params.pid, rules: ['notnull', 'number']},
-            {label: '菜单类型', value: params.type, rules: ['notnull', 'number']},
-            {label: '菜单编码', value: params.code, rules: ['notnull', 'noChinese']},
-            {label: '菜单名称', value: params.name, rules: ['notnull']},
-            {label: '排序', value: params.sort, rules: ['notnull', 'number']},
-            {label: '状态', value: params.status, rules: ['notnull', 'number']}
+            {label: '目录ID', value: params.fid, rules: ['notnull', 'number']},
           ],
           result = this.check(arr)
     if (!result.success) {

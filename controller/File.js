@@ -1,53 +1,46 @@
 import Base from './Base'
-import LibraryModel from '../model/File'
+import FileMolde from '../model/File'
+import fs from 'fs'
 
-class Library extends Base {
+const __dirname = ''
+
+class File extends Base {
   constructor () {
     super()
-    this.create = this.create.bind(this)
+    this.upload = this.upload.bind(this)
     this.update = this.update.bind(this)
     this.delete = this.delete.bind(this)
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
     this.getAll = this.getAll.bind(this)
   }
-  // 创建
-  async create (req, res, next) {
-    let search, result
-    // TODO: 需要做一个消息队列，保证创建时数据不会混乱
-    // 查询角色是否存在
+  // 上传
+  async upload (req, res, next) {
     try {
-      search = await LibraryModel.getRow({get: {name: req.body.name}})
-    } catch (e) {
-      this.handleException(req, res, e)
-      return
-    }
-    // 角色不存在创建角色，存在则提示
-    if (search.length === 0) {
-      try {
-        let data = JSON.parse(JSON.stringify(req.body)),
-            userInfo = await this.getUserInfo(req)
-        // 参数处理
-        data.create_user = userInfo.id,
-        data.create_time = new Date()
-        result = await LibraryModel.create({
-          set: data
+      let data = JSON.parse(JSON.stringify(req.body)),
+          files = req.files,
+          userInfo = await this.getUserInfo(req), result
+      var des_file = __dirname + '/' + req.files.originalname
+      // 获取到文件
+      fs.readFile(req.files[0].path, (err, data) => {
+        // 写入文件
+        fs.writeFile(des_file, data, (err) => {
+            if(err){
+              console.log(err)
+            }else{
+              result = req.files[0].originalname
+            }
         })
-      } catch (e) {
-        this.handleException(req, res, e)
-        return
-      }
+      })
       res.json({
         code: 20000,
         success: true,
-        message: '创建成功'
+        result,
+        message: '上传成功'
       })
-    } else {
-      res.json({
-        code: 20001,
-        success: false,
-        message: '角色已存在'
-      })
+    } catch (e) {
+      this.handleException(req, res, e)
+      return
     }
   }
   // 编辑
@@ -61,7 +54,7 @@ class Library extends Base {
         data.update_time = new Date()
         delete data.id
     try {
-      result = await LibraryModel.update({set: data, get: {id}})
+      result = await FileMolde.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -82,18 +75,8 @@ class Library extends Base {
   }
   // 删除
   async delete (req, res, next) {
-    // 如果当前模块下面有节点，则不能删除
-    const child = await LibraryModel.getAll({get: {pid: req.params.id}})
-    if (child.length > 0) {
-      res.json({
-        code: 20001,
-        success: false,
-        message: '请先删除子节点'
-      })
-      return
-    }
     const userInfo = await this.getUserInfo(req),
-    result = await LibraryModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+      result = await FileMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -110,7 +93,7 @@ class Library extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await LibraryModel.getRow({get: {id: req.params.id, flag: 1}})
+    const search = await FileMolde.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -147,8 +130,8 @@ class Library extends Base {
           }
         }
     try {
-      result = await LibraryModel.getList({get: {query, flag: 1}})
-      length = await LibraryModel.getTotals({get: {query, flag: 1}})
+      result = await FileMolde.getList({get: {...query, flag: 1}})
+      length = await FileMolde.getTotals({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -167,10 +150,9 @@ class Library extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let result, userInfo = await this.getUserInfo(req)
-    // admin获取所有，其他用户获取属于当前角色和创建的角色
+    let result, type = req.query.type
     try {
-      result = await LibraryModel.getAll({get: {id: userInfo.Library_id, flag: 1}})
+      result = await FileMolde.getAll(type ? {get: {type, flag: 1}} : {get: {flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -184,4 +166,4 @@ class Library extends Base {
   }
 }
 
-export default new Library()
+export default new File()

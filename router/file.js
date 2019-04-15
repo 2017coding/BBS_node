@@ -1,28 +1,22 @@
 import express from 'express'
 import File from '../controller/File'
 import ValidateFile from '../validate/File'
+import multipart from 'connect-multiparty' // 处理form-data数据中间件
+
 const router = express.Router()
 
 /**
- * 创建
- * @api {POST} /api/File/create 创建
+ * 上传文件
+ * @api {POST} /api/File/upload 创建
  * @apiDescription 创建菜单
- * @apiName create
+ * @apiName upload
  * @apiHeader {String} Authorization token
- * @apiParam (参数) {Number} pid 父ID
- * @apiParam (参数) {Number} type 菜单类型: 1. 管理平台菜单 2. BBS菜单 3. 移动端菜单
- * @apiParam (参数) {String} code 菜单编码
- * @apiParam (参数) {String} name 菜单名称
- * @apiParam (参数) {String} icon 菜单图标
- * @apiParam (参数) {String} redirect 重定向路径: 配置菜单编码或URL
- * @apiParam (参数) {String} sort 排序
- * @apiParam (参数) {String} desc 描述
- * @apiParam (参数) {String} status 状态: 0：停用，1：启用(默认为1)
- * @apiSampleRequest /api/File/create
+ * @apiParam (参数) {Number} id 目录ID
+ * @apiSampleRequest /api/File/upload
  * @apiGroup File
  * @apiVersion 0.0.1
  */
-router.post('/create', ValidateFile.create, File.create)
+router.post('/upload', multipart(), ValidateFile.upload, File.upload)
 /**
  * 编辑
  * @api {put} /api/File/update 编辑

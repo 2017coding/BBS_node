@@ -33,7 +33,8 @@
     "mysql": "^2.16.0",
     "supervisor": "^0.12.0",
     "apidoc": "^0.17.7",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "connect-multiparty": "^2.2.0"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",

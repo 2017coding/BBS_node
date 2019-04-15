@@ -94,6 +94,7 @@ class User extends Base{
     } else {
       sql += ` where 1 !=1`
     }
+    sql += ` and flag = 1`
     return query(sql)
   }
   async getCreateUser (rootPValue) {
