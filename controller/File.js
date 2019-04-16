@@ -19,7 +19,7 @@ class File extends Base {
           files = req.files.file,
           userInfo = await this.getUserInfo(req), result,
           suffix = files.originalFilename.match(/\.[a-zA-Z]+/),
-          writePath = this.utils.switchTime(new Date(), 'YYYYMMDDhhmmss') + this.utils.randomCode() + suffix
+          writePath = 'public/file/' + this.utils.switchTime(new Date(), 'YYYYMMDDhhmmss') + this.utils.randomCode() + suffix
       // 获取到文件files
       fs.readFile(files.path, (err, data) => {
         // 写入文件

@@ -177,10 +177,11 @@ router.get('/getCreateUser/:id', ValidateUser.getCreateUser, User.getCreateUser)
  * @apiDescription 用户转移
  * @apiName userTransfer
  * @apiHeader {String} Authorization token
- * @apiParam {Object}
+ * @apiParam {Object} Object
  * @apiSampleRequest /api/user/userTransfer
  * @apiGroup User
  * @apiVersion 0.0.1
  */
 router.post('/userTransfer', ValidateUser.userTransfer, User.userTransfer)
+
 export default router
