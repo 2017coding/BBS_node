@@ -94,7 +94,7 @@ class User extends Base {
           }
         }
         // 得到要设置的token类型和过期时间
-        switch (type) {
+        switch (+type) {
           case 0:
             data.type = 'phone'
             data[data.type + '_expire_time'] = new Date(+new Date() + 60 * 60 * 24 * 180 * 1000) // 半年
@@ -114,6 +114,7 @@ class User extends Base {
             set: {
               [data.type + '_token']: JWT.sign(data, 'BBS', {}),
               [data.type + '_expire_time']: data[data.type + '_expire_time'],
+              [data.type + '_ip']: this.getClientIp(req),
               user_id: data.id
             },
             get: {

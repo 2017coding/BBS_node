@@ -39,7 +39,7 @@ class Token extends Base{
           [data.type + '_token']: obj.set[data.type + '_token']
         }
         sql = `UPDATE bbs_token set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)}`
-      } else if(+new Date(data[data.type + '_expire_time']) > +new Date()) {
+      } else if(+new Date(search[data.type + '_expire_time']) > +new Date()) {
         // 数据未过期，不处理
         sql = ``
       } else {

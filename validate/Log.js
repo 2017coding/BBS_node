@@ -1,6 +1,6 @@
-import BaseValidate from './BaseValidate'
+import Base from './Base'
 
-class Log extends BaseValidate{
+class Log extends Base{
   constructor () {
     super()
     this.writeLog = this.writeLog.bind(this)

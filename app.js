@@ -27,7 +27,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 router(app)
 app.use(history())
-app.use(express.static(path.join(__dirname, 'public/apidoc')))
+app.use(express.static(path.join(__dirname, 'public')))
 app.listen(config.port || '1313', () => {
   console.log(
 		chalk.green(`成功监听端口${config.port || 1313}`)

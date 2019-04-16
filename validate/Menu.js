@@ -1,6 +1,6 @@
-import BaseValidate from './BaseValidate'
+import Base from './Base'
 
-class Menu extends BaseValidate{
+class Menu extends Base{
   constructor () {
     super()
     this.create = this.create.bind(this)

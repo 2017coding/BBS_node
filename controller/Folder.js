@@ -139,7 +139,10 @@ class Folder extends Base {
       code: 20000,
       success: true,
       content: {
-        result,
+        result: result.map(item => {
+          item.path = this.getServiceAddr(req) + item.path
+          return item
+        }),
         curPage: +query.curPage,
         pageSize: +query.pageSize,
         totals: length ? length[0].count : 0
@@ -159,7 +162,10 @@ class Folder extends Base {
     res.json({
       code: 20000,
       success: true,
-      content: result,
+      content: result.map(item => {
+        item.path = this.getServiceAddr(req) + item.path
+        return item
+      }),
       message: '操作成功'
     })
   }

@@ -1,6 +1,6 @@
-import BaseValidate from './BaseValidate'
+import Base from './Base'
 
-class Area extends BaseValidate{
+class Area extends Base{
   constructor () {
     super()
     this.update = this.update.bind(this)

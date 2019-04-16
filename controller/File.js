@@ -17,8 +17,9 @@ class File extends Base {
     try {
       let params = JSON.parse(JSON.stringify(req.body)),
           files = req.files.file,
-          userInfo = await this.getUserInfo(req), result, 
-          writePath = files.originalFilename
+          userInfo = await this.getUserInfo(req), result,
+          suffix = files.originalFilename.match(/\.[a-zA-Z]+/),
+          writePath = this.utils.switchTime(new Date(), 'YYYYMMDDhhmmss') + this.utils.randomCode() + suffix
       // 获取到文件files
       fs.readFile(files.path, (err, data) => {
         // 写入文件
@@ -162,7 +163,10 @@ class File extends Base {
       code: 20000,
       success: true,
       content: {
-        result,
+        result: result.map(item => {
+          item.path = this.getServiceAddr(req) + item.path
+          return item
+        }),
         curPage: +query.curPage,
         pageSize: +query.pageSize,
         totals: length ? length[0].count : 0
@@ -182,7 +186,10 @@ class File extends Base {
     res.json({
       code: 20000,
       success: true,
-      content: result,
+      content: result.map(item => {
+        item.path = this.getServiceAddr(req) + item.path
+        return item
+      }),
       message: '操作成功'
     })
   }

@@ -1,6 +1,6 @@
 import validate from '../lib/js/validate'
 
-class BaseValidate{
+class Base{
   check (arr) {
     let success = true, message
     for (let item of arr) {
@@ -14,4 +14,4 @@ class BaseValidate{
   }
 }
 
-export default BaseValidate
+export default Base

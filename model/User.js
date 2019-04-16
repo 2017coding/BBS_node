@@ -1,7 +1,6 @@
 import mysql from 'mysql'
 import query from '../mysql'
 import Base from './Base'
-import utils from '../lib/js/utils'
 
 class User extends Base{
   constructor () {
@@ -82,6 +81,7 @@ class User extends Base{
     mysql.escape(createUserList) ?
     sql += ` where 1 = 1 ${this.joinStr('get', params)} and id in (${mysql.escape(createUserList)})` :
     sql += ` where 1 != 1`
+    sql += ` and flag = 1`
     return query(sql) 
   }
   async getAll (obj) {
@@ -100,9 +100,9 @@ class User extends Base{
   async getCreateUser (rootPValue) {
     let userList, userTree, createUserList = []
     // 获取到所有的用户数据
-    userList = await query(`select id, create_user, create_time from bbs_user`)
+    userList = await query(`select id, create_user, create_time from bbs_user where flag = 1`)
     // 通过建立树状数据，得到当前用户创建的用户树
-    userTree = utils.getTreeArr({key: 'id', pKey: 'create_user', data: userList, rootPValue: +rootPValue})
+    userTree = this.utils.getTreeArr({key: 'id', pKey: 'create_user', data: userList, rootPValue: +rootPValue})
     // 递归得到所有创建的用户
     getUser(userTree)
     function getUser (arr) {

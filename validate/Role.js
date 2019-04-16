@@ -1,6 +1,6 @@
-import BaseValidate from './BaseValidate'
+import Base from './Base'
 
-class Role extends BaseValidate{
+class Role extends Base{
   constructor () {
     super()
     this.create = this.create.bind(this)

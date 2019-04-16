@@ -1,6 +1,6 @@
-import BaseValidate from './BaseValidate'
+import Base from './Base'
 
-class DataPerms extends BaseValidate{
+class DataPerms extends Base{
   constructor () {
     super()
     this.create = this.create.bind(this)

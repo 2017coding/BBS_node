@@ -1,6 +1,10 @@
 import mysql from 'mysql'
+import utils from '../lib/js/utils'
 
 class Base{
+  constructor () {
+    this.utils = utils
+  }
   joinStr (type, obj) {
     let str = ''
     switch (type) {
