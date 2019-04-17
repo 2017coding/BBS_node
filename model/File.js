@@ -32,7 +32,7 @@ class Library extends Base{
   async getList (obj) {
     let curPage = obj.get.curPage, pageSize = obj.get.pageSize
     let sql = `select * from bbs_file
-                where 1 = 1 ${this.joinStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
+                where 1 = 1 ${this.joinStr('get', obj.get)} ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})} limit ${(curPage - 1) * pageSize}, ${pageSize} `
     return query(sql)
   }
   async getTotals (obj) {

@@ -39,11 +39,11 @@ class File extends Base {
         return e
       }
       // 设置上传的文件路径
-      writePath = `public/file/${search[0].path}/${this.utils.switchTime(new Date(), 'YYYYMMDDhhmmss')}-${this.utils.randomCode()}${suffix}`
+      writePath = `${search[0].path}/${this.utils.switchTime(new Date(), 'YYYYMMDDhhmmss')}-${this.utils.randomCode()}${suffix}`
       // 获取到文件files
       fs.readFile(files.path, (err, data) => {
         // 写入文件
-        fs.writeFile(writePath, data, async (err) => {
+        fs.writeFile(`public/file/${writePath}`, data, async (err) => {
           if (err) {
             res.json({
               code: 20001,
