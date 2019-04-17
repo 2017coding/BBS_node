@@ -140,7 +140,7 @@ class Folder extends Base {
       success: true,
       content: {
         result: result.map(item => {
-          item.path = this.getServiceAddr(req) + item.path
+          item.completePath = `${this.getServiceAddr(req)}/file/${item.path}`
           return item
         }),
         curPage: +query.curPage,
@@ -163,7 +163,7 @@ class Folder extends Base {
       code: 20000,
       success: true,
       content: result.map(item => {
-        item.path = this.getServiceAddr(req) + item.path
+        item.completePath = `${this.getServiceAddr(req)}/file/${item.path}`
         return item
       }),
       message: '操作成功'

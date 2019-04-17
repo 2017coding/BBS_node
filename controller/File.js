@@ -1,6 +1,8 @@
 import Base from './Base'
 import FileMolde from '../model/File'
+import FolderMolde from '../model/Folder'
 import fs from 'fs'
+import path from 'path'
 
 class File extends Base {
   constructor () {
@@ -17,9 +19,27 @@ class File extends Base {
     try {
       let params = JSON.parse(JSON.stringify(req.body)),
           files = req.files.file,
-          userInfo = await this.getUserInfo(req), result,
+          userInfo = await this.getUserInfo(req),
+          search = await FolderMolde.getRow({get: {id: params.fid, flag: 1}}),
+          result,
           suffix = files.originalFilename.match(/\.[a-zA-Z]+/),
-          writePath = 'public/file/' + this.utils.switchTime(new Date(), 'YYYYMMDDhhmmss') + this.utils.randomCode() + suffix
+          writePath
+      if (!search.length) {
+        res.json({
+          code: 20001,
+          success: false,
+          result: {},
+          message: '请选择正确的上传目录'
+        })
+      }
+      // 检查路径是否存在，不存在则创建相关路径
+      try {
+        await this.dirExists(`public/file/${search[0].path}`)
+      } catch (e) {
+        return e
+      }
+      // 设置上传的文件路径
+      writePath = `public/file/${search[0].path}/${this.utils.switchTime(new Date(), 'YYYYMMDDhhmmss')}-${this.utils.randomCode()}${suffix}`
       // 获取到文件files
       fs.readFile(files.path, (err, data) => {
         // 写入文件
@@ -39,7 +59,7 @@ class File extends Base {
                 type: params.type,
                 name: files.name, // 文件名
                 path: writePath,  // 文件路径
-                suffix: files.type, // 后缀名
+                suffix: suffix, // 后缀名
                 size: files.size, // 大小
                 create_user: userInfo.id,
                 create_time: new Date()
@@ -164,7 +184,7 @@ class File extends Base {
       success: true,
       content: {
         result: result.map(item => {
-          item.path = this.getServiceAddr(req) + item.path
+          item.completePath = `${this.getServiceAddr(req)}/file/${item.path}`
           return item
         }),
         curPage: +query.curPage,
@@ -187,7 +207,7 @@ class File extends Base {
       code: 20000,
       success: true,
       content: result.map(item => {
-        item.path = this.getServiceAddr(req) + item.path
+        item.completePath = `${this.getServiceAddr(req)}/file/${item.path}`
         return item
       }),
       message: '操作成功'
