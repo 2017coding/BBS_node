@@ -57,7 +57,7 @@ class Authority extends Base{
       search = await this.getToken({get: {[content.type + '_token']: token}})
     } catch (e) {
       res.json({
-        code: 20201,
+        code: 20200,
         success: false,
         content: {},
         message: '服务器内部错误'

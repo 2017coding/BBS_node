@@ -18,7 +18,7 @@ class Folder extends Base {
           userInfo = await this.getUserInfo(req), result, search, path
     // 查询目录是否存在
     try {
-      search = await FolderMolde.getRow({get: {name: data.name, type: data.type}})
+      search = await FolderMolde.getRow({get: {name: data.name, type: data.type, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -89,7 +89,7 @@ class Folder extends Base {
   // 删除
   async delete (req, res, next) {
     // 如果当前模块下面有文件，则不能删除
-    const child = await FileMolde.getAll({get: {f_id: req.params.id}})
+    const child = await FileMolde.getAll({get: {f_id: req.params.id, flag: 1}})
     if (child.length > 0) {
       res.json({
         code: 20001,

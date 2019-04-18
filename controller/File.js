@@ -197,9 +197,17 @@ class File extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let result, type = req.query.type
+    let result, type = req.query.type, f_id = type = req.query.f_id, params = {flag: 1}
+    if (type && f_id) {
+      params.type = type
+      params.f_id = f_id
+    } else if (type) {
+      params.type = type
+    } else if (f_id) {
+      params.f_id = f_id
+    }
     try {
-      result = await FileMolde.getAll(type ? {get: {type, flag: 1}} : {get: {flag: 1}})
+      result = await FileMolde.getAll({get: params})
     } catch (e) {
       this.handleException(req, res, e)
       return
