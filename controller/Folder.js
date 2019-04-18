@@ -1,4 +1,5 @@
 import Base from './Base'
+import FileMolde from '../model/File'
 import FolderMolde from '../model/Folder'
 
 class Folder extends Base {
@@ -87,13 +88,13 @@ class Folder extends Base {
   }
   // 删除
   async delete (req, res, next) {
-    // 如果当前模块下面有节点，则不能删除
-    const child = await FolderMolde.getAll({get: {pid: req.params.id}})
+    // 如果当前模块下面有文件，则不能删除
+    const child = await FileMolde.getAll({get: {f_id: req.params.id}})
     if (child.length > 0) {
       res.json({
         code: 20001,
         success: false,
-        message: '请先删除子目录'
+        message: '请先删除该目录下的文件'
       })
       return
     }
@@ -163,7 +164,7 @@ class Folder extends Base {
       success: true,
       content: {
         result: result.map(item => {
-          item.completePath = `${this.getServiceAddr(req)}/file/${item.path}`
+          item.completePath = `http://www.lyh.red/file/${item.path}`
           return item
         }),
         curPage: +query.curPage,
@@ -186,7 +187,7 @@ class Folder extends Base {
       code: 20000,
       success: true,
       content: result.map(item => {
-        item.completePath = `${this.getServiceAddr(req)}/file/${item.path}`
+        item.completePath = `http://www.lyh.red/file/${item.path}`
         return item
       }),
       message: '操作成功'
