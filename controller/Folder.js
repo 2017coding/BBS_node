@@ -13,24 +13,47 @@ class Folder extends Base {
   }
   // 创建
   async create (req, res, next) {
+    let data = JSON.parse(JSON.stringify(req.body)),
+          userInfo = await this.getUserInfo(req), result, search, path
+    // 查询目录是否存在
     try {
-      let data = JSON.parse(JSON.stringify(req.body)),
-          userInfo = await this.getUserInfo(req), result
-      // 参数处理
-      data.create_user = userInfo.id,
-      data.create_time = new Date()
-      result = await FolderMolde.create({
-        set: data
-      })
+      search = await FolderMolde.getRow({get: {name: data.name, type: data.type}})
     } catch (e) {
       this.handleException(req, res, e)
       return
     }
-    res.json({
-      code: 20000,
-      success: true,
-      message: '创建成功'
-    })
+    // 如果目录存在，提示
+    if (search.length === 0) {
+      // 创建相关目录
+      data.path = `${data.name}_${this.utils.switchTime(new Date(), 'YYYYMMDDhhmmss')}_${this.utils.randomCode()}`
+      try {
+        await this.dirExists(`public/file/${data.path}`)
+      } catch (e) {
+        return e
+      }
+      try {
+        // 参数处理
+        data.create_user = userInfo.id,
+        data.create_time = new Date()
+        result = await FolderMolde.create({
+          set: data
+        })
+      } catch (e) {
+        this.handleException(req, res, e)
+        return
+      }
+      res.json({
+        code: 20000,
+        success: true,
+        message: '创建成功'
+      })
+    } else {
+      res.json({
+        code: 20001,
+        success: false,
+        message: '目录存在'
+      })
+    }
   }
   // 编辑
   async update (req, res, next) {

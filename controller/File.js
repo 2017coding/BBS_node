@@ -2,7 +2,6 @@ import Base from './Base'
 import FileMolde from '../model/File'
 import FolderMolde from '../model/Folder'
 import fs from 'fs'
-import path from 'path'
 
 class File extends Base {
   constructor () {
@@ -39,7 +38,7 @@ class File extends Base {
         return e
       }
       // 设置上传的文件路径
-      writePath = `${search[0].path}/${this.utils.switchTime(new Date(), 'YYYYMMDDhhmmss')}-${this.utils.randomCode()}${suffix}`
+      writePath = `${search[0].path}/${this.utils.switchTime(new Date(), 'YYYYMMDDhhmmss')}_${this.utils.randomCode()}${suffix}`
       // 获取到文件files
       fs.readFile(files.path, (err, data) => {
         // 写入文件
@@ -159,13 +158,6 @@ class File extends Base {
         result,
         length,
         userInfo = await this.getUserInfo(req)
-        // TODO: 有时间逻辑应该写为查询到当前用户创建的用户以及创建用户创建的用户
-        // 如果是admin, 查询的时候则不需要设置用户ID, 否则为用户要查询的ID或用户ID
-        if (userInfo.id === 1 || userInfo.id === '1') {
-          delete query.create_user
-        } else {
-          query.create_user = query.create_user || userInfo.id
-        }
         // 设置非模糊查询字段
         for (let key in query) {
           if (['id', 'create_user'].indexOf(key) === -1) {

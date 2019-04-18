@@ -2,6 +2,8 @@ import TokenModel from '../model/Token'
 import UserModel from '../model/User'
 import JWT from 'jsonwebtoken'
 import utils from '../lib/js/utils'
+import path from 'path'
+import fs from 'fs'
 
 class Base{
   constructor () {
