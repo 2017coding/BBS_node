@@ -41,6 +41,15 @@ class File extends Base {
       writePath = `${search[0].path}/${this.utils.switchTime(new Date(), 'YYYYMMDDhhmmss')}_${this.utils.randomCode()}${suffix}`
       // 获取到文件files
       fs.readFile(files.path, (err, data) => {
+        if (err) {
+          res.json({
+            code: 20001,
+            success: false,
+            result: err,
+            message: '上传失败'
+          })
+          return
+        }
         // 写入文件
         fs.writeFile(`public/file/${writePath}`, data, async (err) => {
           if (err) {
