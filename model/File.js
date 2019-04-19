@@ -56,6 +56,7 @@ class Library extends Base{
                 where 1 = 1 ${this.joinStr('get', obj.get)} ORDER BY sort`
     // 处理表连接字段
     sql = sql.replace(/`type`/, 'a.type')
+    sql = sql.replace(/`name`/, 'a.name')
     sql = sql.replace(/`flag`/, 'a.flag')
     return query(sql)
   }

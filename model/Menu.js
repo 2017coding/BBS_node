@@ -43,7 +43,8 @@ class Menu extends Base{
                 ON a.id = b.menu_id where 1 = 1 ${this.joinStr('get', obj.get)}`
     // admin则获取所有数据
     if (+obj.get.role_id === 1) {
-      sql = `select * from bbs_menu`
+      delete obj.get.role_id
+      sql = `select * from bbs_menu where 1 = 1 ${this.joinStr('get', obj.get)}`
     }
     return query(sql)
   }
