@@ -7,6 +7,8 @@ import roleRelation from './roleRelation'
 import log from './log'
 import folder from './folder'
 import file from './file'
+import tag from './tag'
+import tagType from './tagType'
 import Authority from '../controller/Authority'
 
 /**
@@ -16,6 +18,9 @@ import Authority from '../controller/Authority'
  * 第三层验证参数, 验证成功后再进行事件处理
  */
 export default app => {
+  // 论坛配置
+  app.use('/api/tagType', Authority.checkToken, Authority.permissions, tagType)
+  app.use('/api/tag', Authority.checkToken, Authority.permissions, tag)
   // 文件库
   app.use('/api/folder', Authority.checkToken, Authority.permissions, folder)
   app.use('/api/file', Authority.checkToken, Authority.permissions, file)

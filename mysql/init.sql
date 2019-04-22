@@ -241,6 +241,48 @@ CREATE TABLE `bbs_file` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文件表';
 
 ----------------------------
+-- 标签类型表
+----------------------------
+DROP TABLE IF EXISTS `bbs_tag_type`;
+CREATE TABLE `bbs_tag_type` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(48) NOT NULL COMMENT '名称',
+  `desc` VARCHAR(128) DEFAULT NULL COMMENT '描述',
+  `sort` INT(11) DEFAULT NULL COMMENT '排序',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_user` INT(11) DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：删除，1：可用(默认为1)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='标签类型表';
+
+----------------------------
+-- 标签表
+----------------------------
+DROP TABLE IF EXISTS `bbs_tag`;
+CREATE TABLE `bbs_tag` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `type_id` INT(11) NOT NULL COMMENT '类型ID',
+  `name` VARCHAR(48) NOT NULL COMMENT '名称',
+  `icon` varchar(256) DEFAULT NULL COMMENT '图标地址',
+  `wikipedia` text NOT NULL COMMENT '标签百科',
+  `sort` INT(11) DEFAULT NULL COMMENT '排序',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_user` INT(11) DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：删除，1：可用(默认为1)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='标签表';
+
+----------------------------
 -- 专栏表
 ----------------------------
 DROP TABLE IF EXISTS `bbs_column`;

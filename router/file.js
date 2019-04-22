@@ -8,7 +8,7 @@ const router = express.Router()
 /**
  * 上传文件
  * @api {POST} /api/File/upload 创建
- * @apiDescription 创建菜单
+ * @apiDescription 上传文件
  * @apiName upload
  * @apiHeader {String} Authorization token
  * @apiParam (参数) {Number} id 目录ID
@@ -24,15 +24,9 @@ router.post('/upload', multipart(), ValidateFile.upload, File.upload)
  * @apiName update
  * @apiHeader {String} Authorization token
  * @apiParam (参数) {Number} id
- * @apiParam (参数) {Number} pid 父ID
- * @apiParam (参数) {Number} type 菜单类型: 1. 管理平台菜单 2. BBS菜单 3. 移动端菜单
- * @apiParam (参数) {String} code 菜单编码
- * @apiParam (参数) {String} name 菜单名称
- * @apiParam (参数) {String} icon 菜单图标
- * @apiParam (参数) {String} redirect 重定向路径: 配置菜单编码或URL
- * @apiParam (参数) {String} sort 排序
+ * @apiParam (参数) {Number} f_id 文件目录ID
+ * @apiParam (参数) {String} name 文件名称
  * @apiParam (参数) {String} desc 描述
- * @apiParam (参数) {String} status 状态: 0：停用，1：启用(默认为1)
  * @apiSampleRequest /api/File/update
  * @apiGroup File
  * @apiVersion 0.0.1
@@ -52,9 +46,9 @@ router.put('/update', ValidateFile.update, File.update)
 router.delete('/delete/:id', ValidateFile.delete, File.delete)
 
 /**
- * 获取菜单信息
- * @api {get} /api/File/getRow 获取菜单信息
- * @apiDescription 获取菜单信息
+ * 获取文件信息
+ * @api {get} /api/File/getRow 获取文件信息
+ * @apiDescription 获取文件信息
  * @apiName getRow
  * @apiHeader {String} Authorization token
  * @apiParam {Number} id
@@ -64,29 +58,28 @@ router.delete('/delete/:id', ValidateFile.delete, File.delete)
  */
 router.get('/getRow/:id', ValidateFile.getRow, File.getRow)
 /**
- * 获取菜单列表
- * @api {get} /api/File/getList 获取菜单列表
- * @apiDescription 获取菜单列表
+ * 获取文件列表
+ * @api {get} /api/File/getList 获取文件列表
+ * @apiDescription 获取文件列表
  * @apiName getList
  * @apiHeader {String} Authorization token
  * @apiParam (path参数) {Number} curPage
  * @apiParam (path参数) {Number} pageSize
- * @apiParam (path参数) {String} account 账号
- * @apiParam (path参数) {String} name 昵称
- * @apiParam (path参数) {Number} create_File
+ * @apiParam (path参数) {Number} f_id 目录ID
  * @apiSampleRequest /api/File/getList
  * @apiGroup File
  * @apiVersion 0.0.1
  */
 router.get('/getList', ValidateFile.getList, File.getList)
 /**
- * 获取所有菜单
- * @api {get} /api/File/getAll 获取所有菜单
- * @apiDescription 获取所有菜单
+ * 获取所有文件
+ * @api {get} /api/File/getAll 获取所有文件
+ * @apiDescription 获取所有文件
  * @apiName getAll
  * @apiParam {Number} type
  * @apiHeader {String} Authorization token
  * @apiSampleRequest /api/File/getAll
+ * @apiParam (path参数) {Number} f_id 目录ID
  * @apiGroup File
  * @apiVersion 0.0.1
  */

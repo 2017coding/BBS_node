@@ -10,7 +10,6 @@ class Library extends Base{
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
     this.getTotals = this.getTotals.bind(this)
-    this.getRoleLibrary = this.getRoleLibrary.bind(this)
     this.getAll = this.getAll.bind(this)
   }
   async create (obj) {
@@ -37,16 +36,6 @@ class Library extends Base{
   }
   async getTotals (obj) {
     let sql = `select COUNT(*) as count from bbs_file where 1 = 1 ${this.joinStr('get', obj.get)}`
-    return query(sql)
-  }
-  async getRoleLibrary (obj) {
-    let sql = `select a.* from bbs_file as a
-                LEFT JOIN bbs_role_Library as b
-                ON a.id = b.Library_id where 1 = 1 ${this.joinStr('get', obj.get)}`
-    // admin则获取所有数据
-    if (+obj.get.role_id === 1) {
-      sql = `select * from bbs_file`
-    }
     return query(sql)
   }
   async getAll (obj) {
