@@ -107,19 +107,12 @@ class DataPerms extends Base {
         result,
         length,
         userInfo = await this.getUserInfo(req)
-        // TODO: 有时间逻辑应该写为查询到当前用户创建的用户以及创建用户创建的用户
-        // 如果是admin, 查询的时候则不需要设置用户ID, 否则为用户要查询的ID或用户ID
-        if (userInfo.id === 1 || userInfo.id === '1') {
-          delete query.create_user
-        } else {
-          query.create_user = query.create_user || userInfo.id
-        }
-        // 设置非模糊查询字段
-        for (let key in query) {
-          if (['id', 'create_user'].indexOf(key) === -1) {
-            query.like = [...query.like || [], key]
-          }
-        }
+    // 设置非模糊查询字段
+    for (let key in query) {
+      if (['id', 'create_user'].indexOf(key) === -1) {
+        query.like = [...query.like || [], key]
+      }
+    }
     try {
       result = await DataPermsModel.getList({get: query})
       length = await DataPermsModel.getTotals({get: query})

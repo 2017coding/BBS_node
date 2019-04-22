@@ -343,14 +343,14 @@ class User extends Base {
         result,
         length,
         userInfo = await this.getUserInfo(req)
-        // 传入创建人则查询创建人，没传入则查询当前用户下的
-        query.create_user = query.create_user || userInfo.id
-        // 设置非模糊查询字段
-        for (let key in query) {
-          if (['id', 'create_user'].indexOf(key) === -1) {
-            query.like = [...query.like || [], key]
-          }
-        }
+    // 传入创建人则查询创建人，没传入则查询当前用户下的
+    query.create_user = query.create_user || userInfo.id
+    // 设置非模糊查询字段
+    for (let key in query) {
+      if (['id', 'create_user'].indexOf(key) === -1) {
+        query.like = [...query.like || [], key]
+      }
+    }
     try {
       result = await UserModel.getList({get: {...query, flag: 1}})
       length = await UserModel.getTotals({get: {...query, flag: 1}})
@@ -372,10 +372,16 @@ class User extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let result, userInfo = await this.getUserInfo(req)
+    let result, userInfo = await this.getUserInfo(req), query = req.query
     try {
+      // 设置非模糊查询字段
+      for (let key in query) {
+        if (['id', 'create_user'].indexOf(key) === -1) {
+          query.like = [...query.like || [], key]
+        }
+      }
       // TODO: 暂时为当前用户创建的用户，admin查询所有用户, 之后改为当前用户创建的用户以及用户创建的用户
-      result = await UserModel.getAll({get: {create_user: userInfo.id, flag: 1}})
+      result = await UserModel.getAll({get: {...query, create_user: userInfo.id, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

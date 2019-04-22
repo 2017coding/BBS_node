@@ -41,12 +41,12 @@ class Log extends Base {
         result,
         length,
         userInfo = await this.getUserInfo(req)
-        // 设置非模糊查询字段
-        for (let key in query) {
-          if (['id', 'create_user', 'type', 'origin'].indexOf(key) === -1) {
-            query.like = [...query.like || [], key]
-          }
-        }
+    // 设置非模糊查询字段
+    for (let key in query) {
+      if (['id', 'create_user', 'type', 'origin'].indexOf(key) === -1) {
+        query.like = [...query.like || [], key]
+      }
+    }
     try {
       result = await LogModel.getList({get: query})
       length = await LogModel.getTotals({get: query})

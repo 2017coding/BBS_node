@@ -167,12 +167,12 @@ class File extends Base {
         result,
         length,
         userInfo = await this.getUserInfo(req)
-        // 设置非模糊查询字段
-        for (let key in query) {
-          if (['id', 'create_user'].indexOf(key) === -1) {
-            query.like = [...query.like || [], key]
-          }
-        }
+    // 设置非模糊查询字段
+    for (let key in query) {
+      if (['id', 'create_user'].indexOf(key) === -1) {
+        query.like = [...query.like || [], key]
+      }
+    }
     try {
       result = await FileMolde.getList({get: {...query, flag: 1}})
       length = await FileMolde.getTotals({get: {...query, flag: 1}})

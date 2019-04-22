@@ -269,7 +269,7 @@ CREATE TABLE `bbs_tag` (
   `type_id` INT(11) NOT NULL COMMENT '类型ID',
   `name` VARCHAR(48) NOT NULL COMMENT '名称',
   `icon` varchar(256) DEFAULT NULL COMMENT '图标地址',
-  `wikipedia` text NOT NULL COMMENT '标签百科',
+  `wikipedia` text DEFAULT NULL COMMENT '标签百科',
   `sort` INT(11) DEFAULT NULL COMMENT '排序',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
   `create_user` INT(11) DEFAULT NULL,

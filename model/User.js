@@ -85,12 +85,14 @@ class User extends Base{
     return query(sql) 
   }
   async getAll (obj) {
-    let sql, createUserList = await this.getCreateUser(obj.get.create_user)
+    let sql, createUserList = await this.getCreateUser(obj.get.create_user),
+        params = JSON.parse(JSON.stringify(obj.get))
+    delete params.create_user
     sql = `select * from bbs_user`
     if (obj.get.create_user === 1) {
-      sql += ` where id <> 1`
+      sql += ` where id <> 1 ${this.joinStr('get', params)}`
     } else if (mysql.escape(createUserList)) {
-      sql += ` where id in (${mysql.escape(createUserList)})`
+      sql += ` where id in (${mysql.escape(createUserList)}) ${this.joinStr('get', params)}`
     } else {
       sql += ` where 1 !=1`
     }
