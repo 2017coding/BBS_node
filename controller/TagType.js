@@ -18,7 +18,7 @@ class TagType extends Base {
           userInfo = await this.getUserInfo(req), result, search, path
     // 查询标签类型是否存在
     try {
-      search = await TagTypeMolde.getRow({get: data})
+      search = await TagTypeMolde.getRow({get: {name: data.name}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -45,7 +45,7 @@ class TagType extends Base {
       res.json({
         code: 20001,
         success: false,
-        message: '目录存在'
+        message: '类型已存在'
       })
     }
   }

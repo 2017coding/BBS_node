@@ -1,12 +1,11 @@
--- 初始化数据库
 DROP DATABASE IF EXISTS `LLLyh_BBS`;
 CREATE DATABASE `LLLyh_BBS`;
 USE `LLLyh_BBS`;
 
-SET FOREIGN_KEY_CHECKS=0; -- 禁止外键约束
+SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- token表
+-- token
 -- ----------------------------
 DROP TABLE IF EXISTS `bbs_token`;
 CREATE TABLE `bbs_token` (
@@ -32,7 +31,7 @@ CREATE TABLE `bbs_token` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='token表';
 
 -- ----------------------------
--- 用户表
+-- user
 -- ----------------------------
 DROP TABLE IF EXISTS `bbs_user`;
 CREATE TABLE `bbs_user` (
@@ -61,7 +60,7 @@ CREATE TABLE `bbs_user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
 -- ----------------------------
--- 用户角色关系表
+-- bbs_user_role
 -- ----------------------------
 DROP TABLE IF EXISTS `bbs_user_role`;
 CREATE TABLE `bbs_user_role` (
@@ -72,7 +71,7 @@ CREATE TABLE `bbs_user_role` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='用户关系表';
 
 -- ----------------------------
--- 角色表
+-- bbs_role
 -- ----------------------------
 DROP TABLE IF EXISTS `bbs_role`;
 CREATE TABLE `bbs_role` (
@@ -94,7 +93,7 @@ CREATE TABLE `bbs_role` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色表';
 
 -- ----------------------------
--- 角色菜单关系表
+-- bbs_role_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `bbs_role_menu`;
 CREATE TABLE `bbs_role_menu` (
@@ -105,7 +104,7 @@ CREATE TABLE `bbs_role_menu` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色菜单关系表';
 
 -- ----------------------------
--- 角色数据权限关系表
+-- bbs_role_data_perms
 -- ----------------------------
 DROP TABLE IF EXISTS `bbs_role_data_perms`;
 CREATE TABLE `bbs_role_data_perms` (
@@ -116,7 +115,7 @@ CREATE TABLE `bbs_role_data_perms` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色数据权限关系表';
 
 -- ----------------------------
--- 功能菜单表
+-- bbs_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `bbs_menu`;
 CREATE TABLE `bbs_menu` (
@@ -143,7 +142,7 @@ CREATE TABLE `bbs_menu` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='菜单表';
 
 -- ----------------------------
--- 数据权限表
+-- bbs_data_perms
 -- ----------------------------
 DROP TABLE IF EXISTS `bbs_data_perms`;
 CREATE TABLE `bbs_data_perms` (
@@ -165,7 +164,7 @@ CREATE TABLE `bbs_data_perms` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='数据权限表';
 
 ----------------------------
--- 区域表
+-- bbs_area
 ----------------------------
 DROP TABLE IF EXISTS `bbs_area`;
 CREATE TABLE `bbs_area` (
@@ -177,7 +176,7 @@ CREATE TABLE `bbs_area` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='区域表';
 
 ----------------------------
--- 日志表
+-- bbs_log
 ----------------------------
 DROP TABLE IF EXISTS `bbs_log`;
 CREATE TABLE `bbs_log` (
@@ -193,7 +192,7 @@ CREATE TABLE `bbs_log` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='日志表';
 
 ----------------------------
--- 文件目录表
+-- bbs_folder
 ----------------------------
 DROP TABLE IF EXISTS `bbs_folder`;
 CREATE TABLE `bbs_folder` (
@@ -216,7 +215,7 @@ CREATE TABLE `bbs_folder` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文件目录表';
 
 ----------------------------
--- 文件表
+-- bbs_file
 ----------------------------
 DROP TABLE IF EXISTS `bbs_file`;
 CREATE TABLE `bbs_file` (
@@ -241,12 +240,13 @@ CREATE TABLE `bbs_file` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文件表';
 
 ----------------------------
--- 标签类型表
+-- bbs_tag_type
 ----------------------------
 DROP TABLE IF EXISTS `bbs_tag_type`;
 CREATE TABLE `bbs_tag_type` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(48) NOT NULL COMMENT '名称',
+  `icon` varchar(256) DEFAULT NULL COMMENT '图标地址',
   `desc` VARCHAR(128) DEFAULT NULL COMMENT '描述',
   `sort` INT(11) DEFAULT NULL COMMENT '排序',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
@@ -261,12 +261,22 @@ CREATE TABLE `bbs_tag_type` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='标签类型表';
 
 ----------------------------
--- 标签表
+-- bbs_tag_type_tag
+----------------------------
+DROP TABLE IF EXISTS `bbs_tag_type_tag`;
+CREATE TABLE `bbs_tag_type_tag` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `tag_id` INT(11) NOT NULL,
+  `tag_type_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='标签关联类型表';
+
+----------------------------
+-- bbs_tag
 ----------------------------
 DROP TABLE IF EXISTS `bbs_tag`;
 CREATE TABLE `bbs_tag` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `type_id` INT(11) NOT NULL COMMENT '类型ID',
   `name` VARCHAR(48) NOT NULL COMMENT '名称',
   `icon` varchar(256) DEFAULT NULL COMMENT '图标地址',
   `wikipedia` text DEFAULT NULL COMMENT '标签百科',
@@ -283,7 +293,7 @@ CREATE TABLE `bbs_tag` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='标签表';
 
 ----------------------------
--- 专栏表
+-- bbs_column
 ----------------------------
 DROP TABLE IF EXISTS `bbs_column`;
 CREATE TABLE `bbs_column` (
@@ -304,7 +314,7 @@ CREATE TABLE `bbs_column` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='专栏表';
 
 ----------------------------
--- 专栏关注表
+-- bbs_column_focus
 ----------------------------
 DROP TABLE IF EXISTS `bbs_column_focus`;
 CREATE TABLE `bbs_column_focus` (
@@ -319,7 +329,7 @@ CREATE TABLE `bbs_column_focus` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='专栏关注表';
 
 ----------------------------
--- 文章表
+-- bbs_article
 ----------------------------
 DROP TABLE IF EXISTS `bbs_article`;
 CREATE TABLE `bbs_article` (
@@ -342,7 +352,7 @@ CREATE TABLE `bbs_article` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文章表';
 
 ----------------------------
--- 文章评论表
+-- bbs_article_comments
 ----------------------------
 DROP TABLE IF EXISTS `bbs_article_comments`;
 CREATE TABLE `bbs_article_comments` (
@@ -358,7 +368,7 @@ CREATE TABLE `bbs_article_comments` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文章评论表';
 
 ----------------------------
--- 文章标签表
+-- bbs_article_tag
 ----------------------------
 DROP TABLE IF EXISTS `bbs_article_tag`;
 CREATE TABLE `bbs_article_tag` (
@@ -372,7 +382,7 @@ CREATE TABLE `bbs_article_tag` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文章标签表';
 
 ----------------------------
--- 点赞表
+-- bbs_like
 ----------------------------
 DROP TABLE IF EXISTS `bbs_like`;
 CREATE TABLE `bbs_like` (
@@ -387,7 +397,7 @@ CREATE TABLE `bbs_like` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='点赞表';
 
 ----------------------------
--- 收藏表
+-- bbs_collect
 ----------------------------
 DROP TABLE IF EXISTS `bbs_collect`;
 CREATE TABLE `bbs_collect` (

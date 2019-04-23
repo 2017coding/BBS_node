@@ -17,7 +17,7 @@ class Tag extends Base {
           userInfo = await this.getUserInfo(req), result, search, path
     // 查询标签是否存在
     try {
-      search = await TagMolde.getRow({get: data})
+      search = await TagMolde.getRow({get: {name: data.name}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -44,7 +44,7 @@ class Tag extends Base {
       res.json({
         code: 20001,
         success: false,
-        message: '目录存在'
+        message: '标签已存在'
       })
     }
   }
