@@ -53,11 +53,27 @@ class Tag extends Base {
     let id = req.body.id,
         data = JSON.parse(JSON.stringify(req.body)),
         result,
+        search,
         userInfo = await this.getUserInfo(req)
         // 参数处理
         data.update_user = userInfo.id
         data.update_time = new Date()
         delete data.id
+    // 查询标签是否存在
+    try {
+      search = await TagMolde.getRow({get: {name: data.name}})
+    } catch (e) {
+      this.handleException(req, res, e)
+      return
+    }
+    if (search.length > 0) {
+      res.json({
+        code: 20001,
+        success: false,
+        message: '标签名字重复'
+      })
+      return
+    }
     try {
       result = await TagMolde.update({set: data, get: {id}})
     } catch (e) {

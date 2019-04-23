@@ -54,11 +54,27 @@ class TagType extends Base {
     let id = req.body.id,
         data = JSON.parse(JSON.stringify(req.body)),
         result,
+        search,
         userInfo = await this.getUserInfo(req)
         // 参数处理
         data.update_user = userInfo.id
         data.update_time = new Date()
         delete data.id
+    // 查询标签类型是否存在
+    try {
+      search = await TagTypeMolde.getRow({get: {name: data.name}})
+    } catch (e) {
+      this.handleException(req, res, e)
+      return
+    }
+    if (search.length > 0) {
+      res.json({
+        code: 20001,
+        success: false,
+        message: '类型名字重复'
+      })
+      return
+    }
     try {
       result = await TagTypeMolde.update({set: data, get: {id}})
     } catch (e) {
