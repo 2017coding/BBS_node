@@ -18,7 +18,7 @@ class TagType extends Base {
           userInfo = await this.getUserInfo(req), result, search, path
     // 查询标签类型是否存在
     try {
-      search = await TagTypeMolde.getRow({get: {name: data.name}})
+      search = await TagTypeMolde.getRow({get: {name: data.name, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -62,12 +62,13 @@ class TagType extends Base {
         delete data.id
     // 查询标签类型是否存在
     try {
-      search = await TagTypeMolde.getRow({get: {name: data.name}})
+      search = await TagTypeMolde.getRow({get: {name: data.name, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
     }
-    if (search.length > 1) {
+    // 修改的名字重复
+    if (search.length > 0 && search[0].id !== id) {
       res.json({
         code: 20001,
         success: false,

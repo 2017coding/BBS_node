@@ -61,11 +61,28 @@ class Folder extends Base {
     let id = req.body.id,
         data = JSON.parse(JSON.stringify(req.body)),
         result,
+        search,
         userInfo = await this.getUserInfo(req)
         // 参数处理
         data.update_user = userInfo.id
         data.update_time = new Date()
         delete data.id
+    // 查询目录是否存在
+    try {
+      search = await FolderMolde.getRow({get: {name: data.name, type: data.type, flag: 1}})
+    } catch (e) {
+      this.handleException(req, res, e)
+      return
+    }
+    // 修改的名字重复
+    if (search.length > 0 && search[0].id !== id) {
+      res.json({
+        code: 20001,
+        success: false,
+        message: '目录名重复'
+      })
+      return
+    }
     try {
       result = await FolderMolde.update({set: data, get: {id}})
     } catch (e) {
