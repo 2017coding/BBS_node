@@ -66,7 +66,7 @@ class Tag extends Base {
       this.handleException(req, res, e)
       return
     }
-    if (search.length > 0) {
+    if (search.length > 1) {
       res.json({
         code: 20001,
         success: false,
