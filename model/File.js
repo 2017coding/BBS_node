@@ -1,7 +1,7 @@
 import query from '../mysql'
 import Base from './Base'
 
-class Library extends Base{
+class File extends Base{
   constructor () {
     super()
     this.create = this.create.bind(this)
@@ -51,4 +51,4 @@ class Library extends Base{
   }
 }
 
-export default new Library()
+export default new File()

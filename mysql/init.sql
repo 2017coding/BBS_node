@@ -319,7 +319,23 @@ CREATE TABLE `bbs_column` (
 DROP TABLE IF EXISTS `bbs_column_focus`;
 CREATE TABLE `bbs_column_focus` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `column_id` INT(11) DEFAULT NULL COMMENT '专栏ID',
+  `column_id` INT(11) NOT NULL COMMENT '专栏ID',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：取消关注，1：关注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='专栏关注表';
+
+----------------------------
+-- bbs_column_article
+----------------------------
+DROP TABLE IF EXISTS `bbs_column_article`;
+CREATE TABLE `bbs_column_article` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `column_id` INT(11) NOT NULL COMMENT '专栏ID',
+  `article_id` INT(11) NOT NULL COMMENT '文章ID',
   `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_user` INT(11) DEFAULT NULL,
@@ -357,8 +373,8 @@ CREATE TABLE `bbs_article` (
 DROP TABLE IF EXISTS `bbs_article_comments`;
 CREATE TABLE `bbs_article_comments` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `pid` INT(11) DEFAULT NULL COMMENT '父节点评论',
-  `article_id` INT(11) DEFAULT NULL COMMENT '文章ID',
+  `pid` INT(11) NOT NULL DEFAULT 0 COMMENT '父节点评论',
+  `article_id` INT(11) NOT NULL COMMENT '文章ID',
   `content` VARCHAR(256) NOT NULL COMMENT '评论内容',
   `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
@@ -382,31 +398,126 @@ CREATE TABLE `bbs_article_tag` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文章标签表';
 
 ----------------------------
--- bbs_like
+-- bbs_article_like
 ----------------------------
-DROP TABLE IF EXISTS `bbs_like`;
-CREATE TABLE `bbs_like` (
+DROP TABLE IF EXISTS `bbs_article_like`;
+CREATE TABLE `bbs_article_like` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `article_id` INT(11) DEFAULT NULL COMMENT '文章ID',
+  `article_id` INT(11) NOT NULL COMMENT '文章ID',
   `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_user` INT(11) DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：取消赞，1：点赞',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='点赞表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文章点赞表';
 
 ----------------------------
--- bbs_collect
+-- bbs_article_collect
 ----------------------------
-DROP TABLE IF EXISTS `bbs_collect`;
-CREATE TABLE `bbs_collect` (
+DROP TABLE IF EXISTS `bbs_article_collect`;
+CREATE TABLE `bbs_article_collect` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `article_id` INT(11) DEFAULT NULL COMMENT '文章ID',
+  `article_id` INT(11) NOT NULL COMMENT '文章ID',
   `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_user` INT(11) DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：取消收藏，1：收藏',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='收藏表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文章收藏表';
+
+----------------------------
+-- bbs_questions
+----------------------------
+DROP TABLE IF EXISTS `bbs_questions`;
+CREATE TABLE `bbs_questions` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `title` INT(11) NOT NULL COMMENT '问题标题',
+  `content` text NOT NULL COMMENT '内容',
+  `view_count` INT(11) DEFAULT 0 COMMENT '浏览次数',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_user` INT(11) DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：删除，1：草稿 2: 审核中 3: 通过 4: 未通过 5: 禁止（封禁）',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='问题表';
+
+----------------------------
+-- bbs_questions_tag
+----------------------------
+DROP TABLE IF EXISTS `bbs_questions_tag`;
+CREATE TABLE `bbs_questions_tag` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `questions_id` INT(11) DEFAULT NULL COMMENT '问题ID',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='问题标签表';
+
+----------------------------
+-- bbs_questions_focus
+----------------------------
+DROP TABLE IF EXISTS `bbs_questions_focus`;
+CREATE TABLE `bbs_questions_focus` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `questions_id` INT(11) NOT NULL COMMENT '问题ID',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：取消关注，1：关注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='问题关注表';
+
+----------------------------
+-- bbs_questions_votes
+----------------------------
+DROP TABLE IF EXISTS `bbs_questions_votes`;
+CREATE TABLE `bbs_questions_votes` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `questions_id` INT(11) NOT NULL COMMENT '问题ID',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：顶+1，1：踩-1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='问题得票表';
+
+----------------------------
+-- bbs_questions_comments
+----------------------------
+DROP TABLE IF EXISTS `bbs_questions_comments`;
+CREATE TABLE `bbs_questions_comments` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `pid` INT(11) NOT NULL DEFAULT 0 COMMENT '父节点评论',
+  `questions_id` INT(11) NOT NULL COMMENT '问题ID',
+  `content` VARCHAR(256) NOT NULL COMMENT '评论内容',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='问题评论表';
+
+----------------------------
+-- bbs_article_votes
+----------------------------
+DROP TABLE IF EXISTS `bbs_questions_comments_votes`;
+CREATE TABLE `bbs_questions_votes` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `questions_comments_id` INT(11) NOT NULL COMMENT '评论ID',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：顶+1，1：踩-1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='问题评论得票表';
