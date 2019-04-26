@@ -353,7 +353,7 @@ CREATE TABLE `bbs_article` (
   `column_id` INT(11) DEFAULT NULL COMMENT '专栏ID',
   `title` INT(11) NOT NULL COMMENT '文章标题',
   `type` INT(11) NOT NULL COMMENT '类型: 1: 原创 2：转载 3：翻译',
-  `url` INT(11) NOT NULL COMMENT '文章内容存放地址',
+  `url` VARCHAR(256) NOT NULL COMMENT '文章内容存放地址',
   `view_count` INT(11) DEFAULT 0 COMMENT '浏览次数',
   `desc` VARCHAR(128) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
@@ -380,6 +380,9 @@ CREATE TABLE `bbs_article_comments` (
   `create_time` datetime DEFAULT NULL,
   `update_user` INT(11) DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
+  `delete_user` INT(11) DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：删除，1：可用(默认为1)',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文章评论表';
 
@@ -504,6 +507,9 @@ CREATE TABLE `bbs_questions_comments` (
   `create_time` datetime DEFAULT NULL,
   `update_user` INT(11) DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
+  `delete_user` INT(11) DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：删除，1：可用(默认为1)',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='问题评论表';
 
