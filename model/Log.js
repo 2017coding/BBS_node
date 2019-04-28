@@ -7,7 +7,7 @@ class Log extends Base{
     this.writeLog = this.writeLog.bind(this)
     this.getList = this.getList.bind(this)
     this.getTotals = this.getTotals.bind(this)
-    this.getAll = this.getAll.bind(this)
+    this.getLoginLog = this.getLoginLog.bind(this)
   }
   async writeLog (obj) {
     let sql = `INSERT INTO bbs_log set ${this.joinStr('set', obj.set)}`
@@ -26,8 +26,8 @@ class Log extends Base{
     let sql = `select COUNT(*) as count from bbs_log where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
-  async getAll (obj) {
-    let sql = `select * from bbs_log where 1 = 1 ${this.joinStr('get', obj.get)}`
+  async getLoginLog (obj) {
+    let sql = `select create_time as time from bbs_log where 1 = 1 ${this.joinStr('get', obj.get)}`
     return query(sql)
   }
 }

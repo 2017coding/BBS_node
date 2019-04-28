@@ -19,7 +19,7 @@ class Base{
         // TODO: 暂时只对一般条件查询和模糊查询处理
         for (let key in obj) {
           // 参数跳过, and相关字符串拼接
-          if (['curPage', 'pageSize', 'or'].indexOf(key) === -1) {
+          if (['curPage', 'pageSize', 'or', 'larger', 'lessThan'].indexOf(key) === -1) {
             // 开始拼接SQL
             if (obj['like'] && obj['like'].indexOf(key) !== -1) {
               // str += `and ${key} like ${mysql.escape('%' + obj[key] + '%')} `
@@ -32,12 +32,26 @@ class Base{
           // 或相关字符串拼接
           if (key === 'or') {
             let or = obj.or, keyWord = 'and', index = 0
-            for (let orKey in or) {
+            for (let key in or) {
               if (index > 0) {
                 keyWord = 'or'
               }
               index++
-              str += ' ' + keyWord + ' `' + orKey + '` = ' + mysql.escape(or[orKey])
+              str += ' ' + keyWord + ' `' + key + '` = ' + mysql.escape(or[key])
+            }
+          }
+          // 大于
+          if (key === 'larger') {
+            let larger = obj.larger, keyWord = 'and'
+            for (let key in larger) {
+              str += ' ' + keyWord + ' `' + key + '` > ' + mysql.escape(larger[key])
+            }
+          }
+          // 小于
+          if (key === 'lessThan') {
+            let lessThan = obj.lessThan, keyWord = 'and', index = 0
+            for (let key in lessThan) {
+              str += ' ' + keyWord + ' `' + key + '` < ' + mysql.escape(lessThan[key])
             }
           }
         }

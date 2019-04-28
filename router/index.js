@@ -11,6 +11,7 @@ import tag from './tag'
 import tagType from './tagType'
 import Authority from '../controller/Authority'
 import count from './count'
+import charts from './charts'
 
 /**
  * 路由中间件
@@ -19,6 +20,8 @@ import count from './count'
  * 第三层验证参数, 验证成功后再进行事件处理
  */
 export default app => {
+  // 图表数据
+  app.use('/api/charts', Authority.checkToken, Authority.permissions, charts)
   // 数据统计
   app.use('/api/count', Authority.checkToken, Authority.permissions, count)
   // 论坛配置
