@@ -5,7 +5,7 @@ const router = express.Router()
 
 /**
  * 平台相关数据统计
- * @api {POST} /api/Count/platformData 创建
+ * @api {POST} /api/Count/platformData 平台相关数据统计
  * @apiDescription 平台相关数据统计
  * @apiName platformData
  * @apiHeader {String} Authorization token
