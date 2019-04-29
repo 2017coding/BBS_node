@@ -1,3 +1,4 @@
+import Authority from '../controller/Authority'
 import user from './user'
 import area from './area'
 import role from './role'
@@ -9,7 +10,7 @@ import folder from './folder'
 import file from './file'
 import tag from './tag'
 import tagType from './tagType'
-import Authority from '../controller/Authority'
+import carousel from './carousel'
 import count from './count'
 import charts from './charts'
 
@@ -25,6 +26,7 @@ export default app => {
   // 数据统计
   app.use('/api/count', Authority.checkToken, Authority.permissions, count)
   // 论坛配置
+  app.use('/api/carousel', Authority.checkToken, Authority.permissions, carousel)
   app.use('/api/tagType', Authority.checkToken, Authority.permissions, tagType)
   app.use('/api/tag', Authority.checkToken, Authority.permissions, tag)
   // 文件库

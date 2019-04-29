@@ -85,7 +85,7 @@ class User extends Base {
     // 查询用户名密码是否正确, 以及为用户设置登录成功后的token
     // TODO: 登录比较用户信息和token存储的信息是否一致，不一致需要重新设置token
     try {
-      search = await UserModel.getRow({get: {account, password}})
+      search = await UserModel.getRow({get: {account, password, flag: 1}})
       data = search[0] ? JSON.parse(JSON.stringify(search[0])) : ''
       if (data) {
         for (let key in data) {
@@ -136,6 +136,12 @@ class User extends Base {
         code: 20301,
         success: false,
         message: '账号或密码错误'
+      })
+    } else if (search[0].status === 0) {
+      res.json({
+        code: 20301,
+        success: false,
+        message: '当前账号已被停用'
       })
     } else {
       try {

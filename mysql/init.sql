@@ -293,6 +293,29 @@ CREATE TABLE `bbs_tag` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='标签表';
 
 ----------------------------
+-- bbs_carousel
+----------------------------
+DROP TABLE IF EXISTS `bbs_carousel`;
+CREATE TABLE `bbs_carousel` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(48) NOT NULL COMMENT '标题',
+  `image` varchar(256) NOT NULL COMMENT '轮播图片',
+  `click` tinyint(4) NOT NULL DEFAULT '0' COMMENT '点击: 0：无效果 1：跳转路由(self) 2: 跳转路由(blank) 3：跳向外部链接',
+  `href` varchar(256) DEFAULT NULL COMMENT '点击需要跳转时设置，不设置不跳转',
+  `sort` INT(11) DEFAULT NULL COMMENT '排序',
+  `desc` VARCHAR(128) DEFAULT NULL COMMENT '描述',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_user` INT(11) DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：删除，1：可用(默认为1)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='轮播表';
+
+----------------------------
 -- bbs_column
 ----------------------------
 DROP TABLE IF EXISTS `bbs_column`;
