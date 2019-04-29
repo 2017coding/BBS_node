@@ -4,7 +4,11 @@ import LogModel from '../model/Log'
 class Charts extends Base {
   constructor () {
     super()
+    this.getCharts = this.getCharts.bind(this)
     this.userLoginAnalyze = this.userLoginAnalyze.bind(this)
+  }
+  async getCharts (req, res, next) {
+    const data = req.body.config
   }
   // 用户登陆分析
   async userLoginAnalyze (req, res, next) {
@@ -40,7 +44,8 @@ class Charts extends Base {
       for (let i = 0, len = 24; i < len; i++) {
         arr1.push(0)
       }
-      dataList.push(arr1)
+      // 当天初始为当天的小时个数
+      i === days ? dataList.push(arr1.slice(0, new Date().getHours() + 1)) : dataList.push(arr1)
     }
     arr.forEach(item => {
       // 得到每天每小时登陆的次数
