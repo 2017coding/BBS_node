@@ -14,67 +14,34 @@ class Question extends Base {
   // 创建
   async create (req, res, next) {
     let data = JSON.parse(JSON.stringify(req.body)),
-          userInfo = await this.getUserInfo(req), result, search, path
-    // 查询专栏是否存在
+        userInfo = await this.getUserInfo(req), result
     try {
-      search = await QuestionMolde.getRow({get: {name: data.name, flag: 1}})
+      // 参数处理
+      data.create_user = userInfo.id,
+      data.create_time = new Date()
+      result = await QuestionMolde.create({
+        set: data
+      })
     } catch (e) {
       this.handleException(req, res, e)
       return
     }
-    // 如果存在，提示
-    if (search.length === 0) {
-      try {
-        // 参数处理
-        data.create_user = userInfo.id,
-        data.create_time = new Date()
-        result = await QuestionMolde.create({
-          set: data
-        })
-      } catch (e) {
-        this.handleException(req, res, e)
-        return
-      }
-      res.json({
-        code: 20000,
-        success: true,
-        message: '创建成功'
-      })
-    } else {
-      res.json({
-        code: 20001,
-        success: false,
-        message: '类型已存在'
-      })
-    }
+    res.json({
+      code: 20000,
+      success: true,
+      message: '创建成功'
+    })
   }
   // 编辑
   async update (req, res, next) {
     let id = req.body.id,
         data = JSON.parse(JSON.stringify(req.body)),
         result,
-        search,
         userInfo = await this.getUserInfo(req)
         // 参数处理
         data.update_user = userInfo.id
         data.update_time = new Date()
         delete data.id
-    // 查询专栏是否存在
-    try {
-      search = await QuestionMolde.getRow({get: {name: data.name, flag: 1}})
-    } catch (e) {
-      this.handleException(req, res, e)
-      return
-    }
-    // 修改的名字重复
-    if (search.length > 0 && search[0].id !== id) {
-      res.json({
-        code: 20001,
-        success: false,
-        message: '专栏名字重复'
-      })
-      return
-    }
     try {
       result = await QuestionMolde.update({set: data, get: {id}})
     } catch (e) {
@@ -97,16 +64,6 @@ class Question extends Base {
   }
   // 删除
   async delete (req, res, next) {
-    // 如果当前专栏下面有文章，则不能删除
-    // const child = await TagMolde.getAll({get: {f_id: req.params.id, flag: 1}})
-    // if (child.length > 0) {
-    //   res.json({
-    //     code: 20001,
-    //     success: false,
-    //     message: '请先删除该目录下的文件'
-    //   })
-    //   return
-    // }
     const userInfo = await this.getUserInfo(req),
       result = await QuestionMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
