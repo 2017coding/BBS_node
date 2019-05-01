@@ -185,7 +185,7 @@ class File extends Base {
       success: true,
       content: {
         result: result.map(item => {
-          item.completePath = `http://www.lyh.red/file/${item.path}`
+          item.completePath = `https://www.lyh.red/file/${item.path}`
           return item
         }),
         curPage: +query.curPage,
@@ -214,7 +214,7 @@ class File extends Base {
       code: 20000,
       success: true,
       content: result.map(item => {
-        item.completePath = `http://www.lyh.red/file/${item.path}`
+        item.completePath = `https://www.lyh.red/file/${item.path}`
         return item
       }),
       message: '操作成功'
