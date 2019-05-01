@@ -1,5 +1,7 @@
 import Base from './Base'
 import TokenModel from '../model/Token'
+import UserModel from '../model/User'
+import DataPermsModel from '../model/DataPerms'
 import JWT from 'jsonwebtoken'
 
 class Authority extends Base{
@@ -8,6 +10,7 @@ class Authority extends Base{
     this.checkToken = this.checkToken.bind(this)
     this.setToken = this.setToken.bind(this)
     this.getToken = this.getToken.bind(this)
+    this.permissions = this.permissions.bind(this)
   }
   // 验证Token令牌
   async checkToken (req, res, next) {
@@ -99,7 +102,29 @@ class Authority extends Base{
   }
   // 验证用户是否有操作权限
   async permissions (req, res, next) {
-    next()
+    const baseUrl = req.baseUrl.split('/')
+    const method = req.method
+    const api = baseUrl[baseUrl.length - 1] + req.path
+    const userInfo = await this.getUserInfo(req)
+    // 当请求方式为get时，不需要验证数据权限
+    if (method.toLocaleLowerCase() === 'get') {
+      next()
+      return
+    }
+    // 查询当前接口是否配置权限
+    const search = userInfo.id === 1 ? 
+                  await DataPermsModel.getAll({get: {api}}) :
+                  await DataPermsModel.getRoleDataPerms({get: {role_id: userInfo.role_id, api}})
+    if (search.length > 0) {
+      next()
+    } else {
+      res.json({
+        code: 20001,
+        success: false,
+        content: {},
+        message: '无操作权限'
+      })
+    }
   }
 }
 

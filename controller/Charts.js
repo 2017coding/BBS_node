@@ -16,7 +16,7 @@ class Charts extends Base {
         now = this.utils.switchTime(new Date(), 'YYYY-MM-DD') + ' 00:00:00',
         result, lastDays = +new Date(now) - 1000 * 3600 * 24 * days
     try {
-      result = await LogModel.getLoginLog({get: {larger: {create_time: this.utils.switchTime(lastDays, 'YYYY-MM-DD hh:mm:ss'), type: 1}}})
+      result = await LogModel.getLoginLog({get: {larger: {create_time: this.utils.switchTime(lastDays, 'YYYY-MM-DD hh:mm:ss')}, type: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

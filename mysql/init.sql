@@ -151,7 +151,7 @@ CREATE TABLE `bbs_data_perms` (
   `name` VARCHAR(48) NOT NULL COMMENT '名称',
   `code` VARCHAR(48) NOT NULL COMMENT '编码',
   `type` tinyint(4) NOT NULL COMMENT '按钮或者其他',
-  `api` VARCHAR(24) NOT NULL COMMENT '接口',
+  `api` VARCHAR(48) NOT NULL COMMENT '接口',
   `method` tinyint(4) NOT NULL COMMENT '请求方式 1: GET 2: POST 3: PUT 4. DELETE',
   `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
