@@ -11,6 +11,9 @@ import file from './file'
 import tag from './tag'
 import tagType from './tagType'
 import carousel from './carousel'
+import question from './question'
+import column from './column'
+import article from './article'
 import count from './count'
 import charts from './charts'
 
@@ -25,6 +28,10 @@ export default app => {
   app.use('/api/charts', Authority.checkToken, Authority.permissions, charts)
   // 数据统计
   app.use('/api/count', Authority.checkToken, Authority.permissions, count)
+  // 运维中心
+  app.use('/api/question', Authority.checkToken, Authority.permissions, question)
+  app.use('/api/column', Authority.checkToken, Authority.permissions, column)
+  app.use('/api/article', Authority.checkToken, Authority.permissions, article)
   // 论坛配置
   app.use('/api/carousel', Authority.checkToken, Authority.permissions, carousel)
   app.use('/api/tagType', Authority.checkToken, Authority.permissions, tagType)

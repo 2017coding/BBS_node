@@ -37,11 +37,22 @@ class Carousel extends Base {
     let id = req.body.id,
         data = JSON.parse(JSON.stringify(req.body)),
         result,
+        search,
         userInfo = await this.getUserInfo(req)
         // 参数处理
         data.update_user = userInfo.id
         data.update_time = new Date()
         delete data.id
+    // 设置同时启用的轮播数量为5个
+    search = await CarouselMolde.getRow({get: {status: 1, flag: 1}})
+    if (search.length > 5) {
+      res.json({
+        code: 20001,
+        success: false,
+        message: '轮播最多同时启用五个！'
+      })
+      return
+    }
     try {
       result = await CarouselMolde.update({set: data, get: {id}})
     } catch (e) {
