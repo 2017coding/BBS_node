@@ -23,7 +23,7 @@ class User extends Base {
   }
   // 注册
   async registered (req, res, next) {
-    let search, result, userInfo = await this.getUserInfo(req)
+    let search, result, userInfo = await this.getUserInfo(req) || {}
     // TODO: 需要做一个消息队列，保证注册时数据不会混乱
     // 查询用户是否存在
     try {
@@ -38,7 +38,7 @@ class User extends Base {
         let data = JSON.parse(JSON.stringify(req.body))
         // TODO: 添加时有创建人, 注册时没有
         // 参数处理
-        data.create_user = userInfo.id,
+        data.create_user = userInfo.id || -1,
         data.create_time = new Date()
         result = await UserModel.registered({
           set: data
