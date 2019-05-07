@@ -14,8 +14,10 @@ class Authority extends Base{
   }
   // 验证Token令牌
   async checkToken (req, res, next) {
+    const whiteList = ['/login', '/registered']
     // 登录和注册页面不作限制
-    if (req.path === '/login' || req.path === '/registered') {
+    // TODO: 暂时不对获取数据的接口验证
+    if (req.method.toLocaleLowerCase() === 'get' ||  whiteList.includes(req.path)) {
       next()
       return
     }
@@ -106,8 +108,9 @@ class Authority extends Base{
     const method = req.method
     const api = baseUrl[baseUrl.length - 1] + req.path
     const userInfo = await this.getUserInfo(req)
+    const whiteList = ['/login', '/registered', '/loginOut']
     // 当请求方式为get时或者登陆注册时，不需要验证数据权限
-    if (method.toLocaleLowerCase() === 'get' || req.path === '/login' || req.path === '/registered') {
+    if (method.toLocaleLowerCase() === 'get' || whiteList.includes(req.path)) {
       next()
       return
     }

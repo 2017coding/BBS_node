@@ -179,7 +179,7 @@ class User extends Base {
   async loginOut (req, res, next) {
     let userInfo = await this.getUserInfo(req)
     // 设置Token过期时间为现在
-    userInfo[userInfo.type + 'expire_time'] = +new Date()
+    userInfo[req.query.type + '_expire_time'] = +new Date()
     try {
       // TODO: 测试期间不清除数据
       // await Authority.setToken(userInfo, {
@@ -190,7 +190,7 @@ class User extends Base {
       return
     }
     try {
-      let type = userInfo.type === 'phone' ? 0 : userInfo.type === 'bbs' ? 1 : 2
+      let type = req.query.type === 'phone' ? 0 : req.query.type === 'bbs' ? 1 : 2
       // 写入登出日志
       await logModel.writeLog({
         set: {
