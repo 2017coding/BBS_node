@@ -38,7 +38,7 @@ class User extends Base {
         let data = JSON.parse(JSON.stringify(req.body))
         // TODO: 添加时有创建人, 注册时没有
         // 参数处理
-        data.create_user = userInfo.id || -1,
+        data.create_user = userInfo.id || 1,
         data.create_time = new Date()
         result = await UserModel.registered({
           set: data

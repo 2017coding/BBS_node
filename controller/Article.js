@@ -186,7 +186,7 @@ class Article extends Base {
     let result, params = {...req.query, flag: 1}
     // 设置非模糊查询字段
     for (let key in params) {
-      if (['id', 'create_user', 'f_id'].indexOf(key) === -1) {
+      if (['id', 'create_user'].indexOf(key) === -1) {
         params.like = [...params.like || [], key]
       }
     }
