@@ -107,10 +107,10 @@ class Authority extends Base{
     const baseUrl = req.baseUrl.split('/')
     const method = req.method
     const userInfo = await this.getUserInfo(req)
-    const whiteList = ['/login', '/registered', '/loginOut']
+    const whiteList = ['/login', '/registered', '/loginOut', '/api/article/create', '/api/article/update']
     let api = baseUrl[baseUrl.length - 1] + req.path
     // 当请求方式为get时或者登陆注册时，不需要验证数据权限
-    if (method.toLocaleLowerCase() === 'get' || whiteList.includes(req.path)) {
+    if (method.toLocaleLowerCase() === 'get' || whiteList.includes(req.path) || whiteList.includes(req.originalUrl)) {
       next()
       return
     }
