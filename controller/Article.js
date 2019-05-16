@@ -39,7 +39,10 @@ class Article extends Base {
         } else {
           try {
             // 参数处理
-            delete params.content
+            if (data.content) {
+              data.content = data.content.replace(/#*.*#/g, '').replace(/[^a-z0-9\u4e00-\u9fa5]/, '').substring(0, 100) // 除去标题部分，截取100个字用来显示
+            }
+            delete params.tags
             params.url = writePath
             result = await ArticleMolde.create({
               set: params
@@ -51,7 +54,7 @@ class Article extends Base {
           res.json({
             code: 20000,
             success: true,
-            content: {},
+            content: {id: result.insertId},
             message: '创建成功'
           })
         }
@@ -73,10 +76,8 @@ class Article extends Base {
         data.update_user = userInfo.id
         data.update_time = new Date()
         delete data.id
-    // 先获取到当前文件的路径，然后重新写入文件
-    writePath = search[0].url
     // 重新写入文件
-    fs.writeFile(`public/article/${writePath}`, data.content, async (err) => {
+    fs.writeFile(`public/article/${search[0].url}`, data.content, async (err) => {
       if (err) {
         res.json({
           code: 20001,
@@ -87,8 +88,10 @@ class Article extends Base {
       } else {
         try {
           // 参数处理
-          delete data.content
-          data.url = writePath
+          if (data.content) {
+            data.content = data.content.replace(/#*.*#/g, '').replace(/[^a-z0-9\u4e00-\u9fa5]/, '').substring(0, 100) // 除去标题部分，截取100个字用来显示
+          }
+          delete data.tags
           result = await ArticleMolde.update({
             set: data, get: {id}
           })

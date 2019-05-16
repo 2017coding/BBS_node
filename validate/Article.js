@@ -13,9 +13,9 @@ class Article extends Base{
   async create (req, res, next) {
     const params = req.body,
           arr = [
-            {label: '标题', value: params.title, rules: ['notnull']},
-            {label: '内容', value: params.content, rules: ['notnull']},
-            {label: '状态', value: params.status, rules: ['notnull', 'number']}
+            // {label: '标题', value: params.title, rules: ['notnull']},
+            // {label: '内容', value: params.content, rules: ['notnull']},
+            // {label: '状态', value: params.status, rules: ['notnull', 'number']}
           ],
           result = this.check(arr)
     if (!result.success) {
@@ -31,10 +31,10 @@ class Article extends Base{
   async update (req, res, next) {
     const params = req.body,
           arr = [
-            {label: 'ID', value: params.id, rules: ['notnull', 'number']},
-            {label: '标题', value: params.title, rules: ['notnull']},
-            {label: '内容', value: params.content, rules: ['notnull']},
-            {label: '状态', value: params.status, rules: ['notnull', 'number']}
+            {label: 'ID', value: params.id, rules: ['notnull', 'number']}
+            // {label: '标题', value: params.title, rules: ['notnull']},
+            // {label: '内容', value: params.content, rules: ['notnull']},
+            // {label: '状态', value: params.status, rules: ['notnull', 'number']}
           ],
           result = this.check(arr)
     if (!result.success) {
