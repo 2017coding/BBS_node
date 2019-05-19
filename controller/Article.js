@@ -44,6 +44,8 @@ class Article extends Base {
             }
             delete params.tags
             params.url = writePath
+            params.create_user = userInfo.id
+            create_user.create_time = new Date()
             result = await ArticleMolde.create({
               set: params
             })
@@ -166,8 +168,8 @@ class Article extends Base {
       }
     }
     try {
-      result = await ArticleMolde.getList({get: {...query, flag: 1}})
-      length = await ArticleMolde.getTotals({get: {...query, flag: 1}})
+      result = await ArticleMolde.getList({get: {...query}})
+      length = await ArticleMolde.getTotals({get: {...query}})
     } catch (e) {
       this.handleException(req, res, e)
       return

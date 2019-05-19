@@ -30,8 +30,11 @@ class Article extends Base{
   }
   async getList (obj) {
     let curPage = obj.get.curPage, pageSize = obj.get.pageSize
-    let sql = `select * from bbs_article
+    let sql = `select a.*, b.name as create_user_name from bbs_article as a
+                left join bbs_user as b on a.create_user = b.id
                 where 1 = 1 ${this.joinStr('get', obj.get)} ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})} limit ${(curPage - 1) * pageSize}, ${pageSize} `
+    // 处理表连接字段
+    sql = sql.replace(/`flag`/, 'a.flag')
     return query(sql)
   }
   async getTotals (obj) {

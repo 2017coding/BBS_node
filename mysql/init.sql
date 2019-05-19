@@ -374,7 +374,7 @@ DROP TABLE IF EXISTS `bbs_article`;
 CREATE TABLE `bbs_article` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `column_id` INT(11) DEFAULT NULL COMMENT '专栏ID',
-  `title` VARCHAR(128) DEFAULT NULL COMMENT '文章标题',
+  `title` VARCHAR(128) NULL NULL COMMENT '文章标题',
   `content` text NOT NULL COMMENT '内容',
   `type` INT(11) NOT NULL COMMENT '类型: 1: 原创 2：转载 3：翻译',
   `url` VARCHAR(256) NOT NULL COMMENT '文章内容存放地址',

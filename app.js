@@ -5,6 +5,8 @@ import bodyParser from 'body-parser'
 import config from 'config-lite' // 配置中间件
 import history from 'connect-history-api-fallback'
 import chalk from 'chalk'
+import http from 'http'
+import SocketServer from './socket/index.js'
 
 const app = express()
 
@@ -22,13 +24,17 @@ app.all('*', (req, res, next) => {
 	}
 })
 
+const server = http.createServer(app)
+const io = require('socket.io')(server)
+new SocketServer(io)
+
 // 解析body参数
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 router(app)
 app.use(history())
 app.use(express.static(path.join(__dirname, 'public')))
-app.listen(config.port || '1313', () => {
+server.listen(config.port || '1313', () => {
   console.log(
 		chalk.green(`成功监听端口${config.port || 1313}`)
 	)
