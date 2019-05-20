@@ -39,13 +39,13 @@ class Article extends Base {
         } else {
           try {
             // 参数处理
-            if (data.content) {
-              data.content = data.content.replace(/#*.*#/g, '').replace(/[^a-z0-9\u4e00-\u9fa5]/, '').substring(0, 100) // 除去标题部分，截取100个字用来显示
+            if (params.content) {
+              params.content = params.content.replace(/#*.*#/g, '').replace(/[^a-z0-9\u4e00-\u9fa5]/, '').substring(0, 100) // 除去标题部分，截取100个字用来显示
             }
             delete params.tags
             params.url = writePath
             params.create_user = userInfo.id
-            create_user.create_time = new Date()
+            params.create_time = new Date()
             result = await ArticleMolde.create({
               set: params
             })
@@ -138,7 +138,7 @@ class Article extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await ArticleMolde.getRow({get: {id: req.params.id, flag: 1}})
+    const search = await ArticleMolde.getRow({get: {id: req.params.id, flag: 3}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -147,11 +147,27 @@ class Article extends Base {
         message: '查询信息不存在'
       })
     } else {
-      res.json({
-        code: 20000,
-        success: true,
-        content: search,
-        message: '操作成功'
+      // 获取到文件files
+      fs.readFile(`public/article/${search[0].url}`, (err, data) => {
+        if (err) {
+          res.json({
+            code: 20001,
+            success: false,
+            result: err,
+            message: '查询信息失败'
+          })
+          return
+        }
+        const buf = Buffer.from('runoob', 'ascii')
+        delete search.url
+        search.content = buf.toString('utf8')
+        console.log(buf.toString('utf8'))
+        res.json({
+          code: 20000,
+          success: true,
+          content: search,
+          message: '操作成功'
+        })
       })
     }
   }
