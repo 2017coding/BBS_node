@@ -40,7 +40,7 @@ class Article extends Base {
           try {
             // 参数处理
             if (params.content) {
-              params.content = params.content.replace(/#*.*#/g, '').replace(/[^a-z0-9\u4e00-\u9fa5]/, '').substring(0, 100) // 除去标题部分，截取100个字用来显示
+              params.content = params.content.replace(/#*.*#/g, '').replace(/[^a-z0-9\u4e00-\u9fa5]/, '').substring(0, 200) // 除去标题部分，截取200个字用来显示
             }
             delete params.tags
             params.url = writePath
@@ -91,7 +91,7 @@ class Article extends Base {
         try {
           // 参数处理
           if (data.content) {
-            data.content = data.content.replace(/#*.*#/g, '').replace(/[^a-z0-9\u4e00-\u9fa5]/, '').substring(0, 100) // 除去标题部分，截取100个字用来显示
+            data.content = data.content.replace(/#*.*#/g, '').replace(/[^a-z0-9\u4e00-\u9fa5]/, '').substring(0, 200) // 除去标题部分，截取200个字用来显示
           }
           delete data.tags
           result = await ArticleMolde.update({
