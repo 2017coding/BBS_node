@@ -158,10 +158,9 @@ class Article extends Base {
           })
           return
         }
-        const buf = Buffer.from('runoob', 'ascii')
-        delete search.url
-        search.content = buf.toString('utf8')
-        console.log(buf.toString('utf8'))
+        const buf = new Buffer(data)
+        delete search[0].url
+        search[0].content = buf.toString('utf8', 0, buf.length)
         res.json({
           code: 20000,
           success: true,
