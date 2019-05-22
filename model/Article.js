@@ -25,7 +25,12 @@ class Article extends Base{
     return query(sql)
   }
   async getRow (obj) {
-    let sql = `select * from bbs_article where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `select a.*, b.name as create_user_name, b.avatar from bbs_article as a
+                left join bbs_user as b on a.create_user = b.id
+                where 1 = 1 ${this.joinStr('get', obj.get)}`
+    // 处理表连接字段
+    sql = sql.replace(/`id`/, 'a.id')
+    sql = sql.replace(/`flag`/, 'a.flag')
     return query(sql)
   }
   async getList (obj) {

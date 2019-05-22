@@ -14,7 +14,7 @@ class Count extends Base {
     try {
       result = {
         questions: (await QuestionMolde.getTotals({get: params}))[0].count,
-        articles: (await ArticleMolde.getTotals({get: params}))[0].count,
+        articles: (await ArticleMolde.getTotals({get: {...params, flag: 3}}))[0].count,
         columns: (await ColumnMolde.getTotals({get: params}))[0].count,
         users: (await UserModel.getTotals({get: {...params, create_user: 1}}))[0].count + 1
       }

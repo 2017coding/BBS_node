@@ -417,6 +417,7 @@ DROP TABLE IF EXISTS `bbs_article_tag`;
 CREATE TABLE `bbs_article_tag` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `article_id` INT(11) DEFAULT NULL COMMENT '文章ID',
+  `tag_id` INT(11) DEFAULT NULL COMMENT '标签ID',
   `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_user` INT(11) DEFAULT NULL,
