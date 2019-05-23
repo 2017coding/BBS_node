@@ -72,7 +72,7 @@ class Article extends Base {
         data = JSON.parse(JSON.stringify(req.body)),
         result,
         userInfo = await this.getUserInfo(req),
-        search = await ArticleMolde.getRow({get: {id: data.id, flag: 1}}),
+        search = await ArticleMolde.getRow({get: {id: data.id}}),
         writePath
         // 参数处理
         data.update_user = userInfo.id
