@@ -37,13 +37,14 @@ class Article extends Base{
     let curPage = obj.get.curPage, pageSize = obj.get.pageSize
     let sql = `select a.*, b.name as create_user_name from bbs_article as a
                 left join bbs_user as b on a.create_user = b.id
-                where 1 = 1 ${this.joinStr('get', obj.get)} ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})} limit ${(curPage - 1) * pageSize}, ${pageSize} `
+                where 1 = 1 ${this.joinStr('get', obj.get)} AND a.flag <> 0 ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})} limit ${(curPage - 1) * pageSize}, ${pageSize} `
     // 处理表连接字段
     sql = sql.replace(/`flag`/, 'a.flag')
+    sql = sql.replace(/`type`/, 'a.type')
     return query(sql)
   }
   async getTotals (obj) {
-    let sql = `select COUNT(*) as count from bbs_article where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `select COUNT(*) as count from bbs_article where 1 = 1 ${this.joinStr('get', obj.get)} AND flag <> 0`
     return query(sql)
   }
   async getAll (obj) {

@@ -138,7 +138,7 @@ class Article extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await ArticleMolde.getRow({get: {id: req.params.id, flag: 3}})
+    const search = await ArticleMolde.getRow({get: {id: req.params.id}})
     if (search.length === 0) {
       res.json({
         code: 20401,
