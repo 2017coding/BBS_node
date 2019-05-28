@@ -27,7 +27,7 @@ class User extends Base {
     // TODO: 需要做一个消息队列，保证注册时数据不会混乱
     // 查询用户是否存在
     try {
-      search = await UserModel.getRow({get: {account: req.body.account}})
+      search = await UserModel.getRow({get: {account: req.body.account, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

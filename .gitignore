@@ -3,6 +3,7 @@ node_modules/
 /log/*.log
 /public/apidoc
 /mysql/index.js
+/mysql/transaction.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

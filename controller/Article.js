@@ -78,6 +78,15 @@ class Article extends Base {
         data.update_user = userInfo.id
         data.update_time = new Date()
         delete data.id
+    if (userInfo.id !== search[0].create_user) {
+      res.json({
+        code: 20001,
+        success: false,
+        result: err,
+        message: '不是文章作者，无编辑权限'
+      })
+      return
+    }
     // 重新写入文件
     fs.writeFile(`public/article/${search[0].url}`, data.content, async (err) => {
       if (err) {
