@@ -12,6 +12,7 @@ import tag from './tag'
 import tagType from './tagType'
 import tagRelation from './tagRelation'
 import carousel from './carousel'
+import techSquare from './techSquare'
 import question from './question'
 import column from './column'
 import article from './article'
@@ -35,6 +36,7 @@ export default app => {
   app.use('/api/article', Authority.checkToken, Authority.permissions, article)
   // 论坛配置
   app.use('/api/carousel', Authority.checkToken, Authority.permissions, carousel)
+  app.use('/api/techSquare', Authority.checkToken, Authority.permissions, techSquare)
   app.use('/api/tagRelation', Authority.checkToken, Authority.permissions, tagRelation)
   app.use('/api/tagType', Authority.checkToken, Authority.permissions, tagType)
   app.use('/api/tag', Authority.checkToken, Authority.permissions, tag)

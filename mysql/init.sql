@@ -316,6 +316,44 @@ CREATE TABLE `bbs_carousel` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='轮播表';
 
 ----------------------------
+-- bbs_tech_square
+----------------------------
+DROP TABLE IF EXISTS `bbs_tech_square`;
+CREATE TABLE `bbs_tech_square` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `tag_type_id` INT(11) NOT NULL COMMENT '标签类型ID',
+  `sort` INT(11) NOT NULL COMMENT '排序',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_user` INT(11) DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：删除，1：可用(默认为1)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='技术频道表';
+
+----------------------------
+-- bbs_notice
+----------------------------
+DROP TABLE IF EXISTS `bbs_notice`;
+CREATE TABLE `bbs_notice` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `href` varchar(256) DEFAULT NULL COMMENT '点击需要跳转时设置，不设置不跳转',
+  `content` varchar(256) NOT NULL COMMENT '给用户看到的内容',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_user` INT(11) DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：删除，1：可用(默认为1)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='通知表';
+
+----------------------------
 -- bbs_column
 ----------------------------
 DROP TABLE IF EXISTS `bbs_column`;
