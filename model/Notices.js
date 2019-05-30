@@ -11,7 +11,7 @@ class Notices extends Base{
     const setData = {
       status: 0,
       update_user: obj.set.create_user,
-      create_time: new Date()
+      update_time: new Date()
     }
     // 将当前所有数据状态置为0
     const sql1 = `UPDATE bbs_notices set ${this.joinStr('set', setData)} where 1 = 1`

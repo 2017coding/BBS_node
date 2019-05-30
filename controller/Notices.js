@@ -14,6 +14,7 @@ class Notices extends Base {
         userInfo = await this.getUserInfo(req)
         // 参数处理
         data.create_user = userInfo.id
+        data.create_time = new Date()
         delete data.id
     try {
       result = await NoticesMolde.setNotices({set: data})
