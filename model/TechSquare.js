@@ -39,7 +39,12 @@ class TechSquare extends Base{
     return query(sql)
   }
   async getAll (obj) {
-    let sql = `select * from bbs_tech_square where 1 = 1 ${this.joinStr('get', obj.get)} ORDER BY sort`
+    let sql = `select a.*, b.icon as image, b.name as title from bbs_tech_square as a
+              left join bbs_tag_type as b on a.tag_type_id = b.id
+              where 1 = 1 ${this.joinStr('get', obj.get)} ORDER BY sort`
+    // 处理表连接字段
+    sql = sql.replace(/`status`/, 'a.status')
+    sql = sql.replace(/`flag`/, 'a.flag')
     return query(sql)
   }
 }

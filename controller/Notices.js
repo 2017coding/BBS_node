@@ -17,7 +17,7 @@ class Notices extends Base {
         data.create_time = new Date()
         delete data.id
     try {
-      result = await NoticesMolde.setNotices({set: data})
+      result = await NoticesMolde.setNotices({set: data, get: {status: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

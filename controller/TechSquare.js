@@ -143,9 +143,9 @@ class TechSquare extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let result, type = req.query.type
+    let result, status = req.query.status
     try {
-      result = await TechSquareMolde.getAll(type ? {get: {type, flag: 1}} : {get: {flag: 1}})
+      result = await TechSquareMolde.getAll(status ? {get: {status, flag: 1}} : {get: {flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

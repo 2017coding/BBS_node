@@ -14,7 +14,7 @@ class Notices extends Base{
       update_time: new Date()
     }
     // 将当前所有数据状态置为0
-    const sql1 = `UPDATE bbs_notices set ${this.joinStr('set', setData)} where 1 = 1`
+    const sql1 = `UPDATE bbs_notices set ${this.joinStr('set', setData)} where 1 = 1 ${this.joinStr('get', obj.get)}`
     // 添加新数据
     const sql2 = `INSERT INTO bbs_notices set ${this.joinStr('set', obj.set)}`
     // 事务开始
