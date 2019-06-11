@@ -42,12 +42,13 @@ class Article extends Base {
             if (params.content) {
               params.content = params.content.replace(/#*.*#/g, '').replace(/[^a-z0-9\u4e00-\u9fa5]/, '').substring(0, 200) // 除去标题部分，截取200个字用来显示
             }
-            delete params.tags
             params.url = writePath
             params.create_user = userInfo.id
             params.create_time = new Date()
+            delete params.tags
             result = await ArticleMolde.create({
-              set: params
+              set: params,
+              tags: req.body.tags
             })
           } catch (e) {
             this.handleException(req, res, e)
@@ -104,13 +105,15 @@ class Article extends Base {
           }
           delete data.tags
           result = await ArticleMolde.update({
-            set: data, get: {id}
+            set: data,
+            get: {id},
+            tags: req.body.tags
           })
         } catch (e) {
           this.handleException(req, res, e)
           return
         }
-        if (result.affectedRows) {
+        if (result) {
           res.json({
             code: 20000,
             success: true,
@@ -173,7 +176,22 @@ class Article extends Base {
         res.json({
           code: 20000,
           success: true,
-          content: search,
+          content: search.map(item => {
+            const tagIds = item.tag_id ? item.tag_id.split(',') : []
+            const tagNames = item.tag_name ? item.tag_name.split(',') : []
+            const tagList = tagIds.map((item1, index1) => {
+              return {
+                id: +item1,
+                name: tagNames[index1]
+              }
+            })
+            delete item.tag_id
+            delete item.tag_name
+            return {
+              tagList,
+              ...item
+            }
+          }),
           message: '操作成功'
         })
       })
@@ -202,7 +220,22 @@ class Article extends Base {
       code: 20000,
       success: true,
       content: {
-        result: result,
+        result: result.map(item => {
+          const tagIds = item.tag_id ? item.tag_id.split(',') : []
+          const tagNames = item.tag_name ? item.tag_name.split(',') : []
+          const tagList = tagIds.map((item1, index1) => {
+            return {
+              id: +item1,
+              name: tagNames[index1]
+            }
+          })
+          delete item.tag_id
+          delete item.tag_name
+          return {
+            tagList,
+            ...item
+          }
+        }),
         curPage: +query.curPage,
         pageSize: +query.pageSize,
         totals: length ? length[0].count : 0
