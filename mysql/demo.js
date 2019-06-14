@@ -1,12 +1,15 @@
 import mysql from 'mysql'
+import NodeLog from '../log/index'
 var pool = mysql.createPool({
-  host     : 'localhost',
-  user     : 'root',
-  password : '123456',
+  host     : 'host',
+  user     : 'user',
+  password : 'password',
   port: '3306',
   database : 'LLLyh_BBS'
 });
-function query (sql, param) {
+function query (sql) {
+  // 写入sql
+  NodeLog.writeLog(sql, 'sql')
   return new Promise((resolve, reject) => {
     pool.getConnection((err, conn) => {
       if (err) {
@@ -20,7 +23,7 @@ function query (sql, param) {
         }
       } else {
         // 得到结果
-        conn.query(sql, param, (queryErr, result) => {
+        conn.query(sql, (queryErr, result) => {
           if (queryErr) {
             reject(queryErr);
           } else {
