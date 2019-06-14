@@ -4,6 +4,7 @@ import JWT from 'jsonwebtoken'
 import utils from '../lib/js/utils'
 import path from 'path'
 import fs from 'fs'
+import NodeLog from '../log/index'
 
 class Base{
   constructor () {
@@ -83,6 +84,9 @@ class Base{
   }
   // TODO: 异常处理, 有时间扩展, 从这里转发到异常处理模块处理
   handleException (req, res, e) {
+    // 写入日志
+    NodeLog.writeLog(e)
+    
     res.json({
       code: e.errno || 20501,
       success: false,
