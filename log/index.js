@@ -1,8 +1,12 @@
 import fs from 'fs'
 import path from 'path'
 import utils from '../lib/js/utils'
+import schedule from 'node-schedule'
 
 class Log {
+  constructor () {
+    this.clearLog()
+  }
   /**
    * 写入日志
    * @param {String} type // 日志类型 err 错误日志 sql sql日志
@@ -23,6 +27,16 @@ class Log {
         }
       })
     })
+  }
+  // 定时清除日志
+  async clearLog () {
+    const rule = new schedule.RecurrenceRule()
+　　rule.dayOfWeek = [0, new schedule.Range(1, 6)]
+　　rule.hour = 00
+　　rule.minute = 00
+　　schedule.scheduleJob(rule, () => {
+　　  console.log('每天零点删除不符合条件的文件')
+　　})
   }
   // 查询路径是否存在
   async getStat (path) {
