@@ -32,8 +32,8 @@ class Log {
   async clearLog () {
     const rule = new schedule.RecurrenceRule()
 　　rule.dayOfWeek = [0, new schedule.Range(1, 6)]
-　　rule.hour = 00
-　　rule.minute = 00
+　　rule.hour = 12;
+　　rule.minute = 12;
 　　schedule.scheduleJob(rule, () => {
 　　  console.log('每天零点删除不符合条件的文件')
 　　})

@@ -44,13 +44,13 @@ class Role extends Base{
   }
   async getAll (obj) {
     // 查询到当前角色和当前角色的所有下级角色
-    let sql, createRoleList = await this.getCreateRole(obj.get.id)
+    let sql, createRoleList = await this.getCreateRole(obj.get.pid)
     try {
       sql = `select a.*, b.name as create_user_name, c.name as update_user_name, d.name as pName from bbs_role as a
           left join bbs_user as b on a.create_user = b.id
           left join bbs_user as c on a.update_user = c.id
           left join bbs_role as d on a.pid = d.id
-          where 1 = 1 and a.id in (${mysql.escape([obj.get.id, ...createRoleList])}) and a.flag = 1`
+          where 1 = 1 and a.id in (${mysql.escape([obj.get.pid, ...createRoleList])}) and a.flag = 1`
     } catch (e) {
       return e
     }
