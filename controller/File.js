@@ -169,7 +169,7 @@ class File extends Base {
         userInfo = await this.getUserInfo(req)
     // 设置非模糊查询字段
     for (let key in query) {
-      if (['id', 'create_user'].indexOf(key) === -1) {
+      if (['id', 'f_id', 'create_user'].indexOf(key) === -1) {
         query.like = [...query.like || [], key]
       }
     }

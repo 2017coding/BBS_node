@@ -176,6 +176,37 @@ CREATE TABLE `bbs_area` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='区域表';
 
 ----------------------------
+-- bbs_topic
+----------------------------
+DROP TABLE IF EXISTS `bbs_topic`;
+CREATE TABLE `bbs_topic` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(48) NOT NULL COMMENT '主题名称',
+  `code` VARCHAR(128) NOT NULL COMMENT '主题编码',
+  `desc` VARCHAR(128) DEFAULT NULL COMMENT '主题描述',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_user` INT(11) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_user` INT(11) DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  `flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：删除，1：可用(默认为1)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='订阅主题表';
+
+-- ----------------------------
+-- bbs_topic_role
+-- ----------------------------
+DROP TABLE IF EXISTS `bbs_topic_role`;
+CREATE TABLE `bbs_topic_role` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `role_id` INT(11) NOT NULL,
+  `topic_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='角色订阅关系表';
+
+----------------------------
 -- bbs_log
 ----------------------------
 DROP TABLE IF EXISTS `bbs_log`;
