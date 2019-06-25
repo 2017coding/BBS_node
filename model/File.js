@@ -13,36 +13,36 @@ class File extends Base{
     this.getAll = this.getAll.bind(this)
   }
   async create (obj) {
-    let sql = `INSERT INTO bbs_file set ${this.joinStr('set', obj.set)}`
+    let sql = `INSERT INTO bbs_file set ${this.joinStr('set', obj.set)};`
     return query(sql)
   }
   async update (obj) {
-    let sql = `UPDATE bbs_file set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `UPDATE bbs_file set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
   async delete (obj) {
-    let sql = `DELETE from bbs_file where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `DELETE from bbs_file where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
   async getRow (obj) {
-    let sql = `select * from bbs_file where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `select * from bbs_file where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
   async getList (obj) {
     let curPage = obj.get.curPage, pageSize = obj.get.pageSize
     let sql = `select * from bbs_file
-                where 1 = 1 ${this.joinStr('get', obj.get)} ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})} limit ${(curPage - 1) * pageSize}, ${pageSize} `
+                where 1 = 1 ${this.joinStr('get', obj.get)} ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})} limit ${(curPage - 1) * pageSize}, ${pageSize};`
     return query(sql)
   }
   async getTotals (obj) {
-    let sql = `select COUNT(*) as count from bbs_file where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `select COUNT(*) as count from bbs_file where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
   async getAll (obj) {
     let sql = `select a.*, b.name as create_user_name, c.name as update_user_name from bbs_file as a
                 left join bbs_user as b on a.create_user = b.id
                 left join bbs_user as c on a.update_user = c.id
-                where 1 = 1 ${this.joinStr('get', obj.get)} ORDER BY sort`
+                where 1 = 1 ${this.joinStr('get', obj.get)} ORDER BY sort;`
     // 处理表连接字段
     sql = sql.replace(/`type`/, 'a.type')
     sql = sql.replace(/`name`/, 'a.name')

@@ -1,5 +1,6 @@
 import Base from './Base'
 import RoleModel from '../model/Role'
+import RoleRelationModel from '../model/RoleRelation'
 
 class Role extends Base {
   constructor () {
@@ -83,8 +84,8 @@ class Role extends Base {
   // 删除
   async delete (req, res, next) {
     // 如果当前模块下面有节点，则不能删除
-    const child = await RoleModel.getAll({get: {pid: req.params.id}})
-    if (child.length > 0) {
+    const child = await RoleModel.getTotals({get: {pid: req.params.id, flag: 1}})
+    if (child[0].count > 0) {
       res.json({
         code: 20001,
         success: false,
@@ -92,8 +93,18 @@ class Role extends Base {
       })
       return
     }
-    const userInfo = await this.getUserInfo(req),
-    result = await RoleModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+    const userInfo = await this.getUserInfo(req)
+    // 如果当前角色有用户绑定，则无法删除
+    const bindUser = await RoleRelationModel.getBindUser({get: {role_id: req.params.id, userId: userInfo.id}})
+    if (bindUser.length > 0) {
+      res.json({
+        code: 20001,
+        success: false,
+        message: `存在${bindUser.length}个绑定用户,请先解除绑定`
+      })
+      return
+    }
+    const result = await RoleModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,

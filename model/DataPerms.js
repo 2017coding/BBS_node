@@ -14,46 +14,46 @@ class DataPerms extends Base{
     this.getAll = this.getAll.bind(this)
   }
   async create (obj) {
-    let sql = `INSERT INTO bbs_data_perms set ${this.joinStr('set', obj.set)}`
+    let sql = `INSERT INTO bbs_data_perms set ${this.joinStr('set', obj.set)};`
     return query(sql)
   }
   async update (obj) {
-    let sql = `UPDATE bbs_data_perms set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `UPDATE bbs_data_perms set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
   async delete (obj) {
-    let sql = `DELETE from bbs_data_perms where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `DELETE from bbs_data_perms where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
   async getRow (obj) {
-    let sql = `select * from bbs_data_perms where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `select * from bbs_data_perms where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
   async getList (obj) {
     let curPage = obj.get.curPage, pageSize = obj.get.pageSize
     let sql = `select * from bbs_data_perms
-                where 1 = 1 ${this.joinStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize} `
+                where 1 = 1 ${this.joinStr('get', obj.get)} limit ${(curPage - 1) * pageSize}, ${pageSize};`
     return query(sql)
   }
   async getTotals (obj) {
-    let sql = `select COUNT(*) as count from bbs_data_perms where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `select COUNT(*) as count from bbs_data_perms where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
   async getRoleDataPerms (obj) {
     let sql = `select a.* from bbs_data_perms as a
                 LEFT JOIN bbs_role_data_perms as b
-                ON a.id = b.data_perms_id where 1 = 1 ${this.joinStr('get', obj.get)}`
+                ON a.id = b.data_perms_id where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
   // 只获取code，前端页面做数据权限使用
   async getCodeByRoleDataPerms (obj) {
     let sql = `select a.code from bbs_data_perms as a
                 LEFT JOIN bbs_role_data_perms as b
-                ON a.id = b.data_perms_id where 1 = 1 ${this.joinStr('get', obj.get)}`
+                ON a.id = b.data_perms_id where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
   async getAll (obj) {
-    let sql = `select * from bbs_data_perms where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `select * from bbs_data_perms where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
 }

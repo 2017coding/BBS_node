@@ -9,7 +9,7 @@ class Token extends Base{
     this.setToken = this.setToken.bind(this)
   }
   async getToken (obj) {
-    let sql = `select * from bbs_token where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `select * from bbs_token where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
   async setToken (data, obj) {
@@ -21,7 +21,7 @@ class Token extends Base{
     }
     // 用户不存在则创建一条数据，存在则将原来的token替换掉
     if (search.length === 0) {
-      sql = `INSERT INTO bbs_token set ${this.joinStr('set', obj.set)}`
+      sql = `INSERT INTO bbs_token set ${this.joinStr('set', obj.set)};`
     } else {
       // 解析token和当前数据做对比
       JWT.verify(search[0][data.type + '_token'], 'BBS', (error, decoded) => {
@@ -38,12 +38,12 @@ class Token extends Base{
         obj.set = {
           [data.type + '_token']: obj.set[data.type + '_token']
         }
-        sql = `UPDATE bbs_token set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)}`
+        sql = `UPDATE bbs_token set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)};`
       } else if(+new Date(search[0][data.type + '_expire_time']) > +new Date()) {
         // 数据未过期，不处理
         sql = ``
       } else {
-        sql = `UPDATE bbs_token set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)}`
+        sql = `UPDATE bbs_token set ${this.joinStr('set', obj.set)} where 1 = 1 ${this.joinStr('get', obj.get)};`
       }
     }
     return sql ? query(sql) : ''

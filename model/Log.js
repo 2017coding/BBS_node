@@ -17,17 +17,17 @@ class Log extends Base{
     let curPage = obj.get.curPage, pageSize = obj.get.pageSize
     let sql = `select a.*, b.name as create_user_name from bbs_log as a
               LEFT JOIN bbs_user as b ON a.create_user = b.id
-              where 1 = 1 ${this.joinStr('get', obj.get)} ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})} limit ${(curPage - 1) * pageSize}, ${pageSize}`
+              where 1 = 1 ${this.joinStr('get', obj.get)} ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})} limit ${(curPage - 1) * pageSize}, ${pageSize};`
     // 处理表连接字段 
     sql = sql.replace(/`type`/, 'a.type')
     return query(sql)
   }
   async getTotals (obj) {
-    let sql = `select COUNT(*) as count from bbs_log where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `select COUNT(*) as count from bbs_log where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
   async getLoginLog (obj) {
-    let sql = `select create_time as time from bbs_log where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `select create_time as time from bbs_log where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
 }

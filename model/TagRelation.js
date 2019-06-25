@@ -15,7 +15,7 @@ class TagRelation extends Base {
         createTagList = [], deleteTagList = [], sql1, sql2,
         result1, result2
     // 先查询到当前标签类型下所有的标签
-    dbTags = await query(`select a.tag_id from bbs_tag_type_tag as a where 1 = 1 ${this.joinStr('get', obj.get)}`)
+    dbTags = await query(`select a.tag_id from bbs_tag_type_tag as a where 1 = 1 ${this.joinStr('get', obj.get)};`)
     // 得到数据库的ID列表
     dbTags = dbTags.map(item => item.tag_id)
     // 数据库数据和传入数据做对比，数据库有而传入没有的数据删除，传入而数据库没有的数据添加
@@ -34,9 +34,9 @@ class TagRelation extends Base {
     // 事务开始
     await query('begin')
     // 删除
-    sql1 = `DELETE from bbs_tag_type_tag where tag_id in (${mysql.escape(deleteTagList)}) and tag_type_id = ${obj.get.tag_type_id}`
+    sql1 = `DELETE from bbs_tag_type_tag where tag_id in (${mysql.escape(deleteTagList)}) and tag_type_id = ${obj.get.tag_type_id};`
     // 添加
-    sql2 = `INSERT INTO bbs_tag_type_tag (tag_type_id, tag_id) VALUES ${mysql.escape(createTagList)}`
+    sql2 = `INSERT INTO bbs_tag_type_tag (tag_type_id, tag_id) VALUES ${mysql.escape(createTagList)};`
     // 运行sql
     result1 = mysql.escape(deleteTagList) ? await query(sql1) : {affectedRows: true}
     result2 = mysql.escape(createTagList) ? await query(sql2) : {affectedRows: true}
@@ -51,7 +51,7 @@ class TagRelation extends Base {
   }
   // 获取标签类型绑定的标签
   async getBindTag (obj) {
-    let sql = `select tag_id from bbs_tag_type_tag where 1 = 1 ${this.joinStr('get', obj.get)}`
+    let sql = `select tag_id from bbs_tag_type_tag where 1 = 1 ${this.joinStr('get', obj.get)};`
     return query(sql)
   }
 }
