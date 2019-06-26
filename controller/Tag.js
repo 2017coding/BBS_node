@@ -165,9 +165,9 @@ class Tag extends Base {
   }
   // 获取所有
   async getAll (req, res, next) {
-    let result, type = req.query.type
+    let result, query = req.query
     try {
-      result = await TagMolde.getAll(type ? {get: {type, flag: 1}} : {get: {flag: 1}})
+      result = await TagMolde.getAll({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

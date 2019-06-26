@@ -47,22 +47,22 @@ class User extends Base{
           left join bbs_user as b on a.create_user = b.id
           left join bbs_user as c on a.update_user = c.id
           left join bbs_user_role as d on a.id = d.user_id
-          left join bbs_role as e on e.id = d.role_id;`
+          left join bbs_role as e on e.id = d.role_id`
       // 如果有查询条件，则先查询所有符合条件的数据，再分页，没有查询条件，直接查询的时候分页
       // 判断查询条件的模糊查询中，除了curPage, pageSize, 是否存在其他参数
       if (conditions) {
         // 当前存在查询，不存在则不查询
         mysql.escape(createUserList) ?
-        sql += ` where 1 = 1 ${this.joinStr('get', params)} and a.id in (${mysql.escape(createUserList)});` :
-        sql += ` where 1 !=1;`
+        sql += ` where 1 = 1 ${this.joinStr('get', params)} and a.id in (${mysql.escape(createUserList)})` :
+        sql += ` where 1 !=1`
       } else {
         // 当前存在查询，不存在则不查询
         mysql.escape(createUserList.slice((curPage - 1) * pageSize, (curPage - 1) * pageSize + pageSize)) ?
-        sql += ` where 1 = 1 ${this.joinStr('get', params)} and a.id in (${mysql.escape(createUserList.slice((curPage - 1) * pageSize, (curPage - 1) * pageSize + pageSize))});` :
-        sql += ` where 1 !=1;`
+        sql += ` where 1 = 1 ${this.joinStr('get', params)} and a.id in (${mysql.escape(createUserList.slice((curPage - 1) * pageSize, (curPage - 1) * pageSize + pageSize))})` :
+        sql += ` where 1 !=1`
       }
       // 根据时间排序
-      sql += ` ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})}`
+      sql += ` ${this.joinStr('ORDER BY', {DESC: ['create_time', 'id']})};`
     // 处理表连接字段
     sql = sql.replace(/`account`/, 'a.account')
     sql = sql.replace(/`name`/, 'a.name')
@@ -75,7 +75,7 @@ class User extends Base{
   }
   async getTotals (obj) {
     let createUserList = await this.getCreateUser(obj.get.create_user),
-        sql = 'select COUNT(*) as count from bbs_user;',
+        sql = 'select COUNT(*) as count from bbs_user',
         params = JSON.parse(JSON.stringify(obj.get))
     delete params.create_user
     mysql.escape(createUserList) ?
@@ -88,7 +88,7 @@ class User extends Base{
     let sql, createUserList = await this.getCreateUser(obj.get.create_user),
         params = JSON.parse(JSON.stringify(obj.get))
     delete params.create_user
-    sql = `select * from bbs_user;`
+    sql = `select * from bbs_user`
     if (obj.get.create_user === 1) {
       sql += ` where id <> 1 ${this.joinStr('get', params)};`
     } else if (mysql.escape(createUserList)) {

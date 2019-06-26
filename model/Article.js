@@ -118,9 +118,11 @@ class Article extends Base{
     let sql = `select a.*, b.name as create_user_name, c.name as update_user_name from bbs_article as a
                 left join bbs_user as b on a.create_user = b.id
                 left join bbs_user as c on a.update_user = c.id
-                where 1 = 1 ${this.joinStr('get', obj.get)} ORDER BY sort;`
+                where 1 = 1 ${this.joinStr('get', obj.get)}`
     // 处理表连接字段
     sql = sql.replace(/`flag`/, 'a.flag')
+    sql = sql.replace(/`create_user`/, 'a.create_user')
+    sql = sql.replace(/`name`/, 'a.name')
     return query(sql)
   }
 }
