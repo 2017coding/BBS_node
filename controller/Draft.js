@@ -7,6 +7,8 @@ class Draft extends Base {
     super()
     this.getTotals = this.getTotals.bind(this)
     this.getAll = this.getAll.bind(this)
+    this.giveUp = this.giveUp.bind(this)
+    this.giveUpAll = this.giveUpAll.bind(this)
   }
   // 查询草稿数量
   async getTotals (req, res, next) {
@@ -51,6 +53,51 @@ class Draft extends Base {
       code: 20000,
       success: true,
       content: result,
+      message: '操作成功'
+    })
+  }
+  // 舍弃草稿
+  async giveUp (req, res, next) {
+    let data = JSON.parse(JSON.stringify(req.body)),
+        userInfo = await this.getUserInfo(req),
+        result
+    // dataType 1 问题 2 文章
+    if (data.dataType === 1) {
+      result = await QuestionMolde.update({get: {id: data.id, create_user: userInfo.id}, set: {flag: 0}})
+    } else if (data.dataType === 2) {
+      result = await ArticleMolde.update({get: {id: data.id, create_user: userInfo.id}, set: {flag: 0}})
+    } else {
+      return
+    }
+    if (!result) {
+      res.json({
+        code: 20001,
+        success: false,
+        content: '操作人和操作数据不匹配',
+        message: '操作失败'
+      })
+      return
+    }
+    res.json({
+      code: 20000,
+      success: true,
+      content: result,
+      message: '操作成功'
+    })
+  }
+  // 舍弃全部草稿
+  async giveUpAll (req, res, next) {
+    const userInfo = await this.getUserInfo(req)
+    try {
+      await QuestionMolde.update({get: {create_user: userInfo.id, flag: 1}, set: {flag: 0}})
+      await ArticleMolde.update({get: {create_user: userInfo.id, flag: 1}, set: {flag: 0}})
+    } catch (e) {
+      this.handleException(req, res, e)
+      return
+    }
+    res.json({
+      code: 20000,
+      success: true,
       message: '操作成功'
     })
   }

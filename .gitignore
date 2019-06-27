@@ -1,7 +1,8 @@
 .DS_Store
 node_modules/
 /log/file
-public/
+public/apidoc
+public/file
 /mysql/index.js
 /mysql/transaction.js
 npm-debug.log*
