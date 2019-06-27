@@ -90,7 +90,7 @@ class User extends Base{
     delete params.create_user
     sql = `select * from bbs_user`
     if (obj.get.create_user === 1) {
-      sql += ` where id <> 1 ${this.joinStr('get', params)};`
+      sql += ` where id <> 1 ${this.joinStr('get', params)}`
     } else if (mysql.escape(createUserList)) {
       sql += ` where id in (${mysql.escape(createUserList)}) ${this.joinStr('get', params)}`
     } else {

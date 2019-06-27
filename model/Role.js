@@ -58,11 +58,11 @@ class Role extends Base{
   }
   async getCreateRole (rootPValue) {
     let roleList, roleTree, createRoleList = []
-    // 获取到所有的用户数据
+    // 获取到所有的角色数据
     roleList = await query(`select id, pid from bbs_role;`)
-    // 通过建立树状数据，得到当前用户创建的用户树
+    // 通过建立树状数据，得到当前用户创建的角色树
     roleTree = utils.getTreeArr({key: 'id', pKey: 'pid', data: roleList, rootPValue: +rootPValue})
-    // 递归得到所有创建的用户
+    // 递归得到所有创建的角色
     getRole(roleTree)
     function getRole (arr) {
       for (let val of arr) {

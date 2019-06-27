@@ -188,7 +188,7 @@ class Folder extends Base {
   async getAll (req, res, next) {
     let result, query = req.query
     try {
-      result = await FolderMolde.getAll({get: {...query, falg: 1}})
+      result = await FolderMolde.getAll({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
