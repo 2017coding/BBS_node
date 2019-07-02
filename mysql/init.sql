@@ -183,6 +183,7 @@ CREATE TABLE `bbs_topic` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(48) NOT NULL COMMENT '主题名称',
   `code` VARCHAR(128) NOT NULL COMMENT '主题编码',
+  `client` VARCHAR(12) DEFAULT NULL COMMENT '订阅的客户端: 1. 管理平台 2. BBS 3. 移动端',
   `desc` VARCHAR(128) DEFAULT NULL COMMENT '主题描述',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
   `create_user` INT(11) DEFAULT NULL,

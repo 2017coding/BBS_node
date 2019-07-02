@@ -5,9 +5,9 @@ import bodyParser from 'body-parser'
 import config from 'config-lite' // 配置中间件
 import history from 'connect-history-api-fallback'
 import chalk from 'chalk'
-// import http from 'http'
-// import SocketServer from './socket/index.js'
+import mqttServer from './mqtt/server' // mqtt服务端
 
+mqttServer()
 const app = express()
 app.disable('etag') // 禁止304缓存
 app.all('*', (req, res, next) => {

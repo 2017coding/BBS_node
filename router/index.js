@@ -20,6 +20,7 @@ import article from './article'
 import draft from './draft'
 import count from './count'
 import charts from './charts'
+import topic from './topic'
 
 /**
  * 路由中间件
@@ -55,4 +56,5 @@ export default app => {
   app.use('/api/dataPerms', Authority.checkToken, Authority.permissions, dataPerms)
   app.use('/api/roleRelation', Authority.checkToken, Authority.permissions, roleRelation)
   app.use('/api/log', Authority.checkToken, Authority.permissions, log)
+  app.use('/api/topic', Authority.checkToken, Authority.permissions, topic)
 }
