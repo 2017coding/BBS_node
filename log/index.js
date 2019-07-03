@@ -5,7 +5,7 @@ import schedule from 'node-schedule'
 
 class Log {
   constructor () {
-    this.clearLog()
+    this.clearLog(7)
   }
   /**
    * 写入日志
@@ -29,13 +29,31 @@ class Log {
     })
   }
   // 定时清除日志
-  async clearLog () {
+  async clearLog (day) {
+    // 创建不存在的文件夹
+    await this.dirExists(`log/file/sql`)
+    await this.dirExists(`log/file/err`)
     const rule = new schedule.RecurrenceRule()
 　　rule.dayOfWeek = [0, new schedule.Range(1, 6)]
-　　rule.hour = 12;
-　　rule.minute = 12;
+　　rule.hour = 11;
+　　rule.minute = 54;
 　　schedule.scheduleJob(rule, () => {
-　　  console.log('每天零点删除不符合条件的文件')
+      const sqlLogList = fs.readdirSync('log/file/sql')
+      const errLogList = fs.readdirSync('log/file/err')
+      const NOW = +new Date()
+      sqlLogList.forEach(item => {
+        const logDate = +new Date(item.replace('.log', ''))
+        if (NOW - day * 24 * 3600 * 1000 > logDate) {
+          fs.unlinkSync('log/file/sql/' + item)
+        }
+      })
+      errLogList.forEach(item => {
+        const logDate = +new Date(item.replace('.log', ''))
+        if (NOW - day * 24 * 3600 * 1000 > logDate) {
+          fs.unlinkSync('log/file/err/' + item)
+        }
+      })
+　　  console.log('每天定时删除不符合条件的文件')
 　　})
   }
   // 查询路径是否存在
