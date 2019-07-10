@@ -4,7 +4,7 @@ node_modules/
 public/apidoc
 public/file
 /mysql/index.js
-/mysql/transaction.js
+/redis/index.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

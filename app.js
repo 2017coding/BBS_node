@@ -6,6 +6,7 @@ import config from 'config-lite' // 配置中间件
 import history from 'connect-history-api-fallback'
 import chalk from 'chalk'
 import mqttServer from './mqtt/server' // mqtt服务端
+import redis from './redis'
 
 mqttServer()
 const app = express()
