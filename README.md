@@ -1,6 +1,7 @@
 ## start
 1. 将mysql目录下的demo.js改成index.js, 并设置好相关的数据库连接信息
 2. 在mysql中导入LLLyh_BBS.sql
+33. 将redis目录下的demo.js改成index.js, 并设置好相关的redis连接信息
 
 ## Build Setup
 ``` bash
