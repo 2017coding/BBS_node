@@ -16,16 +16,22 @@ class Log {
     // 创建不存在的文件夹
     await this.dirExists(`log/file/${type}`)
     // 获取到文件files
-    fs.readFile(`log/file/${type}/${utils.switchTime(new Date(), 'YYYY-MM-DD')}.log`, (err, data) => {
+    // fs.readFile(`log/file/${type}/${utils.switchTime(new Date(), 'YYYY-MM-DD')}.log`, (err, data) => {
+    //   if (err) {
+    //     console.log(err)
+    //   }
+    //   // 写入文件
+    //   fs.writeFile(`log/file/${type}/${utils.switchTime(new Date(), 'YYYY-MM-DD')}.log`, `${data || ''}\n${content}`, async (err) => {
+    //     if (err) {
+    //       console.log(err)
+    //     }
+    //   })
+    // })
+     // 写入文件
+     fs.appendFile(`log/file/${type}/${utils.switchTime(new Date(), 'YYYY-MM-DD')}.log`, `\n${content}`, async (err) => {
       if (err) {
         console.log(err)
       }
-      // 写入文件
-      fs.writeFile(`log/file/${type}/${utils.switchTime(new Date(), 'YYYY-MM-DD')}.log`, `${data || ''}\n${content}`, async (err) => {
-        if (err) {
-          console.log(err)
-        }
-      })
     })
   }
   // 定时清除日志
