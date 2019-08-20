@@ -1,6 +1,6 @@
 import Base from './Base'
-import FileMolde from '../model/File'
-import FolderMolde from '../model/Folder'
+import FileModel from '../model/File'
+import FolderModel from '../model/Folder'
 import fs from 'fs'
 
 class File extends Base {
@@ -19,7 +19,7 @@ class File extends Base {
       let params = JSON.parse(JSON.stringify(req.body)),
           files = req.files.file,
           userInfo = await this.getUserInfo(req),
-          search = await FolderMolde.getRow({get: {id: params.fid, flag: 1}}),
+          search = await FolderModel.getRow({get: {id: params.fid, flag: 1}}),
           result,
           suffix = files.originalFilename.match(/\.[a-zA-Z]+/),
           writePath
@@ -72,7 +72,7 @@ class File extends Base {
                 create_user: userInfo.id,
                 create_time: new Date()
               }
-              result = await FileMolde.create({
+              result = await FileModel.create({
                 set: obj
               })
             } catch (e) {
@@ -104,7 +104,7 @@ class File extends Base {
         data.update_time = new Date()
         delete data.id
     try {
-      result = await FileMolde.update({set: data, get: {id}})
+      result = await FileModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -127,7 +127,7 @@ class File extends Base {
   async delete (req, res, next) {
     // TODO: 删除数据库数据时，是否删除对应的文件，这个在之后做处理
     const userInfo = await this.getUserInfo(req),
-      result = await FileMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+      result = await FileModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -144,7 +144,7 @@ class File extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await FileMolde.getRow({get: {id: req.params.id, flag: 1}})
+    const search = await FileModel.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -174,8 +174,8 @@ class File extends Base {
       }
     }
     try {
-      result = await FileMolde.getList({get: {...query, flag: 1}})
-      length = await FileMolde.getTotals({get: {...query, flag: 1}})
+      result = await FileModel.getList({get: {...query, flag: 1}})
+      length = await FileModel.getTotals({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -205,7 +205,7 @@ class File extends Base {
       }
     }
     try {
-      result = await FileMolde.getAll({get: params})
+      result = await FileModel.getAll({get: params})
     } catch (e) {
       this.handleException(req, res, e)
       return

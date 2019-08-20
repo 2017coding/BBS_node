@@ -109,16 +109,17 @@ class Authority extends Base{
     const userInfo = await this.getUserInfo(req)
     const whiteList = ['/login', '/registered', '/loginOut', 
                       '/api/article/create', '/api/article/update',
+                      '/api/articleComments/create', '/api/articleComments/delete',
                       '/api/draft/giveUp', '/api/draft/giveUpAll']
-    let api = baseUrl[baseUrl.length - 1] + req.path
-    // 当请求方式为get时或者登陆注册时，不需要验证数据权限
-    if (method.toLocaleLowerCase() === 'get' || whiteList.includes(req.path) || whiteList.includes(req.originalUrl)) {
-      next()
-      return
-    }
+    let api = req.baseUrl + req.path
     // 如果是删除接口，将delete后面去掉再校验
     if (/delete/.test(api)) {
       api = api.replace(/\/[^/*]*$/, '')
+    }
+    // 当请求方式为get时或者登陆注册时，不需要验证数据权限
+    if (method.toLocaleLowerCase() === 'get' || whiteList.includes(api) || whiteList.includes(req.originalUrl)) {
+      next()
+      return
     }
     // 查询当前接口是否配置权限
     const search = userInfo.id === 1 ? 

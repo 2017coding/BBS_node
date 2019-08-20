@@ -1,5 +1,5 @@
 import Base from './Base'
-import MenuMolde from '../model/Menu'
+import MenuModel from '../model/Menu'
 
 class Menu extends Base {
   constructor () {
@@ -20,7 +20,7 @@ class Menu extends Base {
       // 参数处理
       data.create_user = userInfo.id,
       data.create_time = new Date()
-      result = await MenuMolde.create({
+      result = await MenuModel.create({
         set: data
       })
     } catch (e) {
@@ -44,7 +44,7 @@ class Menu extends Base {
         data.update_time = new Date()
         delete data.id
     try {
-      result = await MenuMolde.update({set: data, get: {id}})
+      result = await MenuModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -66,7 +66,7 @@ class Menu extends Base {
   // 删除
   async delete (req, res, next) {
     // 如果当前模块下面有节点，则不能删除
-    const child = await MenuMolde.getAll({get: {pid: req.params.id}})
+    const child = await MenuModel.getAll({get: {pid: req.params.id}})
     if (child.length > 0) {
       res.json({
         code: 20001,
@@ -76,7 +76,7 @@ class Menu extends Base {
       return
     }
     const userInfo = await this.getUserInfo(req),
-      result = await MenuMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+      result = await MenuModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -93,7 +93,7 @@ class Menu extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await MenuMolde.getRow({get: {id: req.params.id, flag: 1}})
+    const search = await MenuModel.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -123,8 +123,8 @@ class Menu extends Base {
       }
     }
     try {
-      result = await MenuMolde.getList({get: {...query, flag: 1}})
-      length = await MenuMolde.getTotals({get: {...query, flag: 1}})
+      result = await MenuModel.getList({get: {...query, flag: 1}})
+      length = await MenuModel.getTotals({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -145,7 +145,7 @@ class Menu extends Base {
   async getRoleMenu (req, res, next) {
     let result, query = req.query
     try {
-      result = await MenuMolde.getRoleMenu({get: {type: query.type, role_id: query.roleId, flag: 1}})
+      result = await MenuModel.getRoleMenu({get: {type: query.type, role_id: query.roleId, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -161,7 +161,7 @@ class Menu extends Base {
   async getAll (req, res, next) {
     let result, query = req.query
     try {
-      result = await MenuMolde.getAll({get: {...query, flag: 1}})
+      result = await MenuModel.getAll({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

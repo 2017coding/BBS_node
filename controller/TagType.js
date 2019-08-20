@@ -1,6 +1,6 @@
 import Base from './Base'
-import TagMolde from '../model/Tag'
-import TagTypeMolde from '../model/TagType'
+import TagModel from '../model/Tag'
+import TagTypeModel from '../model/TagType'
 
 class TagType extends Base {
   constructor () {
@@ -18,7 +18,7 @@ class TagType extends Base {
           userInfo = await this.getUserInfo(req), result, search, path
     // 查询标签类型是否存在
     try {
-      search = await TagTypeMolde.getRow({get: {name: data.name, flag: 1}})
+      search = await TagTypeModel.getRow({get: {name: data.name, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -29,7 +29,7 @@ class TagType extends Base {
         // 参数处理
         data.create_user = userInfo.id,
         data.create_time = new Date()
-        result = await TagTypeMolde.create({
+        result = await TagTypeModel.create({
           set: data
         })
       } catch (e) {
@@ -62,7 +62,7 @@ class TagType extends Base {
         delete data.id
     // 查询标签类型是否存在
     try {
-      search = await TagTypeMolde.getRow({get: {name: data.name, flag: 1}})
+      search = await TagTypeModel.getRow({get: {name: data.name, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -77,7 +77,7 @@ class TagType extends Base {
       return
     }
     try {
-      result = await TagTypeMolde.update({set: data, get: {id}})
+      result = await TagTypeModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -99,7 +99,7 @@ class TagType extends Base {
   // 删除
   async delete (req, res, next) {
     // 如果当前类型下面有标签，则不能删除
-    const child = await TagMolde.getAll({get: {f_id: req.params.id, flag: 1}})
+    const child = await TagModel.getAll({get: {f_id: req.params.id, flag: 1}})
     if (child.length > 0) {
       res.json({
         code: 20001,
@@ -109,7 +109,7 @@ class TagType extends Base {
       return
     }
     const userInfo = await this.getUserInfo(req),
-      result = await TagTypeMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+      result = await TagTypeModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -126,7 +126,7 @@ class TagType extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await TagTypeMolde.getRow({get: {id: req.params.id, flag: 1}})
+    const search = await TagTypeModel.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -156,8 +156,8 @@ class TagType extends Base {
       }
     }
     try {
-      result = await TagTypeMolde.getList({get: {...query, flag: 1}})
-      length = await TagTypeMolde.getTotals({get: {...query, flag: 1}})
+      result = await TagTypeModel.getList({get: {...query, flag: 1}})
+      length = await TagTypeModel.getTotals({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -178,7 +178,7 @@ class TagType extends Base {
   async getAll (req, res, next) {
     let result, query = req.query
     try {
-      result = await TagTypeMolde.getAll({get: {...query, flag: 1}})
+      result = await TagTypeModel.getAll({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

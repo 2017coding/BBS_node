@@ -448,7 +448,6 @@ CREATE TABLE `bbs_article` (
   `content` text NOT NULL COMMENT '内容',
   `type` INT(11) NOT NULL COMMENT '类型: 1: 原创 2：转载 3：翻译',
   `url` VARCHAR(256) NOT NULL COMMENT '文章内容存放地址',
-  `view_count` INT(11) DEFAULT 0 COMMENT '浏览次数',
   `desc` VARCHAR(128) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态: 0：停用，1：启用(默认为1)',
   `create_user` INT(11) DEFAULT NULL,
@@ -462,13 +461,27 @@ CREATE TABLE `bbs_article` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文章表';
 
 ----------------------------
+-- bbs_article_views
+----------------------------
+DROP TABLE IF EXISTS `bbs_article_views`;
+CREATE TABLE `bbs_article_views` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `article_id` INT(11) NOT NULL COMMENT '文章ID',
+  `ip` VARCHAR(48) NOT NULL COMMENT '访问的IP （游客通过IP计算，用户通过用户ID计算）',
+  `create_user` INT(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文章浏览表';
+
+----------------------------
 -- bbs_article_comments
 ----------------------------
 DROP TABLE IF EXISTS `bbs_article_comments`;
 CREATE TABLE `bbs_article_comments` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `pid` INT(11) NOT NULL DEFAULT 0 COMMENT '父节点评论',
   `article_id` INT(11) NOT NULL COMMENT '文章ID',
+  `pid` INT(11) NOT NULL DEFAULT 0 COMMENT '父节点评论, 默认是0',
+  `p_user_id` INT(11) NOT NULL COMMENT '父节点评论人ID',
   `content` VARCHAR(256) NOT NULL COMMENT '评论内容',
   `create_user` INT(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,

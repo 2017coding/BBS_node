@@ -1,5 +1,5 @@
 import Base from './Base'
-import QuestionMolde from '../model/Question'
+import QuestionModel from '../model/Question'
 
 class Question extends Base {
   constructor () {
@@ -19,7 +19,7 @@ class Question extends Base {
       // 参数处理
       data.create_user = userInfo.id,
       data.create_time = new Date()
-      result = await QuestionMolde.create({
+      result = await QuestionModel.create({
         set: data
       })
     } catch (e) {
@@ -43,7 +43,7 @@ class Question extends Base {
         data.update_time = new Date()
         delete data.id
     try {
-      result = await QuestionMolde.update({set: data, get: {id}})
+      result = await QuestionModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -65,7 +65,7 @@ class Question extends Base {
   // 删除
   async delete (req, res, next) {
     const userInfo = await this.getUserInfo(req),
-      result = await QuestionMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+      result = await QuestionModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -82,7 +82,7 @@ class Question extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await QuestionMolde.getRow({get: {id: req.params.id, flag: 1}})
+    const search = await QuestionModel.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -112,8 +112,8 @@ class Question extends Base {
       }
     }
     try {
-      result = await QuestionMolde.getList({get: {...query, flag: 1}})
-      length = await QuestionMolde.getTotals({get: {...query, flag: 1}})
+      result = await QuestionModel.getList({get: {...query, flag: 1}})
+      length = await QuestionModel.getTotals({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -134,7 +134,7 @@ class Question extends Base {
   async getAll (req, res, next) {
     let result, query = req.query
     try {
-      result = await QuestionMolde.getAll({get: {...query, flag: 1}})
+      result = await QuestionModel.getAll({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

@@ -1,5 +1,5 @@
 import Base from './Base'
-import CarouselMolde from '../model/Carousel'
+import CarouselModel from '../model/Carousel'
 
 class Carousel extends Base {
   constructor () {
@@ -19,7 +19,7 @@ class Carousel extends Base {
       // 参数处理
       data.create_user = userInfo.id,
       data.create_time = new Date()
-      result = await CarouselMolde.create({
+      result = await CarouselModel.create({
         set: data
       })
     } catch (e) {
@@ -44,7 +44,7 @@ class Carousel extends Base {
         data.update_time = new Date()
         delete data.id
     // 设置同时启用的轮播数量为5个
-    search = await CarouselMolde.getRow({get: {status: 1, flag: 1}})
+    search = await CarouselModel.getRow({get: {status: 1, flag: 1}})
     if (search.length > 5) {
       res.json({
         code: 20001,
@@ -54,7 +54,7 @@ class Carousel extends Base {
       return
     }
     try {
-      result = await CarouselMolde.update({set: data, get: {id}})
+      result = await CarouselModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -76,7 +76,7 @@ class Carousel extends Base {
   // 删除
   async delete (req, res, next) {
     const userInfo = await this.getUserInfo(req),
-      result = await CarouselMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+      result = await CarouselModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -93,7 +93,7 @@ class Carousel extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await CarouselMolde.getRow({get: {id: req.params.id, flag: 1}})
+    const search = await CarouselModel.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -123,8 +123,8 @@ class Carousel extends Base {
       }
     }
     try {
-      result = await CarouselMolde.getList({get: {...query, flag: 1}})
-      length = await CarouselMolde.getTotals({get: {...query, flag: 1}})
+      result = await CarouselModel.getList({get: {...query, flag: 1}})
+      length = await CarouselModel.getTotals({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -145,7 +145,7 @@ class Carousel extends Base {
   async getAll (req, res, next) {
     let result, query = req.query
     try {
-      result = await CarouselMolde.getAll({get: {...query, flag: 1}})
+      result = await CarouselModel.getAll({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

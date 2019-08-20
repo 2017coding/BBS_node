@@ -1,6 +1,6 @@
 import Base from './Base'
-import ArticleMolde from '../model/Article'
-import QuestionMolde from '../model/Question'
+import ArticleModel from '../model/Article'
+import QuestionModel from '../model/Question'
 
 class Draft extends Base {
   constructor () {
@@ -15,8 +15,8 @@ class Draft extends Base {
     const userInfo = await this.getUserInfo(req)
     let question, article
     try {
-      question = await QuestionMolde.getTotals({get: {create_user: userInfo.id, flag: 1}})
-      article = await ArticleMolde.getTotals({get: {create_user: userInfo.id, flag: 1}})
+      question = await QuestionModel.getTotals({get: {create_user: userInfo.id, flag: 1}})
+      article = await ArticleModel.getTotals({get: {create_user: userInfo.id, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -35,8 +35,8 @@ class Draft extends Base {
     const userInfo = await this.getUserInfo(req)
     let question, article, result
     try {
-      question = await QuestionMolde.getAll({get: {create_user: userInfo.id, flag: 1}})
-      article = await ArticleMolde.getAll({get: {create_user: userInfo.id, flag: 1}})
+      question = await QuestionModel.getAll({get: {create_user: userInfo.id, flag: 1}})
+      article = await ArticleModel.getAll({get: {create_user: userInfo.id, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -63,9 +63,9 @@ class Draft extends Base {
         result
     // dataType 1 问题 2 文章
     if (data.dataType === 1) {
-      result = await QuestionMolde.update({get: {id: data.id, create_user: userInfo.id}, set: {flag: 0}})
+      result = await QuestionModel.update({get: {id: data.id, create_user: userInfo.id}, set: {flag: 0}})
     } else if (data.dataType === 2) {
-      result = await ArticleMolde.update({get: {id: data.id, create_user: userInfo.id}, set: {flag: 0}})
+      result = await ArticleModel.update({get: {id: data.id, create_user: userInfo.id}, set: {flag: 0}})
     } else {
       return
     }
@@ -89,8 +89,8 @@ class Draft extends Base {
   async giveUpAll (req, res, next) {
     const userInfo = await this.getUserInfo(req)
     try {
-      await QuestionMolde.update({get: {create_user: userInfo.id, flag: 1}, set: {flag: 0}})
-      await ArticleMolde.update({get: {create_user: userInfo.id, flag: 1}, set: {flag: 0}})
+      await QuestionModel.update({get: {create_user: userInfo.id, flag: 1}, set: {flag: 0}})
+      await ArticleModel.update({get: {create_user: userInfo.id, flag: 1}, set: {flag: 0}})
     } catch (e) {
       this.handleException(req, res, e)
       return

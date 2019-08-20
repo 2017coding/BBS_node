@@ -1,7 +1,7 @@
 import Base from './Base'
 import UserModel from '../model/User'
 import logModel from '../model/Log'
-import MenuMolde from '../model/Menu'
+import MenuModel from '../model/Menu'
 import DataPermsModel from '../model/DataPerms'
 import Authority from './Authority'
 import JWT from 'jsonwebtoken'
@@ -414,8 +414,8 @@ class User extends Base {
     }
     try {
       mod = userInfo.id === 1 ?
-            await MenuMolde.getAll({get: {type, flag: 1}}) :
-            await MenuMolde.getRoleMenu({get: {type, role_id: userInfo.role_id, flag: 1}})
+            await MenuModel.getAll({get: {type, flag: 1}}) :
+            await MenuModel.getRoleMenu({get: {type, role_id: userInfo.role_id, flag: 1}})
       dataPerms = userInfo.id === 1 ? 
             await DataPermsModel.getAll({get: {}}) :
             await DataPermsModel.getCodeByRoleDataPerms({get: {role_id: userInfo.role_id}})

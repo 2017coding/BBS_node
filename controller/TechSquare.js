@@ -1,5 +1,5 @@
 import Base from './Base'
-import TechSquareMolde from '../model/TechSquare'
+import TechSquareModel from '../model/TechSquare'
 
 class TechSquare extends Base {
   constructor () {
@@ -19,7 +19,7 @@ class TechSquare extends Base {
       // 参数处理
       data.create_user = userInfo.id,
       data.create_time = new Date()
-      result = await TechSquareMolde.create({
+      result = await TechSquareModel.create({
         set: data
       })
     } catch (e) {
@@ -44,7 +44,7 @@ class TechSquare extends Base {
         data.update_time = new Date()
         delete data.id
     // 设置同时启用的轮播数量为5个
-    search = await TechSquareMolde.getRow({get: {status: 1, flag: 1}})
+    search = await TechSquareModel.getRow({get: {status: 1, flag: 1}})
     if (search.length > 15) {
       res.json({
         code: 20001,
@@ -54,7 +54,7 @@ class TechSquare extends Base {
       return
     }
     try {
-      result = await TechSquareMolde.update({set: data, get: {id}})
+      result = await TechSquareModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -76,7 +76,7 @@ class TechSquare extends Base {
   // 删除
   async delete (req, res, next) {
     const userInfo = await this.getUserInfo(req),
-      result = await TechSquareMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+      result = await TechSquareModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -93,7 +93,7 @@ class TechSquare extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await TechSquareMolde.getRow({get: {id: req.params.id, flag: 1}})
+    const search = await TechSquareModel.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -123,8 +123,8 @@ class TechSquare extends Base {
       }
     }
     try {
-      result = await TechSquareMolde.getList({get: {...query, flag: 1}})
-      length = await TechSquareMolde.getTotals({get: {...query, flag: 1}})
+      result = await TechSquareModel.getList({get: {...query, flag: 1}})
+      length = await TechSquareModel.getTotals({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -145,7 +145,7 @@ class TechSquare extends Base {
   async getAll (req, res, next) {
     let result, status = req.query.status
     try {
-      result = await TechSquareMolde.getAll(status ? {get: {status, flag: 1}} : {get: {flag: 1}})
+      result = await TechSquareModel.getAll(status ? {get: {status, flag: 1}} : {get: {flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

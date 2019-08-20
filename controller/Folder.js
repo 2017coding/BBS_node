@@ -1,6 +1,6 @@
 import Base from './Base'
-import FileMolde from '../model/File'
-import FolderMolde from '../model/Folder'
+import FileModel from '../model/File'
+import FolderModel from '../model/Folder'
 
 class Folder extends Base {
   constructor () {
@@ -18,7 +18,7 @@ class Folder extends Base {
           userInfo = await this.getUserInfo(req), result, search, path
     // 查询目录是否存在
     try {
-      search = await FolderMolde.getRow({get: {name: data.name, type: data.type, flag: 1}})
+      search = await FolderModel.getRow({get: {name: data.name, type: data.type, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -36,7 +36,7 @@ class Folder extends Base {
         // 参数处理
         data.create_user = userInfo.id,
         data.create_time = new Date()
-        result = await FolderMolde.create({
+        result = await FolderModel.create({
           set: data
         })
       } catch (e) {
@@ -69,7 +69,7 @@ class Folder extends Base {
         delete data.id
     // 查询目录是否存在
     try {
-      search = await FolderMolde.getRow({get: {name: data.name, type: data.type, flag: 1}})
+      search = await FolderModel.getRow({get: {name: data.name, type: data.type, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -84,7 +84,7 @@ class Folder extends Base {
       return
     }
     try {
-      result = await FolderMolde.update({set: data, get: {id}})
+      result = await FolderModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -106,7 +106,7 @@ class Folder extends Base {
   // 删除
   async delete (req, res, next) {
     // 如果当前模块下面有文件，则不能删除
-    const child = await FileMolde.getAll({get: {f_id: req.params.id, flag: 1}})
+    const child = await FileModel.getAll({get: {f_id: req.params.id, flag: 1}})
     if (child.length > 0) {
       res.json({
         code: 20001,
@@ -116,7 +116,7 @@ class Folder extends Base {
       return
     }
     const userInfo = await this.getUserInfo(req),
-      result = await FolderMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+      result = await FolderModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -133,7 +133,7 @@ class Folder extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await FolderMolde.getRow({get: {id: req.params.id, flag: 1}})
+    const search = await FolderModel.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -163,8 +163,8 @@ class Folder extends Base {
       }
     }
     try {
-      result = await FolderMolde.getList({get: {...query, flag: 1}})
-      length = await FolderMolde.getTotals({get: {...query, flag: 1}})
+      result = await FolderModel.getList({get: {...query, flag: 1}})
+      length = await FolderModel.getTotals({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -188,7 +188,7 @@ class Folder extends Base {
   async getAll (req, res, next) {
     let result, query = req.query
     try {
-      result = await FolderMolde.getAll({get: {...query, flag: 1}})
+      result = await FolderModel.getAll({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

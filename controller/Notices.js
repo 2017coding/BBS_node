@@ -1,5 +1,5 @@
 import Base from './Base'
-import NoticesMolde from '../model/Notices'
+import NoticesModel from '../model/Notices'
 
 class Notices extends Base {
   constructor () {
@@ -17,7 +17,7 @@ class Notices extends Base {
         data.create_time = new Date()
         delete data.id
     try {
-      result = await NoticesMolde.setNotices({set: data, get: {status: 1}})
+      result = await NoticesModel.setNotices({set: data, get: {status: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -38,7 +38,7 @@ class Notices extends Base {
   }
   // 获取通知
   async getNotices (req, res, next) {
-    const search = await NoticesMolde.getNotices({get: {status: 1, flag: 1}})
+    const search = await NoticesModel.getNotices({get: {status: 1, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,

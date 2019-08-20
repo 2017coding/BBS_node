@@ -1,5 +1,5 @@
 import Base from './Base'
-import ArticleMolde from '../model/Article'
+import ArticleModel from '../model/Article'
 import fs from 'fs'
 
 class Article extends Base {
@@ -46,7 +46,7 @@ class Article extends Base {
             params.create_user = userInfo.id
             params.create_time = new Date()
             delete params.tags
-            result = await ArticleMolde.create({
+            result = await ArticleModel.create({
               set: params,
               tags: req.body.tags
             })
@@ -73,7 +73,7 @@ class Article extends Base {
         data = JSON.parse(JSON.stringify(req.body)),
         result,
         userInfo = await this.getUserInfo(req),
-        search = await ArticleMolde.getRow({get: {id: data.id}}),
+        search = await ArticleModel.getRow({get: {id: data.id}}),
         writePath
         // 参数处理
         data.update_user = userInfo.id
@@ -104,7 +104,7 @@ class Article extends Base {
             data.content = data.content.replace(/#*.*#/g, '').replace(/[^a-z0-9\u4e00-\u9fa5]/, '').substring(0, 200) // 除去标题部分，截取200个字用来显示
           }
           delete data.tags
-          result = await ArticleMolde.update({
+          result = await ArticleModel.update({
             set: data,
             get: {id},
             tags: req.body.tags
@@ -133,7 +133,7 @@ class Article extends Base {
   async delete (req, res, next) {
     // TODO: 删除数据库数据时，是否删除对应的文件，这个在之后做处理
     const userInfo = await this.getUserInfo(req),
-      result = await ArticleMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+      result = await ArticleModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -150,7 +150,7 @@ class Article extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await ArticleMolde.getRow({get: {id: req.params.id}})
+    const search = await ArticleModel.getRow({get: {id: req.params.id}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -210,8 +210,8 @@ class Article extends Base {
       }
     }
     try {
-      result = await ArticleMolde.getList({get: {...query}})
-      length = await ArticleMolde.getTotals({get: {...query}})
+      result = await ArticleModel.getList({get: {...query}})
+      length = await ArticleModel.getTotals({get: {...query}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -253,7 +253,7 @@ class Article extends Base {
       }
     }
     try {
-      result = await ArticleMolde.getAll({get: params})
+      result = await ArticleModel.getAll({get: params})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -264,6 +264,15 @@ class Article extends Base {
       content: result,
       message: '操作成功'
     })
+  }
+  // 浏览
+  async view (req, res, next) {
+  }
+  // 点赞 （用户已点赞，则取消用户点赞， 未点赞则点赞）
+  async praise (req, res, next) {
+  }
+  // 收藏 （用户已收藏，则取消用户收藏， 未收藏则收藏）
+  async collection (req, res, next) {
   }
 }
 

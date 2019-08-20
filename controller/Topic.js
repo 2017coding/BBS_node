@@ -1,5 +1,5 @@
 import Base from './Base'
-import TopicMolde from '../model/Topic'
+import TopicModel from '../model/Topic'
 
 class Topic extends Base {
   constructor () {
@@ -17,7 +17,7 @@ class Topic extends Base {
           userInfo = await this.getUserInfo(req), result, search, path
     // 查询主题是否存在
     try {
-      search = await TopicMolde.getRow({get: data.type ? {code: data.code, type: data.type, flag: 1} : {code: data.code, flag: 1}})
+      search = await TopicModel.getRow({get: data.type ? {code: data.code, type: data.type, flag: 1} : {code: data.code, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -28,7 +28,7 @@ class Topic extends Base {
         // 参数处理
         data.create_user = userInfo.id,
         data.create_time = new Date()
-        result = await TopicMolde.create({
+        result = await TopicModel.create({
           set: data
         })
       } catch (e) {
@@ -61,7 +61,7 @@ class Topic extends Base {
         delete data.id
     // 查询主题是否存在
     try {
-      search = await TopicMolde.getRow({get: data.type ? {code: data.code, type: data.type, flag: 1} : {code: data.code, flag: 1}})
+      search = await TopicModel.getRow({get: data.type ? {code: data.code, type: data.type, flag: 1} : {code: data.code, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -76,7 +76,7 @@ class Topic extends Base {
       return
     }
     try {
-      result = await TopicMolde.update({set: data, get: {id}})
+      result = await TopicModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -98,7 +98,7 @@ class Topic extends Base {
   // 删除
   async delete (req, res, next) {
     const userInfo = await this.getUserInfo(req),
-      result = await TopicMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+      result = await TopicModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -115,7 +115,7 @@ class Topic extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await TopicMolde.getRow({get: {id: req.params.id, flag: 1}})
+    const search = await TopicModel.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -145,8 +145,8 @@ class Topic extends Base {
       }
     }
     try {
-      result = await TopicMolde.getList({get: {...query, flag: 1}})
-      length = await TopicMolde.getTotals({get: {...query, flag: 1}})
+      result = await TopicModel.getList({get: {...query, flag: 1}})
+      length = await TopicModel.getTotals({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -167,7 +167,7 @@ class Topic extends Base {
   async getAll (req, res, next) {
     let result, query = req.query
     try {
-      result = await TopicMolde.getAll({get: {...query, flag: 1}})
+      result = await TopicModel.getAll({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

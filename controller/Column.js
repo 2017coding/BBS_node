@@ -1,5 +1,5 @@
 import Base from './Base'
-import ColumnMolde from '../model/Column'
+import ColumnModel from '../model/Column'
 
 class Column extends Base {
   constructor () {
@@ -17,7 +17,7 @@ class Column extends Base {
           userInfo = await this.getUserInfo(req), result, search, path
     // 查询专栏是否存在
     try {
-      search = await ColumnMolde.getRow({get: {name: data.name, flag: 1}})
+      search = await ColumnModel.getRow({get: {name: data.name, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -28,7 +28,7 @@ class Column extends Base {
         // 参数处理
         data.create_user = userInfo.id,
         data.create_time = new Date()
-        result = await ColumnMolde.create({
+        result = await ColumnModel.create({
           set: data
         })
       } catch (e) {
@@ -61,7 +61,7 @@ class Column extends Base {
         delete data.id
     // 查询专栏是否存在
     try {
-      search = await ColumnMolde.getRow({get: {name: data.name, flag: 1}})
+      search = await ColumnModel.getRow({get: {name: data.name, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -76,7 +76,7 @@ class Column extends Base {
       return
     }
     try {
-      result = await ColumnMolde.update({set: data, get: {id}})
+      result = await ColumnModel.update({set: data, get: {id}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -98,7 +98,7 @@ class Column extends Base {
   // 删除
   async delete (req, res, next) {
     // 如果当前专栏下面有文章，则不能删除
-    // const child = await TagMolde.getAll({get: {f_id: req.params.id, flag: 1}})
+    // const child = await TagModel.getAll({get: {f_id: req.params.id, flag: 1}})
     // if (child.length > 0) {
     //   res.json({
     //     code: 20001,
@@ -108,7 +108,7 @@ class Column extends Base {
     //   return
     // }
     const userInfo = await this.getUserInfo(req),
-      result = await ColumnMolde.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
+      result = await ColumnModel.update({set: {flag: 0, delete_user: userInfo.id, delete_time: new Date()}, get: {id: req.params.id}})
     if (result.affectedRows) {
       res.json({
         code: 20000,
@@ -125,7 +125,7 @@ class Column extends Base {
   }
   // 获取单条数据
   async getRow (req, res, next) {
-    const search = await ColumnMolde.getRow({get: {id: req.params.id, flag: 1}})
+    const search = await ColumnModel.getRow({get: {id: req.params.id, flag: 1}})
     if (search.length === 0) {
       res.json({
         code: 20401,
@@ -155,8 +155,8 @@ class Column extends Base {
       }
     }
     try {
-      result = await ColumnMolde.getList({get: {...query, flag: 1}})
-      length = await ColumnMolde.getTotals({get: {...query, flag: 1}})
+      result = await ColumnModel.getList({get: {...query, flag: 1}})
+      length = await ColumnModel.getTotals({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return
@@ -177,7 +177,7 @@ class Column extends Base {
   async getAll (req, res, next) {
     let result, query = req.query
     try {
-      result = await ColumnMolde.getAll({get: {...query, flag: 1}})
+      result = await ColumnModel.getAll({get: {...query, flag: 1}})
     } catch (e) {
       this.handleException(req, res, e)
       return

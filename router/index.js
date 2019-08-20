@@ -17,6 +17,7 @@ import notices from './notices'
 import question from './question'
 import column from './column'
 import article from './article'
+import articleComments from './articleComments'
 import draft from './draft'
 import count from './count'
 import charts from './charts'
@@ -37,6 +38,7 @@ export default app => {
   app.use('/api/question', Authority.checkToken, Authority.permissions, question)
   app.use('/api/column', Authority.checkToken, Authority.permissions, column)
   app.use('/api/article', Authority.checkToken, Authority.permissions, article)
+  app.use('/api/articleComments', Authority.checkToken, Authority.permissions, articleComments)
   app.use('/api/draft', Authority.checkToken, Authority.permissions, draft)
   // 论坛配置
   app.use('/api/carousel', Authority.checkToken, Authority.permissions, carousel)
