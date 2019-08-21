@@ -46,7 +46,7 @@ class ArticleComments extends Base{
     const query = req.query,
           arr = [
             {label: '文章ID', value: query.article_id, rules: ['notnull']},
-            {label: 'pid', value: query.pid, rules: ['notnull']}
+            // {label: 'pid', value: query.pid, rules: ['notnull']}
           ],
           result = this.check(arr)
     if (!result.success) {

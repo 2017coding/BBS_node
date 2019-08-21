@@ -107,7 +107,7 @@ class Authority extends Base{
     const baseUrl = req.baseUrl.split('/')
     const method = req.method
     const userInfo = await this.getUserInfo(req)
-    const whiteList = ['/login', '/registered', '/loginOut', 
+    const whiteList = ['/api/user/login', '/api/user/registered', '/api/user/loginOut', 
                       '/api/article/create', '/api/article/update',
                       '/api/articleComments/create', '/api/articleComments/delete',
                       '/api/draft/giveUp', '/api/draft/giveUpAll']
