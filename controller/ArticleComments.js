@@ -1,5 +1,6 @@
 import Base from './Base'
 import ArticleCommentsModel from '../model/ArticleComments'
+import mqttClient from '../mqtt/client'
 
 class ArticleComments extends Base {
   constructor () {
@@ -23,6 +24,11 @@ class ArticleComments extends Base {
       this.handleException(req, res, e)
       return
     }
+    // 推送mqtt消息
+    mqttClient.publish(`/message/user/${data.p_user_id}`, JSON.stringify({
+      topic: `/message/user/${data.p_user_id}`,
+      data: data
+    }))
     res.json({
       code: 20000,
       success: true,

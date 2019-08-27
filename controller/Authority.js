@@ -124,7 +124,7 @@ class Authority extends Base{
     // 查询当前接口是否配置权限
     const search = userInfo.id === 1 ? 
                   await DataPermsModel.getAll({get: {api}}) :
-                  await DataPermsModel.getRoleDataPerms({get: {role_id: userInfo.role_id, api}})
+                  await DataPermsModel.getRoleDataPerms({get: {role_id: userInfo.role_id, api: api.replace('/api/', '')}})
     if (search.length > 0) {
       next()
     } else {
