@@ -11,6 +11,7 @@ class Article extends Base {
     this.getRow = this.getRow.bind(this)
     this.getList = this.getList.bind(this)
     this.getAll = this.getAll.bind(this)
+    this.visit = this.visit.bind(this)
   }
   // 创建
   async create (req, res, next) {
@@ -266,7 +267,7 @@ class Article extends Base {
     })
   }
   // 浏览
-  async view (req, res, next) {
+  async visit (req, res, next) {
   }
   // 点赞 （用户已点赞，则取消用户点赞， 未点赞则点赞）
   async praise (req, res, next) {

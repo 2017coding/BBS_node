@@ -9,7 +9,7 @@ var pool = mysql.createPool({
 });
 function query (sql) {
   // 写入sql
-  NodeLog.writeLog(sql, 'sql')
+  NodeLog.writeLog(`\n运行sql时间${new Date()}: \n${sql}`, 'sql')
   return new Promise((resolve, reject) => {
     pool.getConnection((err, conn) => {
       if (err) {

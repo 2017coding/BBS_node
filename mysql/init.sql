@@ -461,10 +461,10 @@ CREATE TABLE `bbs_article` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='文章表';
 
 ----------------------------
--- bbs_article_views
+-- bbs_article_visit
 ----------------------------
-DROP TABLE IF EXISTS `bbs_article_views`;
-CREATE TABLE `bbs_article_views` (
+DROP TABLE IF EXISTS `bbs_article_visit`;
+CREATE TABLE `bbs_article_visit` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `article_id` INT(11) NOT NULL COMMENT '文章ID',
   `ip` VARCHAR(48) NOT NULL COMMENT '访问的IP （游客通过IP计算，用户通过用户ID计算）',

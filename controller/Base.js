@@ -85,7 +85,7 @@ class Base{
   // TODO: 异常处理, 有时间扩展, 从这里转发到异常处理模块处理
   handleException (req, res, e) {
     // 写入日志
-    NodeLog.writeLog(e)
+    NodeLog.writeLog(`\n异常发生时间${new Date()}: \n${e}`)
     
     res.json({
       code: e.errno || 20501,
