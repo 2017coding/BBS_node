@@ -32,7 +32,7 @@
     "log4js": "4.3.1",
     "mysql": "2.16.0",
     "supervisor": "0.12.0",
-    "apidoc": "0.17.7",
+    "apidoc": "0.54.0",
     "request": "2.88.0",
     "connect-multiparty": "2.2.0",
     "mqtt": "2.18.8",
